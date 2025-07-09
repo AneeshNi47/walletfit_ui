@@ -22,7 +22,7 @@ export default function AccountSummary({ currency }) {
         const response = await axios.get('/accounts/', {
           headers: { Authorization: `Bearer ${auth?.access}` },
         });
-        setAccounts(response.data);
+        setAccounts(response.data.results);
       } catch (err) {
         console.error('Failed to fetch accounts for summary:', err);
         setError('Failed to load accounts. Please try again.');

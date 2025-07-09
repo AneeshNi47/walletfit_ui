@@ -4,19 +4,19 @@ import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import CreatableSelect from 'react-select/creatable';
 
-// Remove 'accounts' from props, as it will now fetch them internally
-export default function AddTransactionForm({ onSuccess, onCancel }) {
+// Add initialAccountId to props
+export default function AddTransactionForm({ onSuccess, onCancel, initialAccountId = null }) {
   const { auth } = useAuth();
   const [formData, setFormData] = useState({
-    account: '', // This will hold the account ID
+    account: initialAccountId || '', // Set initial account ID if provided
     amount: '',
-    category: '', // This will hold the category ID
+    category: '',
     description: '',
     date: new Date().toISOString().split('T')[0],
   });
 
-  const [accounts, setAccounts] = useState([]); // New state for accounts
-  const [loadingAccounts, setLoadingAccounts] = useState(true); // New loading state for accounts
+  const [accounts, setAccounts] = useState([]);
+  const [loadingAccounts, setLoadingAccounts] = useState(true);
 
   const [categories, setCategories] = useState([]);
   const [selectedCategoryOption, setSelectedCategoryOption] = useState(null);
@@ -24,15 +24,15 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
 
-  // useEffect to fetch accounts
+  // Fetch accounts
   useEffect(() => {
     const fetchAccounts = async () => {
       setLoadingAccounts(true);
       try {
-        const response = await axios.get('/accounts/', { // Assuming /accounts/ is your endpoint
+        const response = await axios.get('/accounts/', {
           headers: { Authorization: `Bearer ${auth?.access}` },
         });
-        setAccounts(response.data);
+        setAccounts(response.data.results);
       } catch (err) {
         console.error('Failed to fetch accounts:', err);
         setError('Failed to load accounts for transactions.');
@@ -41,12 +41,12 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
       }
     };
 
-    if (auth?.access) { // Only fetch if authenticated
+    if (auth?.access) {
       fetchAccounts();
     }
-  }, [auth]); // Re-fetch accounts if auth token changes
+  }, [auth]);
 
-  // useEffect to fetch categories (existing logic)
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       setLoadingCategories(true);
@@ -54,7 +54,7 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
         const response = await axios.get('/categories/', {
           headers: { Authorization: `Bearer ${auth?.access}` },
         });
-        setCategories(response.data.map(cat => ({ value: cat.id, label: cat.name })));
+        setCategories(response.data.results.map(cat => ({ value: cat.id, label: cat.name })));
       } catch (err) {
         console.error('Failed to fetch categories:', err);
         setError('Failed to load categories.');
@@ -63,7 +63,7 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
       }
     };
 
-    if (auth?.access) { // Only fetch if authenticated
+    if (auth?.access) {
       fetchCategories();
     }
   }, [auth]);
@@ -113,7 +113,6 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
     e.preventDefault();
     setError('');
 
-    // Basic validation
     if (!formData.account) {
       setError('Please select an account.');
       return;
@@ -127,7 +126,6 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
       return;
     }
 
-
     try {
       await axios.post('/expenses/', formData, {
         headers: { Authorization: `Bearer ${auth?.access}` },
@@ -137,7 +135,6 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
       console.error('Failed to add transaction:', err.response?.data || err.message);
       let errorMessage = 'Failed to add transaction. Please check your input and ensure all fields are valid.';
       if (err.response && err.response.data) {
-        // Attempt to parse specific errors from Django backend
         for (const key in err.response.data) {
             errorMessage += ` ${key}: ${err.response.data[key][0]}`;
         }
@@ -146,7 +143,6 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
     }
   };
 
-  // Combine loading states
   if (loadingCategories || loadingAccounts) {
     return (
       <div className="text-center py-4">
@@ -155,7 +151,6 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
     );
   }
 
-  // If after loading, there are no accounts, inform the user
   if (!accounts.length && !loadingAccounts) {
     return (
       <div className="text-center py-4 text-red-500">
@@ -173,27 +168,28 @@ export default function AddTransactionForm({ onSuccess, onCancel }) {
     );
   }
 
-const selectStyles = {
+  const selectStyles = {
     control: (provided) => ({
       ...provided,
-      borderColor: '#d1d5db', // Equivalent to border class
-      borderRadius: '0.25rem', // Equivalent to rounded class
-      padding: '0.25rem', // Adjust padding as needed
-      minHeight: '38px', // Standard height for inputs
+      borderColor: '#d1d5db',
+      borderRadius: '0.25rem',
+      padding: '0.25rem',
+      minHeight: '38px',
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: '#1f2937', // Default text color
+      color: '#1f2937',
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#e5e7eb' : 'white', // bg-gray-200 on focus
+      backgroundColor: state.isFocused ? '#e5e7eb' : 'white',
       color: '#1f2937',
       '&:active': {
-        backgroundColor: '#d1d5db', // bg-gray-300 on active
+        backgroundColor: '#d1d5db',
       },
     }),
   };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       {error && <p className="text-red-500">{error}</p>}
@@ -204,6 +200,7 @@ const selectStyles = {
         onChange={handleChange}
         className="w-full p-2 border rounded"
         required
+        disabled={!!initialAccountId} // Disable if initialAccountId is provided
       >
         <option value="">Select Account</option>
         {accounts.map((acc) => (
@@ -267,10 +264,10 @@ const selectStyles = {
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          disabled={isCreatingCategory || loadingAccounts || loadingCategories} // Disable if any async operation is in progress
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700" // Changed color to red for expense
+          disabled={isCreatingCategory || loadingAccounts || loadingCategories}
         >
-          Add Transaction
+          Add Expense
         </button>
       </div>
     </form>

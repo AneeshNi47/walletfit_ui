@@ -35,7 +35,7 @@ export default function SpendingTrends() {
     };
 
     fetchMonthlySpending();
-  }, [auth]);
+  }, [auth, logout]);
 
   if (loading) return <div className="p-4 text-gray-600">Loading chart...</div>;
 

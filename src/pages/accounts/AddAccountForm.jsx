@@ -16,12 +16,14 @@ export default function AddAccountForm({ onSuccess, onCancel }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const newValue = name === 'balance' ? parseFloat(value) || 0 : value;
+  setForm((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log(form)
     setError(''); // Clear previous errors
     try {
       await axios.post('/accounts/', form, { // Assuming your endpoint for accounts is /accounts/
@@ -52,7 +54,8 @@ export default function AddAccountForm({ onSuccess, onCancel }) {
       />
       <input
         name="balance"
-        type="decimal"
+        type="number"
+        step="0.01"
         placeholder="Account Balance"
         value={form.balance}
         onChange={handleChange}
