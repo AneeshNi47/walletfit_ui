@@ -1,6 +1,6 @@
 import React from 'react';
 
-const APP_VERSION = '0.0.0'; // Keep in sync with package.json
+const APP_VERSION = '1.0.0'; // Keep in sync with package.json
 
 export default function Footer() {
   return (
