@@ -55,7 +55,7 @@ export default function SpendingTrends() {
   };
 
   return (
-    <div className="bg-white shadow rounded p-4 mt-4">
+    <div className="bg-white shadow rounded p-1 mt-4">
       <h2 className="text-xl font-semibold mb-4">📊 Spending Trends</h2>
       <Line data={data} />
     </div>

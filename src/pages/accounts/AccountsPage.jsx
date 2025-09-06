@@ -6,45 +6,8 @@ import Modal from '../../components/Modal';
 import AddAccountForm from './AddAccountForm';
 import AddTransactionForm from '../expenses/AddTransactionForm';
 import TopUpForm from '../expenses/TopUpForm';
+import { formatDate } from '../../utils/utils';
 
-// Helper function to format date in user-friendly format
-const formatDate = (dateString) => {
-  if (!dateString) return '';
-  
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    // If it's today
-    if (diffDays === 1 && date.toDateString() === now.toDateString()) {
-      return `Today at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-    }
-    
-    // If it's yesterday
-    const yesterday = new Date(now);
-    yesterday.setDate(yesterday.getDate() - 1);
-    if (date.toDateString() === yesterday.toDateString()) {
-      return `Yesterday at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-    }
-    
-    // If it's within the last 7 days
-    if (diffDays <= 7) {
-      return `${date.toLocaleDateString([], { weekday: 'long' })} at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-    }
-    
-    // Otherwise, show full date and time
-    return date.toLocaleDateString([], { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    }) + ` at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return dateString; // Fallback to original string if parsing fails
-  }
-};
 
 export default function AccountsPage() {
   const { auth, logout } = useAuth();
@@ -244,14 +207,19 @@ export default function AccountsPage() {
                       >
                         <div>
                           <p className={`text-lg font-semibold ${
-                            activity.type == "top_up" ? 'text-green-600' : 'text-red-600'
-                          }`}>
-                            {activity.type == "top_up" ? '+ ' : '- '}{parseFloat(activity.amount).toFixed(2)} {activity.currency}
-                          </p>
+                                ['top_up', 'transfer_in'].includes(activity.type) ? 'text-green-600' : 'text-red-600'
+                              }`}
+                            >
+                              {['top_up', 'transfer_in'].includes(activity.type) ? '+ ' : '- '}
+                              {parseFloat(activity.amount).toFixed(2)} {activity.currency}
+                            </p>
                           <p className="text-sm text-gray-700 capitalize">
-                            {activity.category_name && ` ${activity.category_name}`}
-                            {activity.related_account_name && ` (${activity.related_account_name})`}
+                            {activity.category && ` ${activity.category}`}
+                            {activity.counterparty_account && ` (${activity.counterparty_account})`}
                           </p>
+                          {activity.note && (
+                            <p className="text-xs text-gray-500 italic">{activity.note}</p>
+                          )}
                           {activity.description && (
                             <p className="text-xs text-gray-500 italic">{activity.description}</p>
                           )}
