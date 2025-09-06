@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArrowDownIcon, ArrowUpIcon, ArrowsRightLeftIcon } from '@heroicons/react/24/solid';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
+import { formatDate } from '../../utils/utils';
 
 export default function RecentTransactions({ currency }) {
   const { auth, logout } = useAuth();
@@ -73,13 +74,13 @@ export default function RecentTransactions({ currency }) {
               {/* Amount, Currency, and Created At Date/Time */}
               <div className="flex flex-col items-end">
                 <span className={`font-bold ${
-                  activity.amount > 0 ? 'text-green-600' : 'text-red-600'
+                  ['top_up', 'transfer_in'].includes(activity.type) ? 'text-green-600' : 'text-red-600'
                 }`}>
-                  {activity.amount > 0 ? '+' : ''}{parseFloat(activity.amount).toFixed(2)} {activity.currency}
+                  {['top_up', 'transfer_in'].includes(activity.type) ? '+' : ''}{parseFloat(activity.amount).toFixed(2)} {activity.currency}
                 </span>
                 {/* Display date and created_at */}
                 <p className="text-xs text-gray-500">
-                  {activity.date} {/* Transaction date */}
+                  {formatDate(activity.date)} {/* Transaction date */}
                   {activity.created_at && ` at ${new Date(activity.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
                 </p>
               </div>

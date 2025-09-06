@@ -46,9 +46,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+ const logout = async () => {
+  try {
+    const refreshToken = auth?.refresh;
+    if (refreshToken) {
+      await axios.post(
+        '/users/logout/',
+        { refresh: refreshToken },
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.access}`,
+          },
+        }
+      );
+    }
+  } catch (err) {
+    console.error('Logout failed:', err);
+    // You might still want to proceed with clearing local auth
+  } finally {
     setAuth(null);
-  };
+    localStorage.removeItem('auth'); // if using localStorage
+  }
+};
 
   const refreshToken = async () => {
     if (!auth?.refresh) return;
