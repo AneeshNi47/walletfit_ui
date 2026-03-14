@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://walletfit.app/sitemap.xml
+
+# Block crawling of API and auth pages
+Disallow: /dashboard
+Disallow: /expenses
+Disallow: /accounts
+Disallow: /household
+Disallow: /budgets
+Disallow: /income
+Disallow: /recurring
+Disallow: /splits
+Disallow: /reports
+Disallow: /categories
+Disallow: /profile

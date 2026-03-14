@@ -1,20 +1,53 @@
+import { Link } from 'react-router-dom';
+import { ShieldCheckIcon, CreditCardIcon, UserGroupIcon } from '@heroicons/react/24/solid';
+
 export default function Banner() {
   return (
-    <section id="home" className="bg-gradient-to-br from-blue-400 via-blue-200 to-white py-28 text-center px-6 relative overflow-hidden">
-      <div className="relative z-10">
-        <h2 className="text-5xl md:text-6xl font-extrabold text-blue-800 mb-6 drop-shadow-lg leading-tight">
-          Manage Household Finances <span className="text-blue-500">Smartly</span>
-        </h2>
-        <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-8">
-          WalletFit helps families and groups track expenses, split costs, and stay on top of spending across wallets and bank accounts.
+    <section id="home" className="bg-gradient-to-br from-blue-500 via-blue-300 to-white py-20 sm:py-32 text-center px-4 sm:px-6 relative overflow-hidden">
+      <div className="relative z-10 max-w-4xl mx-auto">
+        <p className="text-blue-800 font-semibold text-sm sm:text-base uppercase tracking-widest mb-4">
+          Your Personal Finance Companion
         </p>
-        <a href="#features" className="inline-block px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-full shadow hover:bg-blue-700 transition">
-          Get Started Free
-        </a>
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-blue-900 mb-6 drop-shadow-lg leading-tight">
+          Manage Household Finances <span className="text-blue-600">Smartly</span>
+        </h1>
+        <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-10 leading-relaxed">
+          WalletFit helps families and groups track expenses, split costs, manage budgets, and stay on top of spending across wallets and bank accounts — all in one place.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <Link
+            to="/register"
+            className="inline-block px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all"
+          >
+            Get Started Free
+          </Link>
+          <a
+            href="#how-it-works"
+            className="inline-block px-8 py-4 bg-white text-blue-600 text-lg font-semibold rounded-full shadow hover:bg-blue-50 transition-all border border-blue-200"
+          >
+            See How It Works
+          </a>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-6 sm:gap-10 text-sm text-gray-600">
+          <div className="flex items-center gap-2">
+            <ShieldCheckIcon className="h-5 w-5 text-green-500" />
+            <span>Bank-level Security</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CreditCardIcon className="h-5 w-5 text-blue-500" />
+            <span>Multi-account Support</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <UserGroupIcon className="h-5 w-5 text-indigo-500" />
+            <span>Household Collaboration</span>
+          </div>
+        </div>
       </div>
-      {/* Decorative shapes */}
-      <div className="absolute top-0 left-0 w-40 h-40 bg-blue-200 rounded-full opacity-30 blur-2xl -z-1 animate-pulse" />
-      <div className="absolute bottom-0 right-0 w-56 h-56 bg-blue-100 rounded-full opacity-40 blur-2xl -z-1 animate-pulse" />
+
+      <div className="absolute top-10 left-10 w-48 h-48 bg-blue-200 rounded-full opacity-20 blur-3xl animate-pulse" />
+      <div className="absolute bottom-10 right-10 w-64 h-64 bg-blue-100 rounded-full opacity-30 blur-3xl animate-pulse" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-50 rounded-full opacity-20 blur-3xl" />
     </section>
   );
 }

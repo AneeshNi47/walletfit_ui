@@ -328,8 +328,8 @@ export default function ReportPage() {
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Financial Reports</h1>
 
         {/* --- Filter Section --- */}
-        <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Filter Activities</h2>
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md space-y-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">Filter Activities</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {/* Date Filters */}
             <div>
@@ -484,49 +484,49 @@ export default function ReportPage() {
         </div> {/* End Filter Section */}
 
         {/* --- Saved Reports & Export Section --- */}
-        <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-6 rounded-lg shadow-md space-y-4 sm:space-y-0 sm:space-x-4">
-            <h2 className="text-xl font-semibold text-gray-800">Report Actions</h2>
-            <div className="flex flex-wrap gap-3 justify-center sm:justify-end">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 sm:p-6 rounded-lg shadow-md space-y-4 sm:space-y-0 sm:space-x-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Report Actions</h2>
+            <div className="flex flex-wrap gap-2 sm:gap-3 justify-start sm:justify-end w-full sm:w-auto">
                 <button
                     onClick={() => setShowSaveReportModal(true)}
-                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200"
+                    className="px-4 py-2 min-h-[44px] text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200"
                 >
-                    💾 Save Current Filters
+                    Save Current Filters
                 </button>
                 <button
                     onClick={() => setShowLoadReportModal(true)}
-                    className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition duration-200"
+                    className="px-4 py-2 min-h-[44px] text-sm bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition duration-200"
                 >
                     📂 Load Saved Report
                 </button>
                 <button
                     onClick={() => handleExport('excel')}
                     disabled={exportLoading.excel}
-                    className={`px-4 py-2 text-white rounded-md transition duration-200 ${
-                      exportLoading.excel 
-                        ? 'bg-gray-400 cursor-not-allowed' 
+                    className={`px-4 py-2 min-h-[44px] text-sm text-white rounded-md transition duration-200 ${
+                      exportLoading.excel
+                        ? 'bg-gray-400 cursor-not-allowed'
                         : 'bg-green-600 hover:bg-green-700'
                     }`}
                 >
-                    {exportLoading.excel ? '⏳ Exporting...' : '📊 Export to Excel'}
+                    {exportLoading.excel ? 'Exporting...' : 'Export to Excel'}
                 </button>
                 <button
                     onClick={() => handleExport('pdf')}
                     disabled={exportLoading.pdf}
-                    className={`px-4 py-2 text-white rounded-md transition duration-200 ${
-                      exportLoading.pdf 
-                        ? 'bg-gray-400 cursor-not-allowed' 
+                    className={`px-4 py-2 min-h-[44px] text-sm text-white rounded-md transition duration-200 ${
+                      exportLoading.pdf
+                        ? 'bg-gray-400 cursor-not-allowed'
                         : 'bg-red-600 hover:bg-red-700'
                     }`}
                 >
-                    {exportLoading.pdf ? '⏳ Exporting...' : '📄 Export to PDF'}
+                    {exportLoading.pdf ? 'Exporting...' : 'Export to PDF'}
                 </button>
             </div>
         </div>
 
         {/* --- Report Results Section --- */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Report Results</h2>
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">Report Results</h2>
           {loadingReport ? (
             <p className="text-center text-gray-500 py-8">Loading report data...</p>
           ) : reportError ? (
@@ -536,7 +536,7 @@ export default function ReportPage() {
           ) : (
             <>
               <div className="overflow-x-auto rounded-lg border border-gray-200">
-                <table className="min-w-full divide-y divide-gray-200">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
@@ -30,6 +31,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 px-4">
+      <Helmet>
+        <title>Login - WalletFit</title>
+        <meta name="description" content="Sign in to your WalletFit account to manage your household finances, track expenses, and monitor budgets." />
+      </Helmet>
       <div className="bg-white/90 p-10 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center animate-fade-in">
         <div className="flex flex-col items-center mb-6">
           <LockClosedIcon className="h-12 w-12 text-blue-600 mb-2 animate-bounce" />

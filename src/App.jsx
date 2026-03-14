@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Login from './auth/Login';
 import Register from './auth/Register';
@@ -10,8 +10,21 @@ import Household from './pages/households/Household';
 import Profile from './pages/profile/Profile';
 import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
+import CategoriesPage from './pages/categories/CategoriesPage';
+import BudgetsPage from './pages/budgets/BudgetsPage';
+import IncomePage from './pages/income/IncomePage';
+import RecurringPage from './pages/recurring/RecurringPage';
+import SplitExpensesPage from './pages/splits/SplitExpensesPage';
 import ReportPage from './pages/reports/ReportPage';
 import Footer from './components/Footer';
+
+function ConditionalFooter() {
+  var location = useLocation();
+  if (location.pathname === '/') {
+    return null;
+  }
+  return <Footer />;
+}
 
 function App() {
   return (
@@ -30,12 +43,17 @@ function App() {
               <Route path="/expenses/add" element={<AddTransactionForm />} />
               <Route path="/accounts" element={<AccountsPage />} />
               <Route path="/household" element={<Household />} />
+              <Route path="/categories" element={<CategoriesPage />} />
+              <Route path="/budgets" element={<BudgetsPage />} />
+              <Route path="/income" element={<IncomePage />} />
+              <Route path="/recurring" element={<RecurringPage />} />
+              <Route path="/splits" element={<SplitExpensesPage />} />
               <Route path="/reports" element={<ReportPage />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
           </Routes>
         </div>
-        <Footer />
+        <ConditionalFooter />
       </div>
     </BrowserRouter>
   );
