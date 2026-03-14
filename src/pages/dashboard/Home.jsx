@@ -5,13 +5,16 @@ import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 import UserGreeting from './UserGreeting';
 import AccountSummary from './AccountSummary';
-import RecentTransactions from './RecentTransactions'; // Assuming this is correct path
+import FinancialOverview from './FinancialOverview';
+import RecentTransactions from './RecentTransactions';
 import SpendingTrends from './SpendingTrends';
-import QuickActions from './QuickActions'; // Assuming this is correct path
+import QuickActions from './QuickActions';
+import BudgetAlerts from './BudgetAlerts';
+import UpcomingBills from './UpcomingBills';
 import AddAccountForm from '../accounts/AddAccountForm';
 import AddTransactionForm from '../expenses/AddTransactionForm';
-import TopUpForm from '../expenses/TopUpForm'; // Import TopUpForm
-import TransferForm from '../accounts/TransferForm'; // Import TransferForm
+import TopUpForm from '../expenses/TopUpForm';
+import TransferForm from '../accounts/TransferForm';
 
 
 export default function Dashboard() {
@@ -77,14 +80,24 @@ export default function Dashboard() {
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         <UserGreeting user={user} />
 
-        <div className="grid gap-6 md:grid-cols-2">
+        {/* Row 1: Account Summary + Financial Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <AccountSummary currency={profile.currency} />
-          <QuickActions
-            onAddAccount={() => setShowAccountForm(true)}
-            onAddExpense={() => setShowTransactionForm(true)} // Pass handler for Add Expense
-            onTopUp={() => setShowTopUpForm(true)}             // Pass handler for TopUp
-            onTransfer={() => setShowTransferForm(true)}       // Pass handler for Transfer
-          />
+          <FinancialOverview />
+        </div>
+
+        {/* Row 2: Quick Actions (full width) */}
+        <QuickActions
+          onAddAccount={() => setShowAccountForm(true)}
+          onAddExpense={() => setShowTransactionForm(true)}
+          onTopUp={() => setShowTopUpForm(true)}
+          onTransfer={() => setShowTransferForm(true)}
+        />
+
+        {/* Row 3: Budget Alerts + Upcoming Bills */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <BudgetAlerts />
+          <UpcomingBills />
         </div>
 
         {/* Add Account Modal */}
@@ -115,7 +128,7 @@ export default function Dashboard() {
           </Modal>
         )}
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <RecentTransactions currency={profile.currency} />
           <SpendingTrends transactions={transactions} />
         </div>

@@ -133,7 +133,7 @@ export default function AccountsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Account List (Left/Top Section) */}
-          <div className="md:col-span-1 bg-white rounded-lg shadow-md p-4 space-y-3 h-full overflow-y-auto max-h-[80vh] md:max-h-[80vh] min-h-[200px] sm:min-h-[auto]">
+          <div className="md:col-span-1 bg-white rounded-lg shadow-md p-3 sm:p-4 space-y-3 h-full overflow-y-auto max-h-[40vh] md:max-h-[80vh] min-h-[200px] sm:min-h-[auto]">
             <h2 className="text-xl font-semibold text-gray-700 mb-4">Your Wallets & Banks</h2>
             {accounts.length === 0 ? (
               <p className="text-gray-500">No accounts found. Click "Add New Account" to get started!</p>
@@ -152,7 +152,7 @@ export default function AccountsPage() {
                     <p className="text-lg font-semibold text-gray-800">{account.name}</p>
                     <p className="text-sm text-gray-500 capitalize">{account.type.replace(/_/g, ' ')}</p>
                   </div>
-                  <p className="text-xl font-bold text-blue-700">
+                  <p className="text-lg sm:text-xl font-bold text-blue-700">
                     {parseFloat(account.balance).toFixed(2)} {account.currency}
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export default function AccountsPage() {
 
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <p className="text-lg text-gray-600">Current Balance:</p>
-                  <p className="text-3xl font-extrabold text-blue-800 mt-1">
+                  <p className="text-2xl sm:text-3xl font-extrabold text-blue-800 mt-1">
                     {parseFloat(selectedAccount.balance).toFixed(2)} {selectedAccount.currency}
                   </p>
                 </div>

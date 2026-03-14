@@ -185,18 +185,18 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
         required
       />
 
-      <div className="flex justify-between">
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 w-full sm:w-auto"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          disabled={loadingAccounts} // isCreatingCategory is gone
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full sm:w-auto"
+          disabled={loadingAccounts}
         >
           Top Up Account
         </button>

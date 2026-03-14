@@ -49,7 +49,7 @@ export default function RecentTransactions({ currency }) {
               key={`${activity.type}-${activity.id}-${activity.created_at}`}
               className="py-2 flex items-center justify-between"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
                 {/* Icon Logic based on activity.type */}
                 {activity.type === 'top_up' || activity.type === 'transfer_in' ? (
                   <ArrowDownIcon className="h-5 w-5 text-green-500" />
@@ -60,7 +60,7 @@ export default function RecentTransactions({ currency }) {
                 )}
                 <div>
                   {/* Main Description */}
-                  <p className="font-medium">
+                  <p className="font-medium truncate">
                     {activity.description || activity.category_name}
                   </p>
                   {/* Sub-description with type and account info */}
@@ -73,7 +73,7 @@ export default function RecentTransactions({ currency }) {
               </div>
               {/* Amount, Currency, and Created At Date/Time */}
               <div className="flex flex-col items-end">
-                <span className={`font-bold ${
+                <span className={`text-sm sm:text-base font-bold whitespace-nowrap ${
                   ['top_up', 'transfer_in'].includes(activity.type) ? 'text-green-600' : 'text-red-600'
                 }`}>
                   {['top_up', 'transfer_in'].includes(activity.type) ? '+' : ''}{parseFloat(activity.amount).toFixed(2)} {activity.currency}

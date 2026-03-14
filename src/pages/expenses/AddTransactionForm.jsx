@@ -12,6 +12,7 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
     amount: '',
     category: '',
     description: '',
+    is_personal: false, 
     date: new Date().toISOString().split('T')[0],
   });
 
@@ -231,11 +232,20 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
         isDisabled={isCreatingCategory}
         isLoading={isCreatingCategory}
         placeholder="Select or type a category..."
-        className="w-full"
+        className="w-full text-sm"
         classNamePrefix="react-select"
         styles={selectStyles}
       />
-
+    <label className="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        name="is_personal"
+        checked={formData.is_personal}
+        onChange={(e) => setFormData(prev => ({ ...prev, is_personal: e.target.checked }))}
+        className="mr-2"
+      />
+      <span>Mark as Personal Expense</span>
+    </label>
       <input
         type="text"
         name="description"
@@ -254,17 +264,17 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
         required
       />
 
-      <div className="flex justify-between">
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 w-full sm:w-auto"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700" // Changed color to red for expense
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-full sm:w-auto"
           disabled={isCreatingCategory || loadingAccounts || loadingCategories}
         >
           Add Expense

@@ -85,19 +85,19 @@ export default function AddAccountForm({ onSuccess, onCancel }) {
         <option value="INR">INR</option>
       </select>
 
-      <div className="flex justify-end space-x-2">
+      <div className="flex flex-col sm:flex-row sm:justify-end gap-2 sm:space-x-2">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-200 rounded"
-          disabled={loading} // Disable during loading
+          className="px-4 py-2 bg-gray-200 rounded w-full sm:w-auto"
+          disabled={loading}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
-          disabled={loading} // Disable during loading
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 w-full sm:w-auto"
+          disabled={loading}
         >
           {loading ? 'Saving...' : 'Save'}
         </button>

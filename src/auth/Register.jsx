@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../api/axios';
@@ -120,6 +121,10 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 px-4">
+      <Helmet>
+        <title>Create Account - WalletFit</title>
+        <meta name="description" content="Sign up for WalletFit for free. Create your account, set up a household, and start tracking expenses, budgets, and income in minutes." />
+      </Helmet>
       <div className="bg-white/90 p-10 rounded-2xl shadow-2xl w-full max-w-xl flex flex-col items-center animate-fade-in">
         <div className="flex flex-col items-center mb-6">
           <UserPlusIcon className="h-12 w-12 text-blue-600 mb-2 animate-bounce" />

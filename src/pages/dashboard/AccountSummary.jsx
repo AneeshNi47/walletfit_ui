@@ -70,9 +70,9 @@ export default function AccountSummary({ currency }) {
   return (
     <div className="bg-gradient-to-br from-blue-600 to-blue-400 text-white p-4 rounded-lg shadow-md">
       <h2 className="text-lg font-semibold">Total Balance</h2>
-      <p className="text-3xl font-bold mt-2">{totalBalance.toFixed(2)} {currency}</p>
+      <p className="text-2xl sm:text-3xl font-bold mt-2">{totalBalance.toFixed(2)} {currency}</p>
 
-      <div className="grid grid-cols-2 gap-4 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
         {accounts.map((acc) => (
           <div key={acc.id} className="bg-white text-blue-700 rounded-lg p-3 shadow-sm">
             <p className="text-sm font-semibold">{acc.name}</p>
