@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
+import TelegramConnect from './TelegramConnect';
 
 export default function Profile() {
   const { auth } = useAuth();
@@ -261,6 +262,9 @@ export default function Profile() {
             </div>
           </div>
         </div>
+
+        {/* Telegram Integration */}
+        <TelegramConnect />
       </main>
     </>
   );
