@@ -114,13 +114,14 @@ export default function Navbar() {
 
                 <div
                   className={[
-                    'absolute top-full left-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-100 py-1',
+                    'absolute top-full left-0 pt-2 w-44',
                     'transition-all duration-200 origin-top',
                     isFinanceOpen
                       ? 'opacity-100 scale-y-100 pointer-events-auto'
                       : 'opacity-0 scale-y-95 pointer-events-none',
                   ].join(' ')}
                 >
+                <div className="bg-white rounded-lg shadow-lg border border-gray-100 py-1">
                   <Link
                     to="/expenses"
                     className={[
@@ -157,6 +158,7 @@ export default function Navbar() {
                   >
                     Recurring
                   </Link>
+                </div>
                 </div>
               </div>
 
