@@ -4,6 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 import SummaryCards from './SummaryCards';
+import FairnessCard from './FairnessCard';
+import WhoSpentCard from './WhoSpentCard';
+import HouseholdBudgets from './HouseholdBudgets';
 import ExpenseChart from './ExpenseChart';
 import CategoryPieChart from './CategoryPieChart';
 import AccountBarChart from './AccountBarChart';
@@ -426,6 +429,14 @@ export default function HouseholdPage() {
                 categoryData={categoryData}
                 expenses={expenses}
               />
+
+              {/* Household Budgets, Fairness & Who Spent */}
+              <HouseholdBudgets />
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <FairnessCard />
+                <WhoSpentCard />
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white p-4 rounded-lg shadow-md">
