@@ -67,12 +67,12 @@ export default function Register() {
 
     try {
       const res = await axios.post('/users/register/', form);
-      const { access, refresh, username, email } = res.data;
+      const { access, refresh, username, email, id } = res.data;
 
       login(null, null, {
         access,
         refresh,
-        user: { username, email },
+        user: { id, username, email },
       });
 
       navigate('/dashboard');

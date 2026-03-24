@@ -3,6 +3,16 @@ import axios from '../api/axios';
 
 const AuthContext = createContext();
 
+const parseJwtPayload = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
+  } catch {
+    return {};
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(() => {
     const stored = localStorage.getItem('auth');
@@ -35,7 +45,8 @@ export const AuthProvider = ({ children }) => {
         });
         access = res.data.access;
         refresh = res.data.refresh;
-        user = { username }; // optionally fetch user later
+        const payload = parseJwtPayload(access);
+        user = { id: payload.user_id, username };
       }
 
       const authData = { access, refresh, user };
