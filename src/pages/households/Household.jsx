@@ -33,6 +33,13 @@ export default function HouseholdPage() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviting, setInviting] = useState(false);
 
+  // Pending invites (for users not in a household)
+  const [pendingInvites, setPendingInvites] = useState([]);
+  const [pendingInvitesLoading, setPendingInvitesLoading] = useState(false);
+
+  // Sent invites (for owners)
+  const [sentInvites, setSentInvites] = useState([]);
+
   // Transfer ownership modal
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [transferUserId, setTransferUserId] = useState(null);
@@ -122,21 +129,47 @@ export default function HouseholdPage() {
     }
   }, [auth?.access, hasHousehold]);
 
+  // Fetch pending invites for current user
+  const fetchPendingInvites = useCallback(async () => {
+    setPendingInvitesLoading(true);
+    try {
+      const res = await axios.get('/users/households/my-invites/', { headers });
+      setPendingInvites(res.data || []);
+    } catch (err) {
+      console.error('Failed to fetch pending invites:', err);
+    } finally {
+      setPendingInvitesLoading(false);
+    }
+  }, [auth?.access]);
+
+  // Fetch sent invites for household owners
+  const fetchSentInvites = useCallback(async () => {
+    if (!hasHousehold) return;
+    try {
+      const res = await axios.get('/users/households/sent-invites/', { headers });
+      setSentInvites(res.data || []);
+    } catch (err) {
+      console.error('Failed to fetch sent invites:', err);
+    }
+  }, [auth?.access, hasHousehold]);
+
   // Initial load
   useEffect(() => {
     if (auth?.access) {
       fetchHousehold();
+      fetchPendingInvites();
     }
-  }, [auth?.access, fetchHousehold]);
+  }, [auth?.access, fetchHousehold, fetchPendingInvites]);
 
-  // Load analytics when household is available
+  // Load analytics and sent invites when household is available
   useEffect(() => {
     if (hasHousehold) {
       fetchExpenses();
       fetchCategoryData();
       fetchTrendData();
+      fetchSentInvites();
     }
-  }, [hasHousehold, fetchExpenses, fetchCategoryData, fetchTrendData]);
+  }, [hasHousehold, fetchExpenses, fetchCategoryData, fetchTrendData, fetchSentInvites]);
 
   // Clear action messages after 4 seconds
   useEffect(() => {
@@ -179,11 +212,54 @@ export default function HouseholdPage() {
       setInviteEmail('');
       setActionSuccess('Invitation sent successfully!');
       fetchHousehold();
+      fetchSentInvites();
     } catch (err) {
       const msg = err.response?.data?.detail || err.response?.data?.error || 'Failed to send invitation.';
       setActionError(msg);
     } finally {
       setInviting(false);
+    }
+  };
+
+  // Accept invite
+  const handleAcceptInvite = async (inviteId, householdName) => {
+    setActionError('');
+    try {
+      await axios.post('/users/households/accept-invite/', { invite_id: inviteId }, { headers });
+      setActionSuccess(`You have joined ${householdName}!`);
+      setPendingInvites([]);
+      fetchHousehold();
+    } catch (err) {
+      const msg = err.response?.data?.detail || 'Failed to accept invite.';
+      setActionError(msg);
+    }
+  };
+
+  // Decline invite
+  const handleDeclineInvite = async (inviteId) => {
+    if (!window.confirm('Are you sure you want to decline this invite?')) return;
+    setActionError('');
+    try {
+      await axios.post('/users/households/decline-invite/', { invite_id: inviteId }, { headers });
+      setActionSuccess('Invite declined.');
+      fetchPendingInvites();
+    } catch (err) {
+      const msg = err.response?.data?.detail || 'Failed to decline invite.';
+      setActionError(msg);
+    }
+  };
+
+  // Cancel invite (owner)
+  const handleCancelInvite = async (inviteId, email) => {
+    if (!window.confirm(`Cancel the invite to ${email}?`)) return;
+    setActionError('');
+    try {
+      await axios.post('/users/households/cancel-invite/', { invite_id: inviteId }, { headers });
+      setActionSuccess(`Invite to ${email} cancelled.`);
+      fetchSentInvites();
+    } catch (err) {
+      const msg = err.response?.data?.detail || 'Failed to cancel invite.';
+      setActionError(msg);
     }
   };
 
@@ -291,32 +367,78 @@ export default function HouseholdPage() {
 
         {!hasHousehold ? (
           /* ======================== STATE 1: No Household ======================== */
-          <div className="bg-white rounded-lg shadow-md p-8 max-w-lg mx-auto mt-10">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">You are not part of a household</h2>
-            <p className="text-gray-500 mb-6">Create a new household to start tracking shared expenses with your family or roommates.</p>
-            <form onSubmit={handleCreateHousehold} className="space-y-4">
-              <div>
-                <label htmlFor="householdName" className="block text-sm font-medium text-gray-700 mb-1">
-                  Household Name
-                </label>
-                <input
-                  id="householdName"
-                  type="text"
-                  value={householdName}
-                  onChange={(e) => setHouseholdName(e.target.value)}
-                  placeholder="e.g. The Smith Family"
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
+          <div className="max-w-lg mx-auto mt-10 space-y-6">
+            {/* Pending Invites */}
+            {pendingInvitesLoading ? (
+              <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500">
+                Checking for invites...
               </div>
-              <button
-                type="submit"
-                disabled={creating}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-              >
-                {creating ? 'Creating...' : 'Create Household'}
-              </button>
-            </form>
+            ) : pendingInvites.length > 0 && (
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-semibold text-gray-700 mb-4">Pending Invites</h2>
+                <div className="space-y-3">
+                  {pendingInvites.map((invite) => (
+                    <div
+                      key={invite.id}
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-blue-50 p-4 rounded-lg border border-blue-200"
+                    >
+                      <div>
+                        <p className="font-medium text-gray-800">{invite.household}</p>
+                        <p className="text-sm text-gray-500">
+                          Invited by {invite.invited_by} &middot;{' '}
+                          {new Date(invite.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex gap-2 mt-2 sm:mt-0">
+                        <button
+                          onClick={() => handleAcceptInvite(invite.id, invite.household)}
+                          className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() => handleDeclineInvite(invite.id)}
+                          className="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 transition"
+                        >
+                          Decline
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Create Household */}
+            <div className="bg-white rounded-lg shadow-md p-8">
+              <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                {pendingInvites.length > 0 ? 'Or create a new household' : 'You are not part of a household'}
+              </h2>
+              <p className="text-gray-500 mb-6">Create a new household to start tracking shared expenses with your family or roommates.</p>
+              <form onSubmit={handleCreateHousehold} className="space-y-4">
+                <div>
+                  <label htmlFor="householdName" className="block text-sm font-medium text-gray-700 mb-1">
+                    Household Name
+                  </label>
+                  <input
+                    id="householdName"
+                    type="text"
+                    value={householdName}
+                    onChange={(e) => setHouseholdName(e.target.value)}
+                    placeholder="e.g. The Smith Family"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={creating}
+                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                >
+                  {creating ? 'Creating...' : 'Create Household'}
+                </button>
+              </form>
+            </div>
           </div>
         ) : (
           /* ======================== STATE 2: Has Household ======================== */
@@ -416,6 +538,35 @@ export default function HouseholdPage() {
                       {inviting ? 'Inviting...' : 'Send Invite'}
                     </button>
                   </form>
+
+                  {/* Sent Invites (pending) */}
+                  {sentInvites.length > 0 && (
+                    <div className="mt-4">
+                      <h4 className="text-sm font-semibold text-gray-600 mb-2">Pending Invites</h4>
+                      <div className="space-y-2">
+                        {sentInvites.map((invite) => (
+                          <div
+                            key={invite.id}
+                            className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-yellow-50 p-3 rounded-lg border border-yellow-200"
+                          >
+                            <div>
+                              <p className="text-sm font-medium text-gray-800">{invite.email}</p>
+                              <p className="text-xs text-gray-500">
+                                Sent by {invite.invited_by} &middot;{' '}
+                                {new Date(invite.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => handleCancelInvite(invite.id, invite.email)}
+                              className="mt-2 sm:mt-0 px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+                            >
+                              Cancel Invite
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
