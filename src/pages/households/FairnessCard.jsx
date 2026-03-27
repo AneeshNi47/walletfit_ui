@@ -53,7 +53,7 @@ export default function FairnessCard() {
         <select
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
-          className="px-3 py-1.5 border rounded text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="px-3 py-1.5 border rounded text-sm bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none"
         >
           <option value="weekly">This Week</option>
           <option value="monthly">This Month</option>
@@ -99,7 +99,7 @@ export default function FairnessCard() {
             <div key={member.user_id} className="border border-gray-100 rounded-lg p-4">
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-xs">
+                  <div className="w-8 h-8 bg-brand-warm rounded-full flex items-center justify-center text-brand-forest font-bold text-xs">
                     {member.username[0].toUpperCase()}
                   </div>
                   <div>
@@ -133,7 +133,7 @@ export default function FairnessCard() {
                   <div className="w-full bg-gray-100 rounded-full h-2">
                     <div
                       className={`h-2 rounded-full ${
-                        member.status === 'overpaying' ? 'bg-green-500' : member.status === 'underpaying' ? 'bg-red-400' : 'bg-blue-500'
+                        member.status === 'overpaying' ? 'bg-green-500' : member.status === 'underpaying' ? 'bg-red-400' : 'bg-brand-emerald'
                       }`}
                       style={{ width: `${barWidth}%` }}
                     />
@@ -145,7 +145,7 @@ export default function FairnessCard() {
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2">
                     <div
-                      className="h-2 rounded-full bg-blue-300"
+                      className="h-2 rounded-full bg-brand-mint"
                       style={{ width: `${fairBarWidth}%` }}
                     />
                   </div>

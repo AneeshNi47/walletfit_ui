@@ -242,7 +242,7 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
           className={`px-4 py-2 rounded w-full sm:w-auto ${
             isAmountExceeded || loadingAccounts || loadingSubmission
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700'
+              : 'bg-brand-emerald hover:bg-brand-forest'
           } text-white`}
           disabled={isAmountExceeded || loadingAccounts || loadingSubmission}
         >

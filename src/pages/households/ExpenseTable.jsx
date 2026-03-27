@@ -9,7 +9,7 @@ export default function ExpenseTable({ expenses = [], loading = false }) {
 
   return (
     <div className="bg-white p-4 rounded shadow">
-      <h3 className="font-semibold text-blue-800 mb-2">Expenses</h3>
+      <h3 className="font-semibold text-brand-forest mb-2">Expenses</h3>
       {expenses.length === 0 ? (
         <p className="text-gray-500 text-sm text-center py-4">No expenses found.</p>
       ) : (

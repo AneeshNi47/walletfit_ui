@@ -91,7 +91,7 @@ export default function ListExpenses() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
         <p>Error: {error}</p>
-        <button onClick={() => fetchExpenses()} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button onClick={() => fetchExpenses()} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
         </button>
       </div>
@@ -143,7 +143,7 @@ export default function ListExpenses() {
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-700">
                         {expense.category ? (
-                          <span className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
+                          <span className="inline-block bg-brand-warm text-brand-forest text-xs px-2 py-1 rounded-full">
                             {expense.category.name}
                           </span>
                         ) : (
@@ -197,7 +197,7 @@ export default function ListExpenses() {
                   <div className="flex flex-wrap gap-2 items-center text-sm text-gray-500">
                     <span>{formatDate(expense.date)}</span>
                     {expense.category && (
-                      <span className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
+                      <span className="inline-block bg-brand-warm text-brand-forest text-xs px-2 py-1 rounded-full">
                         {expense.category.name}
                       </span>
                     )}
@@ -218,7 +218,7 @@ export default function ListExpenses() {
                 disabled={!prevPage}
                 className={`px-4 py-2 min-h-[44px] rounded text-sm font-medium transition duration-200 ${
                   prevPage
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-brand-emerald text-white hover:bg-brand-forest'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >
@@ -229,7 +229,7 @@ export default function ListExpenses() {
                 disabled={!nextPage}
                 className={`px-4 py-2 min-h-[44px] rounded text-sm font-medium transition duration-200 ${
                   nextPage
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-brand-emerald text-white hover:bg-brand-forest'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >

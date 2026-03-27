@@ -133,7 +133,7 @@ export default function CategoriesPage() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
         <p>Error: {error}</p>
-        <button onClick={fetchCategories} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button onClick={fetchCategories} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
         </button>
       </div>
@@ -175,7 +175,7 @@ export default function CategoriesPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => openEdit(category)}
-                    className="px-3 py-1 min-h-[40px] text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                    className="px-3 py-1 min-h-[40px] text-sm bg-brand-warm text-brand-forest rounded hover:bg-brand-warm transition"
                   >
                     Edit
                   </button>
@@ -208,7 +208,7 @@ export default function CategoriesPage() {
                 onChange={(e) => setNewCategoryName(e.target.value)}
                 required
                 placeholder="e.g. Groceries"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-end">
@@ -222,7 +222,7 @@ export default function CategoriesPage() {
               <button
                 type="submit"
                 disabled={addLoading}
-                className="px-4 py-2 min-h-[40px] text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm bg-brand-emerald text-white rounded-lg hover:bg-brand-forest transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {addLoading ? 'Adding...' : 'Add Category'}
               </button>
@@ -247,7 +247,7 @@ export default function CategoriesPage() {
                 onChange={(e) => setEditName(e.target.value)}
                 required
                 placeholder="Category name"
-                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-end">
@@ -261,7 +261,7 @@ export default function CategoriesPage() {
               <button
                 type="submit"
                 disabled={editLoading}
-                className="px-4 py-2 min-h-[40px] text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm bg-brand-emerald text-white rounded-lg hover:bg-brand-forest transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {editLoading ? 'Saving...' : 'Save Changes'}
               </button>

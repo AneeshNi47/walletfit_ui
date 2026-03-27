@@ -1,4 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
+
+@theme {
+  --color-brand-forest: #1A3A2A;
+  --color-brand-forest-dark: #0E2018;
+  --color-brand-emerald: #1E6B4A;
+  --color-brand-gold: #E8A830;
+  --color-brand-amber: #C8852A;
+  --color-brand-sage: #4A8C6A;
+  --color-brand-mint: #A8D4BC;
+  --color-brand-honey: #F5C842;
+  --color-brand-cream: #FDF6E8;
+  --color-brand-warm: #F7F2EA;
+  --color-brand-sand: #EDE8DF;
+  --color-brand-charcoal: #1A1E18;
+
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-ui: 'Instrument Sans', system-ui, sans-serif;
+}
+
+/* Base typography */
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+button, [type="submit"], [type="button"] {
+  font-family: var(--font-ui);
+}
 
 /* Smooth page transitions */
 * {
@@ -7,7 +41,7 @@
 
 /* Card base style */
 .card {
-  @apply bg-white rounded-xl shadow-sm border border-gray-100 p-5 transition-shadow hover:shadow-md;
+  @apply bg-brand-cream rounded-xl shadow-sm border border-brand-sand p-5 transition-shadow hover:shadow-md;
 }
 
 /* Loading skeleton shimmer */
@@ -17,7 +51,7 @@
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, #F7F2EA 25%, #EDE8DF 50%, #F7F2EA 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 0.5rem;
@@ -41,4 +75,22 @@
 
 .animate-slide-up {
   animation: slideUp 0.25s ease-out;
+}
+
+/* Animated logo keyframes */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+@keyframes wingL {
+  0%, 100% { opacity: 0.85; transform: rotate(-20deg) scaleY(1); }
+  50%      { opacity: 0.55; transform: rotate(-28deg) scaleY(0.86); }
+}
+@keyframes wingR {
+  0%, 100% { opacity: 0.85; transform: rotate(20deg) scaleY(1); }
+  50%      { opacity: 0.55; transform: rotate(28deg) scaleY(0.86); }
+}
+@keyframes hexPulse {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.9; }
 }

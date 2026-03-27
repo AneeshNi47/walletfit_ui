@@ -181,7 +181,7 @@ export default function BudgetsPage() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
         <p>Error: {error}</p>
-        <button onClick={fetchBudgets} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button onClick={fetchBudgets} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
         </button>
       </div>
@@ -207,7 +207,7 @@ export default function BudgetsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white rounded-lg shadow-md p-5 border border-gray-200">
               <p className="text-sm text-gray-500">Total Budget</p>
-              <p className="text-2xl font-bold text-blue-700">{Number(summary.total_budget).toFixed(2)}</p>
+              <p className="text-2xl font-bold text-brand-forest">{Number(summary.total_budget).toFixed(2)}</p>
             </div>
             <div className="bg-white rounded-lg shadow-md p-5 border border-gray-200">
               <p className="text-sm text-gray-500">Total Spent</p>
@@ -243,7 +243,7 @@ export default function BudgetsPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => openEdit(budget)}
-                      className="px-3 py-1 min-h-[40px] text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                      className="px-3 py-1 min-h-[40px] text-sm bg-brand-warm text-brand-forest rounded hover:bg-brand-warm transition"
                     >
                       Edit
                     </button>
@@ -297,7 +297,7 @@ export default function BudgetsPage() {
                 value={addForm.category}
                 onChange={(e) => setAddForm({ ...addForm, category: e.target.value })}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               >
                 <option value="">Select a category</option>
                 {categories.map((cat) => (
@@ -316,7 +316,7 @@ export default function BudgetsPage() {
                 onChange={(e) => setAddForm({ ...addForm, amount: e.target.value })}
                 required
                 placeholder="e.g. 500.00"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               />
             </div>
             <div>
@@ -326,7 +326,7 @@ export default function BudgetsPage() {
                 value={addForm.period}
                 onChange={(e) => setAddForm({ ...addForm, period: e.target.value })}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               >
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
@@ -344,7 +344,7 @@ export default function BudgetsPage() {
               <button
                 type="submit"
                 disabled={addLoading}
-                className="px-4 py-2 min-h-[40px] text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm bg-brand-emerald text-white rounded-lg hover:bg-brand-forest transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {addLoading ? 'Adding...' : 'Add Budget'}
               </button>
@@ -367,7 +367,7 @@ export default function BudgetsPage() {
                 value={editForm.category}
                 onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
                 required
-                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               >
                 <option value="">Select a category</option>
                 {categories.map((cat) => (
@@ -386,7 +386,7 @@ export default function BudgetsPage() {
                 onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })}
                 required
                 placeholder="e.g. 500.00"
-                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               />
             </div>
             <div>
@@ -396,7 +396,7 @@ export default function BudgetsPage() {
                 value={editForm.period}
                 onChange={(e) => setEditForm({ ...editForm, period: e.target.value })}
                 required
-                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               >
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
@@ -414,7 +414,7 @@ export default function BudgetsPage() {
               <button
                 type="submit"
                 disabled={editLoading}
-                className="px-4 py-2 min-h-[40px] text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm bg-brand-emerald text-white rounded-lg hover:bg-brand-forest transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {editLoading ? 'Saving...' : 'Save Changes'}
               </button>

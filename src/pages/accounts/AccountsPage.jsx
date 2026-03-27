@@ -111,7 +111,7 @@ export default function AccountsPage() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
         <p>Error: {error}</p>
-        <button onClick={fetchAccounts} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button onClick={fetchAccounts} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
         </button>
       </div>
@@ -144,7 +144,7 @@ export default function AccountsPage() {
                   onClick={() => setSelectedAccount(account)}
                   className={`p-4 rounded-lg cursor-pointer transition duration-200 ease-in-out
                               ${selectedAccount?.id === account.id
-                                ? 'bg-blue-100 border-blue-500 border-2 shadow-lg'
+                                ? 'bg-brand-warm border-brand-emerald border-2 shadow-lg'
                                 : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'}
                               flex flex-col sm:flex-row justify-between items-start sm:items-center`}
                 >
@@ -152,7 +152,7 @@ export default function AccountsPage() {
                     <p className="text-lg font-semibold text-gray-800">{account.name}</p>
                     <p className="text-sm text-gray-500 capitalize">{account.type.replace(/_/g, ' ')}</p>
                   </div>
-                  <p className="text-lg sm:text-xl font-bold text-blue-700">
+                  <p className="text-lg sm:text-xl font-bold text-brand-forest">
                     {parseFloat(account.balance).toFixed(2)} {account.currency}
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export default function AccountsPage() {
 
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <p className="text-lg text-gray-600">Current Balance:</p>
-                  <p className="text-2xl sm:text-3xl font-extrabold text-blue-800 mt-1">
+                  <p className="text-2xl sm:text-3xl font-extrabold text-brand-forest mt-1">
                     {parseFloat(selectedAccount.balance).toFixed(2)} {selectedAccount.currency}
                   </p>
                 </div>

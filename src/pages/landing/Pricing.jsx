@@ -55,10 +55,10 @@ const tiers = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-16 sm:py-24 px-4 sm:px-6 bg-gray-50">
+    <section id="pricing" className="py-16 sm:py-24 px-4 sm:px-6 bg-brand-warm">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4">Simple, Transparent Pricing</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-forest mb-4">Simple, Transparent Pricing</h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Start free and upgrade when you need more. No hidden fees, cancel anytime.
           </p>
@@ -70,18 +70,18 @@ export default function Pricing() {
               key={tier.name}
               className={`rounded-2xl p-8 flex flex-col transition relative bg-white
                 ${tier.highlight
-                  ? 'border-2 border-blue-600 md:scale-105 z-10 shadow-2xl'
+                  ? 'border-2 border-brand-gold md:scale-105 z-10 shadow-2xl'
                   : 'border border-gray-200 shadow-lg'
                 }
               `}
             >
               {tier.highlight && (
-                <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-4 py-1 rounded-full font-semibold shadow">
+                <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-gold text-brand-forest-dark text-xs px-4 py-1 rounded-full font-semibold shadow">
                   Most Popular
                 </span>
               )}
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-blue-600 mb-1">{tier.name}</h3>
+                <h3 className="text-2xl font-bold text-brand-gold mb-1">{tier.name}</h3>
                 <p className="text-sm text-gray-500 mb-4">{tier.description}</p>
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-5xl font-extrabold text-gray-900">${tier.price}</span>
@@ -104,8 +104,8 @@ export default function Pricing() {
                 to="/register"
                 className={`w-full py-3 rounded-lg font-semibold transition text-lg text-center block
                   ${tier.highlight
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-100 text-blue-700 hover:bg-blue-200'
+                    ? 'bg-brand-gold text-brand-forest-dark hover:bg-brand-amber'
+                    : 'bg-gray-100 text-brand-emerald hover:bg-brand-warm'
                   }`}
               >
                 {tier.cta}

@@ -52,7 +52,7 @@ function FAQItem({ faq }) {
     <div className="border border-gray-200 rounded-xl overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between p-5 text-left hover:bg-brand-warm transition-colors"
       >
         <span className="text-base font-medium text-gray-800 pr-4">{faq.question}</span>
         <ChevronDownIcon
@@ -89,9 +89,9 @@ export default function FAQ() {
       </Helmet>
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4">Frequently Asked Questions</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-forest mb-4">Frequently Asked Questions</h2>
           <p className="text-gray-600 text-lg">
-            Everything you need to know about FynBee. Can't find an answer? <a href="#contact" className="text-blue-600 hover:underline">Contact us</a>.
+            Everything you need to know about FynBee. Can't find an answer? <a href="#contact" className="text-brand-emerald hover:underline">Contact us</a>.
           </p>
         </div>
 

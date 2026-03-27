@@ -56,7 +56,7 @@ export default function RecentTransactions({ currency }) {
                 ) : activity.type === 'expense' ? (
                   <ArrowUpIcon className="h-5 w-5 text-red-500" />
                 ) : (
-                  <ArrowsRightLeftIcon className="h-5 w-5 text-blue-500" />
+                  <ArrowsRightLeftIcon className="h-5 w-5 text-brand-sage" />
                 )}
                 <div>
                   {/* Main Description */}

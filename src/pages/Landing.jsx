@@ -12,7 +12,7 @@ import Footer from './landing/Footer';
 
 export default function Landing() {
   return (
-    <div className="bg-white text-gray-800">
+    <div className="bg-white text-brand-charcoal">
       <Helmet>
         <title>FynBee - Smart Household Finance Management | Track, Budget & Split Expenses</title>
         <meta name="description" content="FynBee helps families and households track expenses, manage budgets, split costs, and monitor income across multiple accounts. Free to start, no credit card required." />

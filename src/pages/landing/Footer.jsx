@@ -1,3 +1,5 @@
+import Logo from '../../components/Logo';
+
 const footerLinks = [
   {
     title: 'Product',
@@ -26,14 +28,12 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-400 pt-14 pb-8 px-4 sm:px-6">
+    <footer className="bg-brand-forest-dark text-brand-mint pt-14 pb-8 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           <div className="col-span-2 md:col-span-1">
-            <h3 className="text-xl font-extrabold text-white flex items-center gap-2 mb-3">
-              <span role="img" aria-label="Wallet">💰</span> FynBee
-            </h3>
-            <p className="text-sm leading-relaxed">
+            <Logo variant="lockup" theme="dark" className="h-8" />
+            <p className="text-sm leading-relaxed mt-3">
               Your personal and household finance companion. Track, budget, split, and save — all in one place.
             </p>
           </div>
@@ -54,7 +54,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="border-t border-brand-forest pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm">
             &copy; {new Date().getFullYear()} FynBee by Brocode Solutions. All rights reserved.
           </p>

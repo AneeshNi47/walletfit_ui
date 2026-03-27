@@ -20,7 +20,7 @@ const features = [
     description: 'Log every expense with category, description, and date. Mark expenses as personal or shared with your household.',
   },
   {
-    icon: <WalletIcon className="h-8 w-8 text-blue-500" />,
+    icon: <WalletIcon className="h-8 w-8 text-brand-sage" />,
     title: 'Multi-Account Management',
     description: 'Manage wallets, bank accounts, tap cards, and cash — all in one place. Track balances and activity per account.',
   },
@@ -78,10 +78,10 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="py-16 sm:py-24 px-4 sm:px-6 bg-gray-50">
+    <section id="features" className="py-16 sm:py-24 px-4 sm:px-6 bg-brand-warm">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4">Everything You Need</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-forest mb-4">Everything You Need</h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             A complete suite of tools to manage personal and household finances, from daily tracking to long-term planning.
           </p>
@@ -95,7 +95,7 @@ export default function Features() {
               <div className="flex items-start gap-4">
                 <div className="shrink-0 mt-1">{feature.icon}</div>
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition mb-1">
+                  <h4 className="text-lg font-semibold text-gray-800 group-hover:text-brand-emerald transition mb-1">
                     {feature.title}
                   </h4>
                   <p className="text-sm text-gray-500 leading-relaxed">{feature.description}</p>

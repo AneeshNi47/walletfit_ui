@@ -7,7 +7,7 @@ export default function AccountOverview({ accounts, currency, onAdd }) {
         <h2 className="text-lg font-semibold text-gray-800">💼 Accounts</h2>
         <button
           onClick={onAdd}
-          className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-blue-700"
+          className="bg-brand-emerald text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-brand-forest"
           title="Add Account"
         >
           +
@@ -24,7 +24,7 @@ export default function AccountOverview({ accounts, currency, onAdd }) {
               className="border border-gray-200 rounded p-3 shadow-sm bg-gray-50"
             >
               <h3 className="font-medium text-gray-700">{acc.name}</h3>
-              <p className="text-xl font-bold text-blue-600">
+              <p className="text-xl font-bold text-brand-emerald">
                 {acc.balance} {currency}
               </p>
             </div>

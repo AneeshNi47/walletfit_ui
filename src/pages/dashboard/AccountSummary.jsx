@@ -44,7 +44,7 @@ export default function AccountSummary({ currency }) {
 
   if (loadingAccounts) {
     return (
-      <div className="bg-gradient-to-br from-blue-600 to-blue-400 text-white p-4 rounded-lg shadow-md text-center">
+      <div className="bg-gradient-to-br from-brand-emerald to-brand-sage text-white p-4 rounded-lg shadow-md text-center">
         Loading Accounts...
       </div>
     );
@@ -60,7 +60,7 @@ export default function AccountSummary({ currency }) {
 
   if (!accounts.length && !loadingAccounts) {
     return (
-      <div className="bg-gradient-to-br from-blue-600 to-blue-400 text-white p-4 rounded-lg shadow-md text-center">
+      <div className="bg-gradient-to-br from-brand-emerald to-brand-sage text-white p-4 rounded-lg shadow-md text-center">
         <h2 className="text-lg font-semibold">No Accounts Added Yet</h2>
         <p className="text-sm mt-2">Add your first account to see your balance.</p>
       </div>
@@ -68,13 +68,13 @@ export default function AccountSummary({ currency }) {
   }
 
   return (
-    <div className="bg-gradient-to-br from-blue-600 to-blue-400 text-white p-4 rounded-lg shadow-md">
+    <div className="bg-gradient-to-br from-brand-emerald to-brand-sage text-white p-4 rounded-lg shadow-md">
       <h2 className="text-lg font-semibold">Total Balance</h2>
       <p className="text-2xl sm:text-3xl font-bold mt-2">{totalBalance.toFixed(2)} {currency}</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
         {accounts.map((acc) => (
-          <div key={acc.id} className="bg-white text-blue-700 rounded-lg p-3 shadow-sm">
+          <div key={acc.id} className="bg-white text-brand-forest rounded-lg p-3 shadow-sm">
             <p className="text-sm font-semibold">{acc.name}</p>
             {/* Make sure acc.balance is parsed to a float before toFixed() */}
             <p className="text-lg font-bold">{parseFloat(acc.balance).toFixed(2)} {currency}</p>

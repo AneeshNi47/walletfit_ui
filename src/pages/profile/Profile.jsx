@@ -82,7 +82,7 @@ export default function Profile() {
           {!editing ? (
             <button
               onClick={() => setEditing(true)}
-              className="px-4 py-2 min-h-[44px] bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition w-full sm:w-auto"
+              className="px-4 py-2 min-h-[44px] bg-brand-emerald text-white text-sm rounded hover:bg-brand-forest transition w-full sm:w-auto"
             >
               Edit Profile
             </button>
@@ -150,7 +150,7 @@ export default function Profile() {
                 onChange={handleChange}
                 disabled={!editing}
                 className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none' : 'bg-gray-100 text-gray-500'
+                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
                 }`}
               />
             </div>
@@ -163,7 +163,7 @@ export default function Profile() {
                 onChange={handleChange}
                 disabled={!editing}
                 className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none' : 'bg-gray-100 text-gray-500'
+                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
                 }`}
               />
             </div>
@@ -176,7 +176,7 @@ export default function Profile() {
                 onChange={handleChange}
                 disabled={!editing}
                 className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none' : 'bg-gray-100 text-gray-500'
+                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
                 }`}
               />
             </div>
@@ -188,7 +188,7 @@ export default function Profile() {
                 onChange={handleChange}
                 disabled={!editing}
                 className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none' : 'bg-gray-100 text-gray-500'
+                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
                 }`}
               >
                 <option value="">Select</option>
@@ -206,7 +206,7 @@ export default function Profile() {
                 onChange={handleChange}
                 disabled={!editing}
                 className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none' : 'bg-gray-100 text-gray-500'
+                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
                 }`}
               />
             </div>
@@ -219,7 +219,7 @@ export default function Profile() {
                 disabled={!editing}
                 rows={2}
                 className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none' : 'bg-gray-100 text-gray-500'
+                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
                 }`}
               />
             </div>
@@ -241,7 +241,7 @@ export default function Profile() {
                 onChange={handleChange}
                 disabled={!editing}
                 className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none' : 'bg-gray-100 text-gray-500'
+                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
                 }`}
               />
             </div>
@@ -253,7 +253,7 @@ export default function Profile() {
                 onChange={handleChange}
                 disabled={!editing}
                 className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none' : 'bg-gray-100 text-gray-500'
+                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
                 }`}
               >
                 <option value="light">Light</option>

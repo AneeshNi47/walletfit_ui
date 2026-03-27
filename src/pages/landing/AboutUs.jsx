@@ -12,7 +12,7 @@ const values = [
     description: 'From splitting rent with roommates to managing a family budget, FynBee is designed for people who share their financial lives.',
   },
   {
-    icon: <GlobeAltIcon className="h-8 w-8 text-blue-500" />,
+    icon: <GlobeAltIcon className="h-8 w-8 text-brand-sage" />,
     title: 'Privacy & Trust',
     description: 'Your financial data is yours. We use bank-level security, never sell your data, and give you full control over your information.',
   },
@@ -20,10 +20,10 @@ const values = [
 
 export default function AboutUs() {
   return (
-    <section id="about" className="py-16 sm:py-24 px-4 sm:px-6 bg-gray-50">
+    <section id="about" className="py-16 sm:py-24 px-4 sm:px-6 bg-brand-warm">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4">About FynBee</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-forest mb-4">About FynBee</h2>
           <p className="max-w-3xl mx-auto text-gray-600 text-lg leading-relaxed">
             FynBee was born from a simple idea: managing shared finances shouldn't be stressful.
             Whether you're splitting bills with flatmates, budgeting as a family, or just trying to understand
@@ -34,7 +34,7 @@ export default function AboutUs() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {values.map((value, index) => (
             <div key={index} className="text-center p-8 rounded-2xl bg-white shadow-sm border border-gray-100">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gray-50 mb-5">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-brand-warm mb-5">
                 {value.icon}
               </div>
               <h3 className="text-lg font-bold text-gray-800 mb-2">{value.title}</h3>

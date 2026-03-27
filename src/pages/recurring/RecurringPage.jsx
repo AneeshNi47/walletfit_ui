@@ -13,7 +13,7 @@ const FREQUENCY_LABELS = {
 
 const FREQUENCY_COLORS = {
   daily: 'bg-purple-100 text-purple-700',
-  weekly: 'bg-blue-100 text-blue-700',
+  weekly: 'bg-brand-warm text-brand-forest',
   monthly: 'bg-indigo-100 text-indigo-700',
   yearly: 'bg-teal-100 text-teal-700',
 };
@@ -212,7 +212,7 @@ export default function RecurringPage() {
         <p>Error: {error}</p>
         <button
           onClick={() => { setError(''); fetchRecurring(activeFilter); fetchUpcoming(); }}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest"
         >
           Retry
         </button>
@@ -229,7 +229,7 @@ export default function RecurringPage() {
           <h1 className="text-3xl font-bold text-gray-800">Recurring Transactions</h1>
           <button
             onClick={openAddModal}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-300 w-full sm:w-auto"
+            className="px-6 py-3 bg-brand-emerald text-white rounded-lg shadow-md hover:bg-brand-forest transition duration-300 w-full sm:w-auto"
           >
             + Add Recurring
           </button>
@@ -295,7 +295,7 @@ export default function RecurringPage() {
               className={
                 'px-4 py-2 rounded-full text-sm font-medium transition duration-200 ' +
                 (activeFilter === tab.key
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-brand-emerald text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200')
               }
             >
@@ -396,7 +396,7 @@ export default function RecurringPage() {
                     </button>
                     <button
                       onClick={() => openEditModal(item)}
-                      className="px-3 py-2 min-h-[44px] text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200"
+                      className="px-3 py-2 min-h-[44px] text-xs bg-brand-emerald text-white rounded hover:bg-brand-emerald transition duration-200"
                     >
                       Edit
                     </button>
@@ -429,7 +429,7 @@ export default function RecurringPage() {
                 value={form.name}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 placeholder="e.g. Netflix Subscription"
               />
             </div>
@@ -441,7 +441,7 @@ export default function RecurringPage() {
                   name="type"
                   value={form.type}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="expense">Expense</option>
                   <option value="income">Income</option>
@@ -457,7 +457,7 @@ export default function RecurringPage() {
                   required
                   min="0.01"
                   step="0.01"
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                   placeholder="0.00"
                 />
               </div>
@@ -470,7 +470,7 @@ export default function RecurringPage() {
                   name="account"
                   value={form.account}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="">-- None --</option>
                   {accounts.map((acc) => (
@@ -484,7 +484,7 @@ export default function RecurringPage() {
                   name="category"
                   value={form.category}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="">-- None --</option>
                   {categories.map((cat) => (
@@ -501,7 +501,7 @@ export default function RecurringPage() {
                   name="frequency"
                   value={form.frequency}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
@@ -517,7 +517,7 @@ export default function RecurringPage() {
                   value={form.next_due_date}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 />
               </div>
             </div>
@@ -529,7 +529,7 @@ export default function RecurringPage() {
                 value={form.description}
                 onChange={handleChange}
                 rows={3}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 placeholder="Optional notes..."
               />
             </div>
@@ -545,7 +545,7 @@ export default function RecurringPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-4 py-2 min-h-[44px] text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 transition duration-200 w-full sm:w-auto"
+                className="px-4 py-2 min-h-[44px] text-sm bg-brand-emerald text-white rounded hover:bg-brand-forest disabled:opacity-50 transition duration-200 w-full sm:w-auto"
               >
                 {submitting ? 'Saving...' : editingItem ? 'Update' : 'Create'}
               </button>

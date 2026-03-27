@@ -314,7 +314,7 @@ export default function ReportPage() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
         <p>Error: {optionsError}</p>
-        <button onClick={fetchOptions} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button onClick={fetchOptions} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
         </button>
       </div>
@@ -338,7 +338,7 @@ export default function ReportPage() {
                 selected={filters.startDate}
                 onChange={(date) => handleDateChange(date, 'startDate')}
                 dateFormat="yyyy-MM-dd"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
                 placeholderText="Select start date"
                 isClearable
               />
@@ -349,7 +349,7 @@ export default function ReportPage() {
                 selected={filters.endDate}
                 onChange={(date) => handleDateChange(date, 'endDate')}
                 dateFormat="yyyy-MM-dd"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
                 placeholderText="Select end date"
                 isClearable
               />
@@ -374,7 +374,7 @@ export default function ReportPage() {
     name="dateRange"
     value={filters.dateRange}
     onChange={handleFilterChange}
-    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+    className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
   >
     <option value="">Custom Range</option>
     <option value="today">Today</option>
@@ -406,7 +406,7 @@ export default function ReportPage() {
                 name="type"
                 value={filters.type}
                 onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
               >
                 <option value="">All Types</option>
                 <option value="expense">Expense</option>
@@ -423,7 +423,7 @@ export default function ReportPage() {
                 name="minAmount"
                 value={filters.minAmount}
                 onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
                 step="0.01"
                 placeholder="e.g., 10.00"
               />
@@ -435,7 +435,7 @@ export default function ReportPage() {
                 name="maxAmount"
                 value={filters.maxAmount}
                 onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
                 step="0.01"
                 placeholder="e.g., 100.00"
               />
@@ -449,7 +449,7 @@ export default function ReportPage() {
                         checked={filters.isCredit}
                         onChange={handleFilterChange}
                         id="isCredit"
-                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        className="h-4 w-4 text-brand-emerald border-gray-300 rounded focus:ring-brand-emerald"
                     />
                     <label htmlFor="isCredit" className="ml-2 text-sm font-medium text-gray-700">Is Credit</label>
                 </div>
@@ -460,7 +460,7 @@ export default function ReportPage() {
                         checked={filters.isDebit}
                         onChange={handleFilterChange}
                         id="isDebit"
-                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        className="h-4 w-4 text-brand-emerald border-gray-300 rounded focus:ring-brand-emerald"
                     />
                     <label htmlFor="isDebit" className="ml-2 text-sm font-medium text-gray-700">Is Debit</label>
                 </div>
@@ -476,7 +476,7 @@ export default function ReportPage() {
             </button>
             <button
               onClick={applyFilters}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+              className="px-6 py-2 bg-brand-emerald text-white rounded-md hover:bg-brand-forest transition duration-200"
             >
               Apply Filters
             </button>
@@ -598,7 +598,7 @@ export default function ReportPage() {
                     id="pageSizeSelect"
                     value={pageSize}
                     onChange={handlePageSizeChange}
-                    className="p-1 border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="p-1 border border-gray-300 rounded-md text-sm focus:ring-brand-emerald focus:border-brand-emerald"
                   >
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -658,7 +658,7 @@ export default function ReportPage() {
                       <p className="text-xs text-gray-500">Saved: {new Date(report.created_at).toLocaleDateString()}</p>
                     </div>
                     <div className="flex space-x-2 mt-2 sm:mt-0">
-                      <button onClick={() => handleLoadReport(report)} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition duration-200">Load</button>
+                      <button onClick={() => handleLoadReport(report)} className="px-3 py-1 bg-brand-warm text-brand-forest rounded-md hover:bg-brand-warm transition duration-200">Load</button>
                       <button onClick={() => handleDeleteSavedReport(report.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition duration-200">Delete</button>
                     </div>
                   </li>

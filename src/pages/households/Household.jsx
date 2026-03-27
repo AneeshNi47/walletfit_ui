@@ -339,7 +339,7 @@ export default function HouseholdPage() {
         <Navbar />
         <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
           <p>Error: {error}</p>
-          <button onClick={fetchHousehold} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          <button onClick={fetchHousehold} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
             Retry
           </button>
         </div>
@@ -380,7 +380,7 @@ export default function HouseholdPage() {
                   {pendingInvites.map((invite) => (
                     <div
                       key={invite.id}
-                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-blue-50 p-4 rounded-lg border border-blue-200"
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-brand-cream p-4 rounded-lg border border-brand-sand"
                     >
                       <div>
                         <p className="font-medium text-gray-800">{invite.household}</p>
@@ -426,14 +426,14 @@ export default function HouseholdPage() {
                     value={householdName}
                     onChange={(e) => setHouseholdName(e.target.value)}
                     placeholder="e.g. The Smith Family"
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                     required
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  className="w-full px-4 py-2 bg-brand-emerald text-white rounded-lg hover:bg-brand-forest transition disabled:opacity-50"
                 >
                   {creating ? 'Creating...' : 'Create Household'}
                 </button>
@@ -447,7 +447,7 @@ export default function HouseholdPage() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-blue-800">{household.name}</h2>
+                  <h2 className="text-2xl font-bold text-brand-forest">{household.name}</h2>
                   <p className="text-sm text-gray-500 mt-1">
                     Created on {new Date(household.created_at).toLocaleDateString('en-US', {
                       year: 'numeric', month: 'long', day: 'numeric'
@@ -474,7 +474,7 @@ export default function HouseholdPage() {
                       className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-gray-50 p-3 rounded-lg border border-gray-200"
                     >
                       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-sm flex-shrink-0">
+                        <div className="w-10 h-10 bg-brand-warm rounded-full flex items-center justify-center text-brand-forest font-bold text-sm flex-shrink-0">
                           {(member.first_name?.[0] || member.username?.[0] || '?').toUpperCase()}
                         </div>
                         <div className="min-w-0">
@@ -488,7 +488,7 @@ export default function HouseholdPage() {
                         <span className={`px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 ${
                           member.role === 'owner'
                             ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-blue-100 text-blue-700'
+                            : 'bg-brand-warm text-brand-forest'
                         }`}>
                           {member.role === 'owner' ? 'Owner' : 'Member'}
                         </span>
@@ -527,7 +527,7 @@ export default function HouseholdPage() {
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
                       placeholder="Enter email address"
-                      className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                       required
                     />
                     <button
@@ -573,7 +573,7 @@ export default function HouseholdPage() {
 
             {/* ======================== Household Expense Analytics ======================== */}
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-blue-800">Household Expense Summary</h2>
+              <h2 className="text-2xl font-bold text-brand-forest">Household Expense Summary</h2>
 
               <SummaryCards
                 totalExpense={totalExpense}
@@ -591,7 +591,7 @@ export default function HouseholdPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white p-4 rounded-lg shadow-md">
-                  <h3 className="font-semibold text-blue-800 mb-2">Expense Trend</h3>
+                  <h3 className="font-semibold text-brand-forest mb-2">Expense Trend</h3>
                   {trendData.length > 0 ? (
                     <ExpenseChart data={trendData} />
                   ) : (
@@ -599,7 +599,7 @@ export default function HouseholdPage() {
                   )}
                 </div>
                 <div className="bg-white p-4 rounded-lg shadow-md">
-                  <h3 className="font-semibold text-blue-800 mb-2">Expenses by Category</h3>
+                  <h3 className="font-semibold text-brand-forest mb-2">Expenses by Category</h3>
                   {categoryData.length > 0 ? (
                     <CategoryPieChart data={categoryData} />
                   ) : (
@@ -609,7 +609,7 @@ export default function HouseholdPage() {
               </div>
 
               <div className="bg-white p-4 rounded-lg shadow-md">
-                <h3 className="font-semibold text-blue-800 mb-2">Account Balances</h3>
+                <h3 className="font-semibold text-brand-forest mb-2">Account Balances</h3>
                 <AccountBarChart />
               </div>
 

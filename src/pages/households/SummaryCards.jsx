@@ -26,7 +26,7 @@ export default function SummaryCards({ totalExpense = 0, categoryData = [], expe
     {
       title: 'Monthly Average',
       value: `AED ${Number(monthlyAverage).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      color: 'bg-blue-100 text-blue-800',
+      color: 'bg-brand-warm text-brand-forest',
     },
     {
       title: 'Top Category',

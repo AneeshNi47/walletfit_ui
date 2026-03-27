@@ -92,7 +92,7 @@ export default function HouseholdBudgets() {
         {!isViewer && (
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 min-h-[40px] bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition w-full sm:w-auto"
+            className="px-4 py-2 min-h-[40px] bg-brand-emerald text-white text-sm rounded hover:bg-brand-forest transition w-full sm:w-auto"
           >
             Add Budget
           </button>
@@ -112,9 +112,9 @@ export default function HouseholdBudgets() {
       {/* Summary Cards */}
       {summary && budgets.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-xs text-blue-600 font-medium">Total Budget</p>
-            <p className="text-lg font-bold text-blue-700">
+          <div className="bg-brand-cream rounded-lg p-3">
+            <p className="text-xs text-brand-emerald font-medium">Total Budget</p>
+            <p className="text-lg font-bold text-brand-forest">
               {summary.total_budget.toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </p>
           </div>
@@ -218,7 +218,7 @@ export default function HouseholdBudgets() {
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-brand-emerald focus:outline-none"
                 required
               >
                 <option value="">Select category</option>
@@ -235,7 +235,7 @@ export default function HouseholdBudgets() {
                 min="0"
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-brand-emerald focus:outline-none"
                 placeholder="e.g. 3000"
                 required
               />
@@ -245,7 +245,7 @@ export default function HouseholdBudgets() {
               <select
                 value={formData.period}
                 onChange={(e) => setFormData({ ...formData, period: e.target.value })}
-                className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-brand-emerald focus:outline-none"
               >
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
@@ -263,7 +263,7 @@ export default function HouseholdBudgets() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-4 py-2 min-h-[44px] bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50"
+                className="px-4 py-2 min-h-[44px] bg-brand-emerald text-white rounded hover:bg-brand-forest transition disabled:opacity-50"
               >
                 {saving ? 'Creating...' : 'Create Budget'}
               </button>

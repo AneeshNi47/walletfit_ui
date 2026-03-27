@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect, useRef } from 'react';
+import Logo from './Logo';
 
 export default function Navbar() {
   const { auth, logout } = useAuth();
@@ -51,28 +52,28 @@ export default function Navbar() {
   }
 
   const baseLinkClass =
-    'font-medium transition-all duration-200 hover:text-blue-600';
+    'font-medium transition-all duration-200 hover:text-brand-emerald';
 
   function desktopLinkClass(path) {
     return [
       baseLinkClass,
       isActive(path)
-        ? 'text-blue-700 font-semibold border-b-2 border-blue-600 pb-0.5'
+        ? 'text-brand-forest font-semibold border-b-2 border-brand-gold pb-0.5'
         : 'text-gray-700',
     ].join(' ');
   }
 
   function mobileLinkClass(path) {
     return [
-      'py-2 w-full font-medium transition-all duration-200 hover:text-blue-600',
-      isActive(path) ? 'text-blue-700 font-semibold' : 'text-gray-700',
+      'py-2 w-full font-medium transition-all duration-200 hover:text-brand-emerald',
+      isActive(path) ? 'text-brand-forest font-semibold' : 'text-gray-700',
     ].join(' ');
   }
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="bg-brand-cream shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-blue-700">FynBee</Link>
+        <Link to="/"><Logo variant="lockup" theme="light" className="h-8" /></Link>
 
         {/* Desktop navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm">
@@ -94,7 +95,7 @@ export default function Navbar() {
                     baseLinkClass,
                     'flex items-center gap-1 bg-transparent border-none cursor-pointer text-sm',
                     isFinanceActive
-                      ? 'text-blue-700 font-semibold border-b-2 border-blue-600 pb-0.5'
+                      ? 'text-brand-forest font-semibold border-b-2 border-brand-gold pb-0.5'
                       : 'text-gray-700',
                   ].join(' ')}
                 >
@@ -121,12 +122,12 @@ export default function Navbar() {
                       : 'opacity-0 scale-y-95 pointer-events-none',
                   ].join(' ')}
                 >
-                <div className="bg-white rounded-lg shadow-lg border border-gray-100 py-1">
+                <div className="bg-brand-cream rounded-lg shadow-lg border border-brand-sand py-1">
                   <Link
                     to="/expenses"
                     className={[
-                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-blue-50 hover:text-blue-600',
-                      isActive('/expenses') ? 'text-blue-700 font-semibold bg-blue-50' : 'text-gray-700',
+                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-brand-cream hover:text-brand-emerald',
+                      isActive('/expenses') ? 'text-brand-forest font-semibold bg-brand-cream' : 'text-gray-700',
                     ].join(' ')}
                   >
                     Expenses
@@ -134,8 +135,8 @@ export default function Navbar() {
                   <Link
                     to="/income"
                     className={[
-                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-blue-50 hover:text-blue-600',
-                      isActive('/income') ? 'text-blue-700 font-semibold bg-blue-50' : 'text-gray-700',
+                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-brand-cream hover:text-brand-emerald',
+                      isActive('/income') ? 'text-brand-forest font-semibold bg-brand-cream' : 'text-gray-700',
                     ].join(' ')}
                   >
                     Income
@@ -143,8 +144,8 @@ export default function Navbar() {
                   <Link
                     to="/budgets"
                     className={[
-                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-blue-50 hover:text-blue-600',
-                      isActive('/budgets') ? 'text-blue-700 font-semibold bg-blue-50' : 'text-gray-700',
+                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-brand-cream hover:text-brand-emerald',
+                      isActive('/budgets') ? 'text-brand-forest font-semibold bg-brand-cream' : 'text-gray-700',
                     ].join(' ')}
                   >
                     Budgets
@@ -152,8 +153,8 @@ export default function Navbar() {
                   <Link
                     to="/recurring"
                     className={[
-                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-blue-50 hover:text-blue-600',
-                      isActive('/recurring') ? 'text-blue-700 font-semibold bg-blue-50' : 'text-gray-700',
+                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-brand-cream hover:text-brand-emerald',
+                      isActive('/recurring') ? 'text-brand-forest font-semibold bg-brand-cream' : 'text-gray-700',
                     ].join(' ')}
                   >
                     Recurring
@@ -182,7 +183,7 @@ export default function Navbar() {
           <div className="hidden md:flex gap-2">
             <Link
               to="/profile"
-              className="text-sm font-medium px-4 py-1 border rounded text-blue-600 hover:bg-blue-50 transition-all duration-200"
+              className="text-sm font-medium px-4 py-1 border rounded text-brand-emerald hover:bg-brand-cream transition-all duration-200"
             >
               Profile
             </Link>
@@ -197,13 +198,13 @@ export default function Navbar() {
           <div className="hidden md:flex gap-2">
             <Link
               to="/login"
-              className="text-sm font-medium px-4 py-1 border rounded text-blue-600 hover:bg-blue-50 transition-all duration-200"
+              className="text-sm font-medium px-4 py-1 border rounded text-brand-emerald hover:bg-brand-cream transition-all duration-200"
             >
               Login
             </Link>
             <Link
               to="/register"
-              className="text-sm font-medium px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all duration-200"
+              className="text-sm font-medium px-4 py-1 bg-brand-gold text-brand-forest-dark rounded hover:bg-brand-amber transition-all duration-200"
             >
               Sign Up
             </Link>
@@ -211,7 +212,7 @@ export default function Navbar() {
         )}
 
         {/* Hamburger menu button - mobile only */}
-        <button onClick={toggleMobileMenu} className="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button onClick={toggleMobileMenu} className="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald">
           <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             {isMobileMenuOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -223,7 +224,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile menu - Collapsible */}
-      <div className={['md:hidden bg-white border-t border-gray-200 py-2 transition-all duration-200', isMobileMenuOpen ? 'block' : 'hidden'].join(' ')}>
+      <div className={['md:hidden bg-brand-cream border-t border-brand-sand py-2 transition-all duration-200', isMobileMenuOpen ? 'block' : 'hidden'].join(' ')}>
         <nav className="flex flex-col items-start px-4 gap-1 text-sm">
           {auth?.access ? (
             <>
@@ -234,8 +235,8 @@ export default function Navbar() {
               <button
                 onClick={() => setIsFinanceOpen(!isFinanceOpen)}
                 className={[
-                  'py-2 w-full text-left font-medium flex items-center justify-between transition-all duration-200 hover:text-blue-600',
-                  isFinanceActive ? 'text-blue-700 font-semibold' : 'text-gray-700',
+                  'py-2 w-full text-left font-medium flex items-center justify-between transition-all duration-200 hover:text-brand-emerald',
+                  isFinanceActive ? 'text-brand-forest font-semibold' : 'text-gray-700',
                 ].join(' ')}
               >
                 Finance
@@ -269,11 +270,11 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <a href="/#home" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-blue-600">Home</a>
-              <a href="/#features" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-blue-600">Features</a>
-              <a href="/#pricing" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-blue-600">Pricing</a>
-              <a href="/#about" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-blue-600">About Us</a>
-              <a href="/#contact" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-blue-600">Contact</a>
+              <a href="/#home" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-brand-emerald">Home</a>
+              <a href="/#features" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-brand-emerald">Features</a>
+              <a href="/#pricing" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-brand-emerald">Pricing</a>
+              <a href="/#about" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-brand-emerald">About Us</a>
+              <a href="/#contact" onClick={closeMobileMenu} className="py-2 w-full font-medium text-gray-700 transition-all duration-200 hover:text-brand-emerald">Contact</a>
             </>
           )}
         </nav>
@@ -284,7 +285,7 @@ export default function Navbar() {
             <Link
               to="/profile"
               onClick={closeMobileMenu}
-              className="w-full text-center text-sm font-medium px-4 py-2 border rounded text-blue-600 hover:bg-blue-50 transition-all duration-200"
+              className="w-full text-center text-sm font-medium px-4 py-2 border rounded text-brand-emerald hover:bg-brand-cream transition-all duration-200"
             >
               Profile
             </Link>
@@ -300,14 +301,14 @@ export default function Navbar() {
             <Link
               to="/login"
               onClick={closeMobileMenu}
-              className="w-full text-center text-sm font-medium px-4 py-2 border rounded text-blue-600 hover:bg-blue-50 transition-all duration-200"
+              className="w-full text-center text-sm font-medium px-4 py-2 border rounded text-brand-emerald hover:bg-brand-cream transition-all duration-200"
             >
               Login
             </Link>
             <Link
               to="/register"
               onClick={closeMobileMenu}
-              className="w-full text-center text-sm font-medium px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all duration-200"
+              className="w-full text-center text-sm font-medium px-4 py-2 bg-brand-gold text-brand-forest-dark rounded hover:bg-brand-amber transition-all duration-200"
             >
               Sign Up
             </Link>

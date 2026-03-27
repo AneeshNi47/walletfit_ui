@@ -44,8 +44,8 @@ export default function WhoSpentCard() {
     );
   }
 
-  const colors = ['bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'];
-  const lightColors = ['bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-yellow-100 text-yellow-700', 'bg-purple-100 text-purple-700', 'bg-pink-100 text-pink-700', 'bg-indigo-100 text-indigo-700'];
+  const colors = ['bg-brand-emerald', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'];
+  const lightColors = ['bg-brand-warm text-brand-forest', 'bg-green-100 text-green-700', 'bg-yellow-100 text-yellow-700', 'bg-purple-100 text-purple-700', 'bg-pink-100 text-pink-700', 'bg-indigo-100 text-indigo-700'];
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -54,7 +54,7 @@ export default function WhoSpentCard() {
         <select
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
-          className="px-3 py-1.5 border rounded text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="px-3 py-1.5 border rounded text-sm bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none"
         >
           <option value="weekly">This Week</option>
           <option value="monthly">This Month</option>
@@ -96,7 +96,7 @@ export default function WhoSpentCard() {
           <div key={member.user_id} className="border border-gray-100 rounded-lg p-4">
             <div className="flex justify-between items-center mb-2">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-xs">
+                <div className="w-8 h-8 bg-brand-warm rounded-full flex items-center justify-center text-brand-forest font-bold text-xs">
                   {member.username[0].toUpperCase()}
                 </div>
                 <p className="font-medium text-gray-800 text-sm">{member.username}</p>

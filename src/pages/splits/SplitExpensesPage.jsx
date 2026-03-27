@@ -219,7 +219,7 @@ export default function SplitExpensesPage() {
           {hasHousehold && (
             <button
               onClick={openCreateModal}
-              className="bg-blue-600 text-white px-4 py-2 min-h-[44px] rounded hover:bg-blue-700 transition text-sm w-full sm:w-auto"
+              className="bg-brand-emerald text-white px-4 py-2 min-h-[44px] rounded hover:bg-brand-forest transition text-sm w-full sm:w-auto"
             >
               + New Split
             </button>
@@ -331,7 +331,7 @@ export default function SplitExpensesPage() {
                             className={
                               'px-2 py-0.5 rounded text-xs font-medium ' +
                               (split.split_type === 'equal'
-                                ? 'bg-blue-100 text-blue-700'
+                                ? 'bg-brand-warm text-brand-forest'
                                 : 'bg-purple-100 text-purple-700')
                             }
                           >
@@ -426,7 +426,7 @@ export default function SplitExpensesPage() {
                 <select
                   value={selectedExpense}
                   onChange={(e) => handleExpenseChange(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="">-- Choose an expense --</option>
                   {expenses.map((exp) => (
@@ -477,7 +477,7 @@ export default function SplitExpensesPage() {
                   <div className="space-y-2">
                     {customShares.map((share, idx) => (
                       <div key={share.user_id} className="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-brand-warm flex items-center justify-center text-brand-forest font-bold text-xs flex-shrink-0">
                           {getInitial(share.username)}
                         </div>
                         <span className="text-sm text-gray-700 w-20 sm:w-24 truncate">
@@ -491,7 +491,7 @@ export default function SplitExpensesPage() {
                           onChange={(e) => handleShareAmountChange(idx, e.target.value)}
                           disabled={splitType === 'equal'}
                           className={
-                            'flex-1 min-w-[80px] border border-gray-300 rounded px-3 py-2 min-h-[40px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500' +
+                            'flex-1 min-w-[80px] border border-gray-300 rounded px-3 py-2 min-h-[40px] text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald' +
                             (splitType === 'equal' ? ' bg-gray-50' : '')
                           }
                           placeholder="0.00"
@@ -523,7 +523,7 @@ export default function SplitExpensesPage() {
                 <button
                   onClick={handleCreateSplit}
                   disabled={createLoading}
-                  className="px-4 py-2 min-h-[44px] text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50 w-full sm:w-auto"
+                  className="px-4 py-2 min-h-[44px] text-sm bg-brand-emerald text-white rounded hover:bg-brand-forest transition disabled:opacity-50 w-full sm:w-auto"
                 >
                   {createLoading ? 'Creating...' : 'Create Split'}
                 </button>

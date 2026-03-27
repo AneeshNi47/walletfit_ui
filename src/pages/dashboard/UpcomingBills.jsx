@@ -82,7 +82,7 @@ export default function UpcomingBills() {
           <p className="text-sm text-gray-500 mb-2">Track recurring bills</p>
           <Link
             to="/recurring"
-            className="text-sm font-medium text-blue-600 hover:text-blue-800 underline"
+            className="text-sm font-medium text-brand-emerald hover:text-brand-forest underline"
           >
             Set Up Recurring
           </Link>

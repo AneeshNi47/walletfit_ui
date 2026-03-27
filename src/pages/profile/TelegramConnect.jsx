@@ -142,7 +142,7 @@ export default function TelegramConnect() {
             <select
               value={status.default_account || ''}
               onChange={(e) => setDefaultAccount(e.target.value)}
-              className="w-full sm:w-64 px-3 py-2 border rounded bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full sm:w-64 px-3 py-2 border rounded bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none"
             >
               <option value="">No default (manual selection)</option>
               {accounts.map((acc) => (
@@ -191,9 +191,9 @@ export default function TelegramConnect() {
           </p>
 
           {/* Steps */}
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-blue-800 mb-3">How to connect:</h3>
-            <ol className="space-y-2 text-sm text-blue-700">
+          <div className="bg-brand-cream rounded-lg p-4">
+            <h3 className="text-sm font-medium text-brand-forest mb-3">How to connect:</h3>
+            <ol className="space-y-2 text-sm text-brand-forest">
               <li className="flex gap-2">
                 <span className="font-bold">1.</span>
                 <span>Click "Generate Code" below</span>
@@ -241,7 +241,7 @@ export default function TelegramConnect() {
               <button
                 onClick={generateCode}
                 disabled={generating}
-                className="text-sm text-blue-600 hover:underline disabled:opacity-50"
+                className="text-sm text-brand-emerald hover:underline disabled:opacity-50"
               >
                 Generate new code
               </button>
@@ -250,7 +250,7 @@ export default function TelegramConnect() {
             <button
               onClick={generateCode}
               disabled={generating}
-              className="px-4 py-2 min-h-[44px] bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition disabled:opacity-50 w-full sm:w-auto"
+              className="px-4 py-2 min-h-[44px] bg-brand-emerald text-white text-sm rounded hover:bg-brand-forest transition disabled:opacity-50 w-full sm:w-auto"
             >
               {generating ? 'Generating...' : 'Generate Code'}
             </button>
