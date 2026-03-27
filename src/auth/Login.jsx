@@ -32,13 +32,13 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 px-4">
       <Helmet>
-        <title>Login - WalletFit</title>
-        <meta name="description" content="Sign in to your WalletFit account to manage your household finances, track expenses, and monitor budgets." />
+        <title>Login - FynBee</title>
+        <meta name="description" content="Sign in to your FynBee account to manage your household finances, track expenses, and monitor budgets." />
       </Helmet>
       <div className="bg-white/90 p-10 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center animate-fade-in">
         <div className="flex flex-col items-center mb-6">
           <LockClosedIcon className="h-12 w-12 text-blue-600 mb-2 animate-bounce" />
-          <h1 className="text-3xl font-extrabold mb-2 text-blue-700 tracking-tight">Sign in to WalletFit</h1>
+          <h1 className="text-3xl font-extrabold mb-2 text-blue-700 tracking-tight">Sign in to FynBee</h1>
           <p className="text-gray-500 text-sm">Welcome back! Please enter your details.</p>
         </div>
 

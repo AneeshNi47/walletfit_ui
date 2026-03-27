@@ -34,7 +34,7 @@ describe('Login', () => {
 
   it('renders login form', () => {
     renderLogin();
-    expect(screen.getByText('Sign in to WalletFit')).toBeInTheDocument();
+    expect(screen.getByText('Sign in to FynBee')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('admin@example.com')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('••••••••')).toBeInTheDocument();
     expect(screen.getByText('Login')).toBeInTheDocument();

@@ -4,11 +4,11 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid';
 
 const faqs = [
   {
-    question: 'What is WalletFit?',
-    answer: 'WalletFit is a personal and household finance management app. It helps you track expenses, manage multiple accounts, set budgets, split costs with household members, and generate detailed financial reports.',
+    question: 'What is FynBee?',
+    answer: 'FynBee is a personal and household finance management app. It helps you track expenses, manage multiple accounts, set budgets, split costs with household members, and generate detailed financial reports.',
   },
   {
-    question: 'Is WalletFit free to use?',
+    question: 'Is FynBee free to use?',
     answer: 'Yes! You can start with our Free plan which includes expense tracking, income tracking, budget alerts, and basic reports. Upgrade to Gold or Premium for advanced features like expense splitting, recurring transactions, and Excel/PDF exports.',
   },
   {
@@ -21,15 +21,15 @@ const faqs = [
   },
   {
     question: 'What account types are supported?',
-    answer: 'WalletFit supports Wallets, Bank Accounts, Tap & Pay Cards, Cash, and a general Other category. Each account tracks its own balance, top-ups, transfers, and expenses independently.',
+    answer: 'FynBee supports Wallets, Bank Accounts, Tap & Pay Cards, Cash, and a general Other category. Each account tracks its own balance, top-ups, transfers, and expenses independently.',
   },
   {
     question: 'Can I set budgets?',
-    answer: 'Yes. You can create budgets per spending category with weekly, monthly, or yearly limits. WalletFit tracks your spending against each budget and sends alerts when you reach 80% of the limit, helping you avoid overspending.',
+    answer: 'Yes. You can create budgets per spending category with weekly, monthly, or yearly limits. FynBee tracks your spending against each budget and sends alerts when you reach 80% of the limit, helping you avoid overspending.',
   },
   {
     question: 'How do recurring transactions work?',
-    answer: 'You can set up recurring expenses (like subscriptions or rent) and recurring income (like salary). Choose a frequency (daily, weekly, monthly, yearly) and a next due date. WalletFit shows upcoming transactions due within the next 7 days on your dashboard.',
+    answer: 'You can set up recurring expenses (like subscriptions or rent) and recurring income (like salary). Choose a frequency (daily, weekly, monthly, yearly) and a next due date. FynBee shows upcoming transactions due within the next 7 days on your dashboard.',
   },
   {
     question: 'Can I export my data?',
@@ -37,10 +37,10 @@ const faqs = [
   },
   {
     question: 'Is my financial data secure?',
-    answer: 'Absolutely. WalletFit uses JWT authentication with token rotation and blacklisting. All data is transmitted over HTTPS, passwords are hashed, and each user can only access their own data. Household data is shared only with invited members.',
+    answer: 'Absolutely. FynBee uses JWT authentication with token rotation and blacklisting. All data is transmitted over HTTPS, passwords are hashed, and each user can only access their own data. Household data is shared only with invited members.',
   },
   {
-    question: 'Can I use WalletFit on my phone?',
+    question: 'Can I use FynBee on my phone?',
     answer: 'The web app is fully responsive and works great on mobile browsers. A dedicated Flutter mobile app is also in development for an even better mobile experience.',
   },
 ];
@@ -91,7 +91,7 @@ export default function FAQ() {
         <div className="text-center mb-14">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4">Frequently Asked Questions</h2>
           <p className="text-gray-600 text-lg">
-            Everything you need to know about WalletFit. Can't find an answer? <a href="#contact" className="text-blue-600 hover:underline">Contact us</a>.
+            Everything you need to know about FynBee. Can't find an answer? <a href="#contact" className="text-blue-600 hover:underline">Contact us</a>.
           </p>
         </div>
 

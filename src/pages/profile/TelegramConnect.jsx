@@ -202,7 +202,7 @@ export default function TelegramConnect() {
                 <span className="font-bold">2.</span>
                 <span>
                   Open Telegram and search for{' '}
-                  <span className="font-semibold">@WalletFitBot</span>
+                  <span className="font-semibold">@FynBeeBot</span>
                 </span>
               </li>
               <li className="flex gap-2">

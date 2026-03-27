@@ -67,7 +67,7 @@ const features = [
   {
     icon: <DevicePhoneMobileIcon className="h-8 w-8 text-yellow-500" />,
     title: 'Mobile Responsive',
-    description: 'Access WalletFit from any device. The interface adapts seamlessly to desktop, tablet, and mobile screens.',
+    description: 'Access FynBee from any device. The interface adapts seamlessly to desktop, tablet, and mobile screens.',
   },
   {
     icon: <LockClosedIcon className="h-8 w-8 text-gray-500" />,

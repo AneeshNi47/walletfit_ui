@@ -4,12 +4,12 @@ const values = [
   {
     icon: <LightBulbIcon className="h-8 w-8 text-yellow-500" />,
     title: 'Simplicity First',
-    description: 'We believe financial tools should be easy to use, not intimidating. WalletFit is designed so anyone can start tracking in minutes.',
+    description: 'We believe financial tools should be easy to use, not intimidating. FynBee is designed so anyone can start tracking in minutes.',
   },
   {
     icon: <HeartIcon className="h-8 w-8 text-red-400" />,
     title: 'Built for Families',
-    description: 'From splitting rent with roommates to managing a family budget, WalletFit is designed for people who share their financial lives.',
+    description: 'From splitting rent with roommates to managing a family budget, FynBee is designed for people who share their financial lives.',
   },
   {
     icon: <GlobeAltIcon className="h-8 w-8 text-blue-500" />,
@@ -23,11 +23,11 @@ export default function AboutUs() {
     <section id="about" className="py-16 sm:py-24 px-4 sm:px-6 bg-gray-50">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4">About WalletFit</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4">About FynBee</h2>
           <p className="max-w-3xl mx-auto text-gray-600 text-lg leading-relaxed">
-            WalletFit was born from a simple idea: managing shared finances shouldn't be stressful.
+            FynBee was born from a simple idea: managing shared finances shouldn't be stressful.
             Whether you're splitting bills with flatmates, budgeting as a family, or just trying to understand
-            where your money goes, we built WalletFit to make it effortless.
+            where your money goes, we built FynBee to make it effortless.
           </p>
         </div>
 

@@ -13,9 +13,9 @@ export default function HomeSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <SparklesIcon className="h-10 w-10 text-blue-400 mx-auto mb-4 animate-bounce" />
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-4 text-blue-700">Why WalletFit?</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-4 text-blue-700">Why FynBee?</h2>
           <p className="max-w-3xl mx-auto text-gray-600 text-lg leading-relaxed">
-            Designed for modern families and shared households, WalletFit brings clarity to group spending and budgeting.
+            Designed for modern families and shared households, FynBee brings clarity to group spending and budgeting.
             From daily groceries to monthly bills, track everything with ease, split expenses fairly, set budgets, and get
             real insight into where your money goes.
           </p>

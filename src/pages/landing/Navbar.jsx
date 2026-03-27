@@ -17,7 +17,7 @@ export default function Navbar() {
     <header className="bg-white/80 backdrop-blur shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <h1 className="text-2xl font-extrabold text-blue-700 tracking-tight flex items-center gap-2">
-          <span role="img" aria-label="Wallet">💰</span> WalletFit
+          <span role="img" aria-label="Wallet">💰</span> FynBee
         </h1>
         <nav className="hidden md:flex gap-6 text-sm font-medium">
           {navLinks.map((link) => (

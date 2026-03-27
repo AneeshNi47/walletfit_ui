@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://walletfit.app/sitemap.xml
+Sitemap: https://fynbee.app/sitemap.xml
 
 # Block crawling of API and auth pages
 Disallow: /dashboard

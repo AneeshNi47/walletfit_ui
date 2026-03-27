@@ -122,13 +122,13 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 px-4">
       <Helmet>
-        <title>Create Account - WalletFit</title>
-        <meta name="description" content="Sign up for WalletFit for free. Create your account, set up a household, and start tracking expenses, budgets, and income in minutes." />
+        <title>Create Account - FynBee</title>
+        <meta name="description" content="Sign up for FynBee for free. Create your account, set up a household, and start tracking expenses, budgets, and income in minutes." />
       </Helmet>
       <div className="bg-white/90 p-10 rounded-2xl shadow-2xl w-full max-w-xl flex flex-col items-center animate-fade-in">
         <div className="flex flex-col items-center mb-6">
           <UserPlusIcon className="h-12 w-12 text-blue-600 mb-2 animate-bounce" />
-          <h1 className="text-3xl font-extrabold mb-2 text-blue-700 tracking-tight">Create Your WalletFit Account</h1>
+          <h1 className="text-3xl font-extrabold mb-2 text-blue-700 tracking-tight">Create Your FynBee Account</h1>
           <p className="text-gray-500 text-sm">Join us and start managing your finances smarter.</p>
         </div>
 

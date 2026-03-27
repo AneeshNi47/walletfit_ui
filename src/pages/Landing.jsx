@@ -14,9 +14,9 @@ export default function Landing() {
   return (
     <div className="bg-white text-gray-800">
       <Helmet>
-        <title>WalletFit - Smart Household Finance Management | Track, Budget & Split Expenses</title>
-        <meta name="description" content="WalletFit helps families and households track expenses, manage budgets, split costs, and monitor income across multiple accounts. Free to start, no credit card required." />
-        <link rel="canonical" href="https://walletfit.app/" />
+        <title>FynBee - Smart Household Finance Management | Track, Budget & Split Expenses</title>
+        <meta name="description" content="FynBee helps families and households track expenses, manage budgets, split costs, and monitor income across multiple accounts. Free to start, no credit card required." />
+        <link rel="canonical" href="https://fynbee.app/" />
       </Helmet>
       <Navbar />
       <Banner />

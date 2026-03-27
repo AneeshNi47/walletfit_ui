@@ -288,7 +288,7 @@ export default function ReportPage() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `walletfit_report.${format === 'excel' ? 'xlsx' : 'pdf'}`;
+      link.download = `fynbee_report.${format === 'excel' ? 'xlsx' : 'pdf'}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

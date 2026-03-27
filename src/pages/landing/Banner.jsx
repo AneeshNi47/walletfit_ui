@@ -12,7 +12,7 @@ export default function Banner() {
           Manage Household Finances <span className="text-blue-600">Smartly</span>
         </h1>
         <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-10 leading-relaxed">
-          WalletFit helps families and groups track expenses, split costs, manage budgets, and stay on top of spending across wallets and bank accounts — all in one place.
+          FynBee helps families and groups track expenses, split costs, manage budgets, and stay on top of spending across wallets and bank accounts — all in one place.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <Link
