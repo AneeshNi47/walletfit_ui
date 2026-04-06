@@ -36,12 +36,14 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
 
   const rowBg = row._status ? statusColors[row._status] ?? '' : '';
 
-  // Local accounts/categories that belong to OTHER rows (not this row's own new entry)
+  // Pending accounts from other rows available to reuse.
+  // Only exclude this row's own entry when it's actively being typed (text input open),
+  // so the option stays in the list when this row has selected a pending category.
   const otherLocalAccounts = (localAccounts ?? []).filter(
-    a => a.name !== row.account_new?.name
+    a => showNewAccount ? a.name !== row.account_new?.name : true
   );
   const otherLocalCategories = (localCategories ?? []).filter(
-    name => name !== row.category_new
+    name => showNewCategory ? name !== row.category_new : true
   );
 
   // Current dropdown value for account

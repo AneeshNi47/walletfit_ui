@@ -2,11 +2,11 @@ import { useState, useRef } from 'react';
 import { downloadTemplate, parseImportFile } from './importParser';
 
 export default function ImportSection({ accounts, categories, onImport }) {
+  const [selectedAccount, setSelectedAccount] = useState('');
   const [dragging, setDragging] = useState(false);
   const [parsing, setParsing] = useState(false);
   const [error, setError] = useState(null);
-  const [preview, setPreview] = useState(null); // { rows, warnings, filename }
-  const [selectedAccount, setSelectedAccount] = useState('');
+  const [preview, setPreview] = useState(null); // { rows, warnings, filename, isFynBeeTemplate }
   const fileRef = useRef(null);
 
   async function handleFile(file) {
@@ -23,7 +23,18 @@ export default function ImportSection({ accounts, categories, onImport }) {
 
     try {
       const result = await parseImportFile(file, accounts, categories);
-      setPreview({ ...result, filename: file.name });
+
+      // Pre-apply selected account to all rows that don't already have one
+      let rows = result.rows;
+      if (selectedAccount) {
+        rows = rows.map(r =>
+          !r.account_id && !r.account_new
+            ? { ...r, account_id: selectedAccount }
+            : r
+        );
+      }
+
+      setPreview({ ...result, rows, filename: file.name });
     } catch (e) {
       setError(e.message);
     } finally {
@@ -44,26 +55,13 @@ export default function ImportSection({ accounts, categories, onImport }) {
 
   function handleLoadIntoGrid() {
     if (!preview) return;
-    let rows = preview.rows;
-
-    // Apply selected account to all rows that don't already have one
-    if (selectedAccount) {
-      rows = rows.map(r =>
-        !r.account_id && !r.account_new
-          ? { ...r, account_id: selectedAccount }
-          : r
-      );
-    }
-
-    onImport(rows);
+    onImport(preview.rows);
     setPreview(null);
-    setSelectedAccount('');
   }
 
   function handleDiscard() {
     setPreview(null);
     setError(null);
-    setSelectedAccount('');
   }
 
   const typeColors = {
@@ -72,6 +70,8 @@ export default function ImportSection({ accounts, categories, onImport }) {
     transfer_in: 'bg-blue-100 text-blue-700',
     transfer_out: 'bg-orange-100 text-orange-700',
   };
+
+  const selectedAccountName = accounts.find(a => String(a.id) === selectedAccount)?.name;
 
   return (
     <div className="mb-6 bg-white border border-brand-sand rounded-xl p-5">
@@ -91,36 +91,77 @@ export default function ImportSection({ accounts, categories, onImport }) {
         </button>
       </div>
 
-      {/* Drop zone */}
-      {!preview && (
-        <div
-          onDragOver={e => { e.preventDefault(); setDragging(true); }}
-          onDragLeave={() => setDragging(false)}
-          onDrop={handleDrop}
-          onClick={() => fileRef.current?.click()}
-          className={[
-            'border-2 border-dashed rounded-lg px-6 py-8 text-center cursor-pointer transition-colors',
-            dragging ? 'border-brand-emerald bg-green-50' : 'border-gray-200 hover:border-brand-emerald hover:bg-gray-50',
-          ].join(' ')}
+      {/* Step 1 — Account selection (always visible) */}
+      <div className="mb-4">
+        <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+          Step 1 — Select the account for this statement
+        </label>
+        <select
+          className="border border-brand-sand rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald bg-white w-full max-w-xs"
+          value={selectedAccount}
+          onChange={e => {
+            setSelectedAccount(e.target.value);
+            // Re-apply to existing preview rows if one is open
+            if (preview) {
+              const accId = e.target.value;
+              setPreview(prev => ({
+                ...prev,
+                rows: prev.rows.map(r =>
+                  !r.account_id && !r.account_new
+                    ? { ...r, account_id: accId }
+                    : r
+                ),
+              }));
+            }
+          }}
         >
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".xlsx,.xls,.csv"
-            className="hidden"
-            onChange={handleFileInput}
-          />
-          {parsing ? (
-            <p className="text-sm text-gray-400">Parsing file…</p>
-          ) : (
-            <>
-              <svg className="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <p className="text-sm text-gray-500 font-medium">Drop your file here or click to browse</p>
-              <p className="text-xs text-gray-400 mt-1">Supports .xlsx, .xls, .csv — bank statements or FynBee template</p>
-            </>
-          )}
+          <option value="">— No account selected (set per row) —</option>
+          {accounts.map(a => (
+            <option key={a.id} value={String(a.id)}>{a.name}</option>
+          ))}
+        </select>
+        {selectedAccount && (
+          <p className="mt-1 text-xs text-brand-emerald">
+            All imported rows will be assigned to <strong>{selectedAccountName}</strong>.
+          </p>
+        )}
+      </div>
+
+      {/* Step 2 — File upload */}
+      {!preview && (
+        <div>
+          <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+            Step 2 — Upload your file
+          </label>
+          <div
+            onDragOver={e => { e.preventDefault(); setDragging(true); }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={handleDrop}
+            onClick={() => fileRef.current?.click()}
+            className={[
+              'border-2 border-dashed rounded-lg px-6 py-8 text-center cursor-pointer transition-colors',
+              dragging ? 'border-brand-emerald bg-green-50' : 'border-gray-200 hover:border-brand-emerald hover:bg-gray-50',
+            ].join(' ')}
+          >
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              className="hidden"
+              onChange={handleFileInput}
+            />
+            {parsing ? (
+              <p className="text-sm text-gray-400">Parsing file…</p>
+            ) : (
+              <>
+                <svg className="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <p className="text-sm text-gray-500 font-medium">Drop your file here or click to browse</p>
+                <p className="text-xs text-gray-400 mt-1">Supports .xlsx, .xls, .csv — bank statements or FynBee template</p>
+              </>
+            )}
+          </div>
         </div>
       )}
 
@@ -131,7 +172,6 @@ export default function ImportSection({ accounts, categories, onImport }) {
       {/* Preview panel */}
       {preview && (
         <div className="mt-3">
-          {/* File info + warnings */}
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
             <div>
               <span className="text-xs font-medium text-gray-600">{preview.filename}</span>
@@ -140,7 +180,9 @@ export default function ImportSection({ accounts, categories, onImport }) {
                 <span className="ml-2 text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">bank statement</span>
               )}
             </div>
-            <button onClick={handleDiscard} className="text-xs text-gray-400 hover:text-red-400 transition-colors">Discard</button>
+            <button onClick={handleDiscard} className="text-xs text-gray-400 hover:text-red-400 transition-colors">
+              Discard
+            </button>
           </div>
 
           {/* Warnings */}
@@ -149,22 +191,6 @@ export default function ImportSection({ accounts, categories, onImport }) {
               {preview.warnings.map((w, i) => <p key={i}>⚠ {w}</p>)}
             </div>
           )}
-
-          {/* Account selector */}
-          <div className="mb-3 flex items-center gap-3 flex-wrap">
-            <label className="text-xs font-medium text-gray-600 whitespace-nowrap">Apply account to all rows:</label>
-            <select
-              className="border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-white min-w-[180px]"
-              value={selectedAccount}
-              onChange={e => setSelectedAccount(e.target.value)}
-            >
-              <option value="">— keep per-row accounts —</option>
-              {accounts.map(a => (
-                <option key={a.id} value={a.id}>{a.name}</option>
-              ))}
-            </select>
-            <span className="text-xs text-gray-400">Rows that already have an account won't be overridden.</span>
-          </div>
 
           {/* Row preview table */}
           <div className="overflow-x-auto rounded border border-gray-100 max-h-56 overflow-y-auto mb-3">
@@ -207,8 +233,20 @@ export default function ImportSection({ accounts, categories, onImport }) {
             </table>
           </div>
 
-          {/* Load button */}
-          <div className="flex justify-end">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <button
+              onClick={() => fileRef.current?.click()}
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              Upload a different file
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              className="hidden"
+              onChange={handleFileInput}
+            />
             <button
               onClick={handleLoadIntoGrid}
               className="px-4 py-2 bg-brand-emerald text-white text-sm font-semibold rounded-lg hover:bg-brand-forest transition-colors"
