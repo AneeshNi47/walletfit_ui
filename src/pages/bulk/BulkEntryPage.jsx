@@ -2,6 +2,7 @@ import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/AuthContext';
 import { useBulkEntry } from './useBulkEntry';
 import BulkEntryGrid from './BulkEntryGrid';
+import ImportSection from './ImportSection';
 
 export default function BulkEntryPage() {
   const { auth } = useAuth();
@@ -49,6 +50,13 @@ export default function BulkEntryPage() {
             </label>
           </div>
         </div>
+
+        {/* Import section */}
+        <ImportSection
+          accounts={accounts}
+          categories={categories}
+          onImport={pasteRows}
+        />
 
         {/* Paste hint */}
         <div className="mb-3 text-xs text-gray-400 bg-white border border-dashed border-gray-200 rounded px-3 py-2">
