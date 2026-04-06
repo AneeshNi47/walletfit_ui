@@ -29,9 +29,11 @@ export function downloadTemplate() {
 
 const DATE_ALIASES = ['date', 'transaction date', 'trans date', 'txn date', 'value date', 'booking date', 'posted date'];
 const DESC_ALIASES = ['description', 'narration', 'details', 'merchant', 'remarks', 'particulars', 'transaction details', 'memo', 'reference', 'narrative'];
-const AMOUNT_ALIASES = ['amount', 'transaction amount', 'txn amount'];
+const AMOUNT_ALIASES = ['amount', 'transaction amount', 'txn amount', 'amount '];
 const DEBIT_ALIASES = ['debit', 'dr', 'withdrawal', 'debit amount', 'withdrawals', 'debit(dr)'];
 const CREDIT_ALIASES = ['credit', 'cr', 'deposit', 'credit amount', 'deposits', 'credit(cr)'];
+// Single column containing "Debit" or "Credit" as a value (e.g. ENBD, FAB statements)
+const DIRECTION_ALIASES = ['debit/credit', 'dr/cr', 'transaction type indicator', 'cr/dr'];
 const TYPE_ALIASES = ['type', 'transaction type', 'txn type'];
 const CATEGORY_ALIASES = ['category', 'cat', 'expense category'];
 const ACCOUNT_ALIASES = ['account', 'account name'];
@@ -58,11 +60,31 @@ export function detectColumns(headers) {
     amount: matchCol(headers, AMOUNT_ALIASES),
     debit: matchCol(headers, DEBIT_ALIASES),
     credit: matchCol(headers, CREDIT_ALIASES),
+    direction: matchCol(headers, DIRECTION_ALIASES), // single "Debit/Credit" column
     type: matchCol(headers, TYPE_ALIASES),
     category: matchCol(headers, CATEGORY_ALIASES),
     account: matchCol(headers, ACCOUNT_ALIASES),
     toAccount: matchCol(headers, TO_ACCOUNT_ALIASES),
   };
+}
+
+// ─── Header row scanner ───────────────────────────────────────────────────────
+// Scans up to the first 15 rows to find the actual column header row,
+// skipping bank metadata / empty rows at the top of the file.
+
+const KNOWN_HEADER_WORDS = new Set([
+  'date', 'amount', 'description', 'narration', 'details', 'debit', 'credit',
+  'transaction date', 'balance', 'dr', 'cr', 'type', 'debit/credit',
+]);
+
+function findHeaderRow(rawRows) {
+  for (let i = 0; i < Math.min(rawRows.length, 15); i++) {
+    const row = rawRows[i];
+    const cells = row.map(c => String(c ?? '').trim().toLowerCase());
+    const hits = cells.filter(c => KNOWN_HEADER_WORDS.has(c));
+    if (hits.length >= 2) return i;
+  }
+  return 0; // fallback: assume first row
 }
 
 // ─── Date normalisation ───────────────────────────────────────────────────────
@@ -99,6 +121,15 @@ function parseDate(val) {
     const [, m, d, y] = mdy;
     const year = y.length === 2 ? `20${y}` : y;
     return `${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+  }
+
+  // "05 Apr 2026" or "5 April 2026" style
+  const months = { jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12 };
+  const dmy2 = s.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  if (dmy2) {
+    const [, d, mon, y] = dmy2;
+    const m = months[mon.toLowerCase().slice(0, 3)];
+    if (m) return `${y}-${String(m).padStart(2, '0')}-${d.padStart(2, '0')}`;
   }
 
   // Try native Date parse as last resort
@@ -146,8 +177,9 @@ export async function parseImportFile(file, existingAccounts, existingCategories
     throw new Error('File appears to be empty or has only a header row.');
   }
 
-  const headers = raw[0].map(h => String(h ?? '').trim());
-  const dataRows = raw.slice(1).filter(r => r.some(cell => cell !== '' && cell !== null));
+  const headerRowIdx = findHeaderRow(raw);
+  const headers = raw[headerRowIdx].map(h => String(h ?? '').trim());
+  const dataRows = raw.slice(headerRowIdx + 1).filter(r => r.some(cell => cell !== '' && cell !== null));
   const colMap = detectColumns(headers);
   const warnings = [];
 
@@ -206,11 +238,21 @@ export async function parseImportFile(file, existingAccounts, existingCategories
       const debit = parseAmount(colMap.debit !== -1 ? raw[colMap.debit] : null);
       const credit = parseAmount(colMap.credit !== -1 ? raw[colMap.credit] : null);
       const amount = parseAmount(colMap.amount !== -1 ? raw[colMap.amount] : null);
+      const direction = colMap.direction !== -1
+        ? String(raw[colMap.direction] ?? '').trim().toLowerCase()
+        : null;
 
       const hasDebit = debit !== null && debit > 0;
       const hasCredit = credit !== null && credit > 0;
 
-      if (hasDebit && !hasCredit) {
+      if (direction === 'debit' || direction === 'dr') {
+        // Single direction column says "Debit" — use Amount column for value
+        r.type = 'expense';
+        r.amount = amount !== null ? Math.abs(amount).toFixed(2) : '';
+      } else if (direction === 'credit' || direction === 'cr') {
+        r.type = 'income';
+        r.amount = amount !== null ? Math.abs(amount).toFixed(2) : '';
+      } else if (hasDebit && !hasCredit) {
         r.type = 'expense';
         r.amount = Math.abs(debit).toFixed(2);
       } else if (hasCredit && !hasDebit) {
