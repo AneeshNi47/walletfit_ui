@@ -23,7 +23,7 @@ function NewAccountInline({ value, onChange }) {
   );
 }
 
-export default function BulkEntryRow({ row, accounts, categories, localAccounts, localCategories, onUpdate, onDelete, rowIndex }) {
+export default function BulkEntryRow({ row, accounts, categories, localAccounts, localCategories, onUpdate, onDelete, onSubmit, submitting, rowIndex }) {
   const [showNewAccount, setShowNewAccount] = useState(!!row.account_new);
   const [showNewToAccount, setShowNewToAccount] = useState(!!row.to_account_new);
   const [showNewCategory, setShowNewCategory] = useState(!!row.category_new && !row.category_id);
@@ -118,9 +118,10 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
     }
   }
 
+  const locked = row._status === 'created';
   const cellClass = 'px-1';
-  const inputClass = 'w-full border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-white';
-  const selectClass = 'w-full border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-white';
+  const inputClass = `w-full border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-white ${locked ? 'opacity-60 pointer-events-none' : ''}`;
+  const selectClass = `w-full border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-white ${locked ? 'opacity-60 pointer-events-none' : ''}`;
 
   return (
     <tr className={`border-b border-gray-100 ${rowBg} transition-colors`}>
@@ -309,6 +310,25 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
           {row._error}
         </td>
       )}
+
+      {/* Submit row */}
+      <td className="px-2 py-2 w-16 text-center">
+        {!locked && (
+          <button
+            onClick={() => onSubmit(row._id)}
+            disabled={submitting}
+            title="Submit this row"
+            className="px-2 py-1 text-xs font-semibold bg-brand-emerald text-white rounded hover:bg-brand-forest transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+          >
+            {submitting ? (
+              <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+              </svg>
+            ) : '↑'}
+          </button>
+        )}
+      </td>
 
       {/* Delete */}
       <td className="px-2 py-2 w-8 text-center">

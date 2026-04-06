@@ -3,10 +3,10 @@ import BulkEntryRow from './BulkEntryRow';
 import { newRow } from './useBulkEntry';
 
 const HEADERS = [
-  '#', 'Type', 'Account', 'Amount', 'Category', 'To Account', 'Description', 'Date', '', ''
+  '#', 'Type', 'Account', 'Amount', 'Category', 'To Account', 'Description', 'Date', '', '', ''
 ];
 
-export default function BulkEntryGrid({ rows, accounts, categories, localAccounts, localCategories, onUpdate, onDelete, onAdd, onPasteRows }) {
+export default function BulkEntryGrid({ rows, accounts, categories, localAccounts, localCategories, onUpdate, onDelete, onAdd, onPasteRows, onSubmitRow, submittingRowId }) {
   const tableRef = useRef(null);
 
   // Handle paste from Excel / Google Sheets
@@ -82,6 +82,8 @@ export default function BulkEntryGrid({ rows, accounts, categories, localAccount
               localCategories={localCategories}
               onUpdate={onUpdate}
               onDelete={onDelete}
+              onSubmit={onSubmitRow}
+              submitting={submittingRowId === row._id}
             />
           ))}
         </tbody>

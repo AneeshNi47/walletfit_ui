@@ -8,8 +8,8 @@ export default function BulkEntryPage() {
   const { auth } = useAuth();
   const {
     rows, accounts, categories, localAccounts, localCategories,
-    submitting, submitSummary, mode,
-    setMode, addRow, deleteRow, updateRow, submit, clearResults, pasteRows,
+    submitting, submittingRowId, submitSummary, mode,
+    setMode, addRow, deleteRow, updateRow, submit, submitRow, clearResults, pasteRows,
   } = useBulkEntry(auth);
 
   const hasResults = rows.some(r => r._status !== null);
@@ -77,6 +77,8 @@ export default function BulkEntryPage() {
           onDelete={deleteRow}
           onAdd={addRow}
           onPasteRows={pasteRows}
+          onSubmitRow={submitRow}
+          submittingRowId={submittingRowId}
         />
 
         {/* Submit bar */}
