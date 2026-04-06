@@ -6,7 +6,7 @@ const HEADERS = [
   '#', 'Type', 'Account', 'Amount', 'Category', 'To Account', 'Description', 'Date', '', ''
 ];
 
-export default function BulkEntryGrid({ rows, accounts, categories, onUpdate, onDelete, onAdd, onPasteRows }) {
+export default function BulkEntryGrid({ rows, accounts, categories, localAccounts, localCategories, onUpdate, onDelete, onAdd, onPasteRows }) {
   const tableRef = useRef(null);
 
   // Handle paste from Excel / Google Sheets
@@ -78,6 +78,8 @@ export default function BulkEntryGrid({ rows, accounts, categories, onUpdate, on
               rowIndex={idx}
               accounts={accounts}
               categories={categories}
+              localAccounts={localAccounts}
+              localCategories={localCategories}
               onUpdate={onUpdate}
               onDelete={onDelete}
             />

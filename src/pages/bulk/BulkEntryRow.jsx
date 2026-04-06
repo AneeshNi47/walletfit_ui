@@ -23,10 +23,10 @@ function NewAccountInline({ value, onChange }) {
   );
 }
 
-export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDelete, rowIndex }) {
+export default function BulkEntryRow({ row, accounts, categories, localAccounts, localCategories, onUpdate, onDelete, rowIndex }) {
   const [showNewAccount, setShowNewAccount] = useState(!!row.account_new);
   const [showNewToAccount, setShowNewToAccount] = useState(!!row.to_account_new);
-  const [showNewCategory, setShowNewCategory] = useState(false);
+  const [showNewCategory, setShowNewCategory] = useState(!!row.category_new && !row.category_id);
 
   const statusColors = {
     created: 'bg-green-50 border-green-300',
@@ -36,11 +36,43 @@ export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDe
 
   const rowBg = row._status ? statusColors[row._status] ?? '' : '';
 
+  // Local accounts/categories that belong to OTHER rows (not this row's own new entry)
+  const otherLocalAccounts = (localAccounts ?? []).filter(
+    a => a.name !== row.account_new?.name
+  );
+  const otherLocalCategories = (localCategories ?? []).filter(
+    name => name !== row.category_new
+  );
+
+  // Current dropdown value for account
+  const accountDropdownValue = showNewAccount
+    ? '__new__'
+    : row.account_id
+    ? String(row.account_id)
+    : row.account_new?.name
+    ? `__local__${row.account_new.name}`
+    : '';
+
+  const toAccountDropdownValue = showNewToAccount
+    ? '__new__'
+    : row.to_account_id
+    ? String(row.to_account_id)
+    : row.to_account_new?.name
+    ? `__local__${row.to_account_new.name}`
+    : '';
+
   function handleAccountChange(val) {
     if (val === '__new__') {
       setShowNewAccount(true);
       onUpdate(row._id, 'account_id', '');
       onUpdate(row._id, 'account_new', { name: '', type: 'cash', currency: 'AED' });
+    } else if (val.startsWith('__local__')) {
+      // Reuse a pending new account from another row
+      const name = val.slice(9);
+      const spec = (localAccounts ?? []).find(a => a.name === name);
+      setShowNewAccount(false);
+      onUpdate(row._id, 'account_id', '');
+      onUpdate(row._id, 'account_new', spec ?? { name, type: 'cash', currency: 'AED' });
     } else {
       setShowNewAccount(false);
       onUpdate(row._id, 'account_new', null);
@@ -53,6 +85,12 @@ export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDe
       setShowNewToAccount(true);
       onUpdate(row._id, 'to_account_id', '');
       onUpdate(row._id, 'to_account_new', { name: '', type: 'cash', currency: 'AED' });
+    } else if (val.startsWith('__local__')) {
+      const name = val.slice(9);
+      const spec = (localAccounts ?? []).find(a => a.name === name);
+      setShowNewToAccount(false);
+      onUpdate(row._id, 'to_account_id', '');
+      onUpdate(row._id, 'to_account_new', spec ?? { name, type: 'cash', currency: 'AED' });
     } else {
       setShowNewToAccount(false);
       onUpdate(row._id, 'to_account_new', null);
@@ -64,6 +102,13 @@ export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDe
     if (val === '__new__') {
       setShowNewCategory(true);
       onUpdate(row._id, 'category_id', '');
+      onUpdate(row._id, 'category_new', '');
+    } else if (val.startsWith('__local__')) {
+      // Reuse a pending new category from another row
+      const name = val.slice(9);
+      setShowNewCategory(false);
+      onUpdate(row._id, 'category_id', '');
+      onUpdate(row._id, 'category_new', name);
     } else {
       setShowNewCategory(false);
       onUpdate(row._id, 'category_new', '');
@@ -95,11 +140,22 @@ export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDe
       <td className={`${cellClass} py-2 w-44`}>
         <select
           className={selectClass}
-          value={showNewAccount ? '__new__' : (row.account_id || '')}
+          value={accountDropdownValue}
           onChange={e => handleAccountChange(e.target.value)}
         >
           <option value="">Select account</option>
-          {accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+          {accounts.map(a => (
+            <option key={a.id} value={String(a.id)}>{a.name}</option>
+          ))}
+          {otherLocalAccounts.length > 0 && (
+            <optgroup label="Pending (unsaved)">
+              {otherLocalAccounts.map(a => (
+                <option key={`local_${a.name}`} value={`__local__${a.name}`}>
+                  {a.name} (new)
+                </option>
+              ))}
+            </optgroup>
+          )}
           <option value="__new__">+ Create new</option>
         </select>
         {showNewAccount && (
@@ -107,6 +163,11 @@ export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDe
             value={row.account_new}
             onChange={v => onUpdate(row._id, 'account_new', v)}
           />
+        )}
+        {!showNewAccount && row.account_new?.name && (
+          <span className="text-xs text-blue-500 mt-0.5 block">
+            new: {row.account_new.name}
+          </span>
         )}
       </td>
 
@@ -130,11 +191,22 @@ export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDe
             {!showNewCategory ? (
               <select
                 className={selectClass}
-                value={row.category_id || ''}
+                value={row.category_id ? String(row.category_id) : row.category_new ? `__local__${row.category_new}` : ''}
                 onChange={e => handleCategoryChange(e.target.value)}
               >
                 <option value="">No category</option>
-                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {categories.map(c => (
+                  <option key={c.id} value={String(c.id)}>{c.name}</option>
+                ))}
+                {otherLocalCategories.length > 0 && (
+                  <optgroup label="Pending (unsaved)">
+                    {otherLocalCategories.map(name => (
+                      <option key={`local_${name}`} value={`__local__${name}`}>
+                        {name} (new)
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
                 <option value="__new__">+ Create new</option>
               </select>
             ) : (
@@ -163,11 +235,22 @@ export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDe
           <>
             <select
               className={selectClass}
-              value={showNewToAccount ? '__new__' : (row.to_account_id || '')}
+              value={toAccountDropdownValue}
               onChange={e => handleToAccountChange(e.target.value)}
             >
               <option value="">Select account</option>
-              {accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+              {accounts.map(a => (
+                <option key={a.id} value={String(a.id)}>{a.name}</option>
+              ))}
+              {otherLocalAccounts.length > 0 && (
+                <optgroup label="Pending (unsaved)">
+                  {otherLocalAccounts.map(a => (
+                    <option key={`local_to_${a.name}`} value={`__local__${a.name}`}>
+                      {a.name} (new)
+                    </option>
+                  ))}
+                </optgroup>
+              )}
               <option value="__new__">+ Create new</option>
             </select>
             {showNewToAccount && (
@@ -175,6 +258,11 @@ export default function BulkEntryRow({ row, accounts, categories, onUpdate, onDe
                 value={row.to_account_new}
                 onChange={v => onUpdate(row._id, 'to_account_new', v)}
               />
+            )}
+            {!showNewToAccount && row.to_account_new?.name && (
+              <span className="text-xs text-blue-500 mt-0.5 block">
+                new: {row.to_account_new.name}
+              </span>
             )}
           </>
         ) : (

@@ -7,7 +7,8 @@ import ImportSection from './ImportSection';
 export default function BulkEntryPage() {
   const { auth } = useAuth();
   const {
-    rows, accounts, categories, submitting, submitSummary, mode,
+    rows, accounts, categories, localAccounts, localCategories,
+    submitting, submitSummary, mode,
     setMode, addRow, deleteRow, updateRow, submit, clearResults, pasteRows,
   } = useBulkEntry(auth);
 
@@ -70,6 +71,8 @@ export default function BulkEntryPage() {
           rows={rows}
           accounts={accounts}
           categories={categories}
+          localAccounts={localAccounts}
+          localCategories={localCategories}
           onUpdate={updateRow}
           onDelete={deleteRow}
           onAdd={addRow}
