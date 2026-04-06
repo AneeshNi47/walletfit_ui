@@ -16,6 +16,7 @@ import IncomePage from './pages/income/IncomePage';
 import RecurringPage from './pages/recurring/RecurringPage';
 import SplitExpensesPage from './pages/splits/SplitExpensesPage';
 import ReportPage from './pages/reports/ReportPage';
+import BulkEntryPage from './pages/bulk/BulkEntryPage';
 import Footer from './components/Footer';
 
 function ConditionalFooter() {
@@ -49,6 +50,7 @@ function App() {
               <Route path="/recurring" element={<RecurringPage />} />
               <Route path="/splits" element={<SplitExpensesPage />} />
               <Route path="/reports" element={<ReportPage />} />
+              <Route path="/bulk-entry" element={<BulkEntryPage />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
           </Routes>

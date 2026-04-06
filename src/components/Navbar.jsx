@@ -44,7 +44,7 @@ export default function Navbar() {
     setIsFinanceOpen(false);
   }, [location.pathname]);
 
-  const financeRoutes = ['/expenses', '/income', '/budgets', '/recurring'];
+  const financeRoutes = ['/expenses', '/income', '/budgets', '/recurring', '/bulk-entry'];
   const isFinanceActive = financeRoutes.includes(location.pathname);
 
   function isActive(path) {
@@ -159,6 +159,15 @@ export default function Navbar() {
                   >
                     Recurring
                   </Link>
+                  <Link
+                    to="/bulk-entry"
+                    className={[
+                      'block px-4 py-2 text-sm transition-all duration-150 hover:bg-brand-cream hover:text-brand-emerald',
+                      isActive('/bulk-entry') ? 'text-brand-forest font-semibold bg-brand-cream' : 'text-gray-700',
+                    ].join(' ')}
+                  >
+                    Bulk Entry
+                  </Link>
                 </div>
                 </div>
               </div>
@@ -262,6 +271,7 @@ export default function Navbar() {
                 <Link to="/income" onClick={closeMobileMenu} className={mobileLinkClass('/income')}>Income</Link>
                 <Link to="/budgets" onClick={closeMobileMenu} className={mobileLinkClass('/budgets')}>Budgets</Link>
                 <Link to="/recurring" onClick={closeMobileMenu} className={mobileLinkClass('/recurring')}>Recurring</Link>
+                <Link to="/bulk-entry" onClick={closeMobileMenu} className={mobileLinkClass('/bulk-entry')}>Bulk Entry</Link>
               </div>
 
               <Link to="/splits" onClick={closeMobileMenu} className={mobileLinkClass('/splits')}>Splits</Link>
