@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import axios from '../../api/axios';
 
 const ENTRY_TYPES = [
@@ -160,6 +160,29 @@ export function useBulkEntry(auth) {
     }
   }, [rows, mode, auth]);
 
+  // Derived: unique new accounts typed inline across all rows — shared across dropdowns
+  const localAccounts = useMemo(() => {
+    const seen = new Set();
+    const result = [];
+    for (const row of rows) {
+      for (const spec of [row.account_new, row.to_account_new]) {
+        if (spec?.name && !seen.has(spec.name)) {
+          seen.add(spec.name);
+          result.push(spec);
+        }
+      }
+    }
+    return result;
+  }, [rows]);
+
+  // Derived: unique new category names typed inline across all rows
+  const localCategories = useMemo(() => {
+    const seen = new Set();
+    return rows
+      .map(r => r.category_new)
+      .filter(name => name && !seen.has(name) && seen.add(name));
+  }, [rows]);
+
   const pasteRows = useCallback((parsed) => {
     const hasData = rows.some(r => r.amount || r.description || r.account_id || r.account_new);
     if (hasData) {
@@ -170,7 +193,8 @@ export function useBulkEntry(auth) {
   }, [rows]);
 
   return {
-    rows, accounts, categories, submitting, submitSummary, mode,
+    rows, accounts, categories, localAccounts, localCategories,
+    submitting, submitSummary, mode,
     setMode, addRow, deleteRow, updateRow, submit, clearResults, pasteRows,
   };
 }
