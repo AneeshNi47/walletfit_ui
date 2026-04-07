@@ -58,8 +58,8 @@ export default function ReportPage() {
         axios.get('/accounts/', { headers: { Authorization: `Bearer ${auth?.access}` } }),
         axios.get('/categories/', { headers: { Authorization: `Bearer ${auth?.access}` } }),
       ]);
-      setAccountsOptions(accountsRes.data.results.map(acc => ({ value: acc.id, label: acc.name })));
-      setCategoriesOptions(categoriesRes.data.results.map(cat => ({ value: cat.id, label: cat.name })));
+      setAccountsOptions((accountsRes.data.results ?? accountsRes.data).map(acc => ({ value: acc.id, label: acc.name })));
+      setCategoriesOptions((categoriesRes.data.results ?? categoriesRes.data).map(cat => ({ value: cat.id, label: cat.name })));
     } catch (err) {
       console.error('Failed to fetch filter options:', err);
       setOptionsError('Failed to load filter options.');

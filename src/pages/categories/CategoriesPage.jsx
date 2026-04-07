@@ -36,7 +36,7 @@ export default function CategoriesPage() {
       const response = await axios.get('/categories/', {
         headers: { Authorization: `Bearer ${auth?.access}` },
       });
-      setCategories(response.data.results);
+      setCategories(response.data.results ?? response.data);
     } catch (err) {
       console.error('Failed to fetch categories:', err);
       setError('Failed to load categories. Please try again.');

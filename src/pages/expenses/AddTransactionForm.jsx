@@ -33,7 +33,7 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
         const response = await axios.get('/accounts/', {
           headers: { Authorization: `Bearer ${auth?.access}` },
         });
-        setAccounts(response.data.results);
+        setAccounts(response.data.results ?? response.data);
       } catch (err) {
         console.error('Failed to fetch accounts:', err);
         setError('Failed to load accounts for transactions.');
@@ -55,7 +55,7 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
         const response = await axios.get('/categories/', {
           headers: { Authorization: `Bearer ${auth?.access}` },
         });
-        setCategories(response.data.results.map(cat => ({ value: cat.id, label: cat.name })));
+        setCategories((response.data.results ?? response.data).map(cat => ({ value: cat.id, label: cat.name })));
       } catch (err) {
         console.error('Failed to fetch categories:', err);
         setError('Failed to load categories.');
