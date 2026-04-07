@@ -98,6 +98,10 @@ export default function ImportSection({ accounts, categories, onImport }) {
     transfer_out: 'bg-orange-100 text-orange-700',
   };
 
+  function removeDuplicates() {
+    setPreview(prev => ({ ...prev, rows: prev.rows.filter(r => !r._isDuplicate) }));
+  }
+
   const selectedAccountName = accounts.find(a => String(a.id) === selectedAccount)?.name;
   const duplicateCount = preview?.rows.filter(r => r._isDuplicate).length ?? 0;
 
@@ -227,8 +231,14 @@ export default function ImportSection({ accounts, categories, onImport }) {
 
           {/* Duplicate notice */}
           {duplicateCount > 0 && (
-            <div className="mb-3 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded px-3 py-2">
-              ⚠ {duplicateCount} row{duplicateCount !== 1 ? 's' : ''} may already exist (same date &amp; amount found in your records). They are highlighted below — review before loading.
+            <div className="mb-3 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded px-3 py-2 flex items-center justify-between gap-3 flex-wrap">
+              <span>⚠ {duplicateCount} row{duplicateCount !== 1 ? 's' : ''} may already exist (same date &amp; amount found in your records). They are highlighted below.</span>
+              <button
+                onClick={removeDuplicates}
+                className="shrink-0 px-2.5 py-1 bg-orange-600 text-white rounded hover:bg-orange-700 transition-colors font-semibold whitespace-nowrap"
+              >
+                Remove {duplicateCount} duplicate{duplicateCount !== 1 ? 's' : ''}
+              </button>
             </div>
           )}
 
