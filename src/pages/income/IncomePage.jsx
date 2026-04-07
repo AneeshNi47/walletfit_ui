@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 import CreatableSelect from 'react-select/creatable';
+import IncomeCharts from './IncomeCharts';
 
 export default function IncomePage() {
   const { auth } = useAuth();
@@ -275,6 +276,12 @@ export default function IncomePage() {
             )}
           </div>
         </div>
+
+        {/* Charts */}
+        <IncomeCharts
+          monthlyTrend={summary.monthly_trend}
+          incomeBySource={summary.income_by_source}
+        />
 
         {/* Income List */}
         {loading ? (

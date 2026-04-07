@@ -163,6 +163,26 @@ function normalizeType(val) {
 
 // ─── Main parse function ──────────────────────────────────────────────────────
 
+// ─── Duplicate detection ─────────────────────────────────────────────────────
+
+/**
+ * Mark rows that likely already exist in the system.
+ * A row is flagged if an existing entry has the same date and amount (within 1 cent).
+ * existingEntries: array of { date: 'YYYY-MM-DD', amount: string|number }
+ */
+export function flagDuplicates(rows, existingEntries) {
+  if (!existingEntries || existingEntries.length === 0) return rows;
+  return rows.map(row => {
+    const match = existingEntries.find(e =>
+      e.date === row.date &&
+      Math.abs(parseFloat(e.amount) - parseFloat(row.amount)) < 0.01
+    );
+    return match ? { ...row, _isDuplicate: true } : row;
+  });
+}
+
+// ─── Main parse function ──────────────────────────────────────────────────────
+
 /**
  * Parse an uploaded File (XLSX or CSV) into bulk entry rows.
  * Returns { rows, headers, columnMap, warnings }
