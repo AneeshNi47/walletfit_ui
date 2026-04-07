@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 import AddTransactionForm from './AddTransactionForm';
+import ExpenseCharts from './ExpenseCharts';
 import { formatDate } from '../../utils/utils.jsx';
 
 export default function ListExpenses() {
@@ -113,6 +114,8 @@ export default function ListExpenses() {
         </div>
 
         <p className="text-sm text-gray-500">{totalCount} expense{totalCount !== 1 ? 's' : ''} total</p>
+
+        <ExpenseCharts />
 
         {expenses.length === 0 ? (
           <div className="text-center py-10 text-gray-500">

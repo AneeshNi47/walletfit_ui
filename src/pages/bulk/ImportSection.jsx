@@ -1,13 +1,33 @@
 import { useState, useRef } from 'react';
-import { downloadTemplate, parseImportFile } from './importParser';
+import axios from '../../api/axios';
+import { useAuth } from '../../context/AuthContext';
+import { downloadTemplate, parseImportFile, flagDuplicates } from './importParser';
 
 export default function ImportSection({ accounts, categories, onImport }) {
+  const { auth } = useAuth();
   const [selectedAccount, setSelectedAccount] = useState('');
   const [dragging, setDragging] = useState(false);
   const [parsing, setParsing] = useState(false);
   const [error, setError] = useState(null);
   const [preview, setPreview] = useState(null); // { rows, warnings, filename, isFynBeeTemplate }
   const fileRef = useRef(null);
+
+  async function fetchExistingEntries(minDate, maxDate) {
+    if (!auth?.access) return [];
+    const headers = { Authorization: `Bearer ${auth.access}` };
+    const params = { page_size: 1000, start_date: minDate, end_date: maxDate };
+    try {
+      const [expRes, incRes] = await Promise.all([
+        axios.get('expenses/', { headers, params }),
+        axios.get('income/', { headers, params }),
+      ]);
+      const expenses = (expRes.data.results ?? expRes.data).map(e => ({ date: e.date, amount: e.amount }));
+      const incomes = (incRes.data.results ?? incRes.data).map(e => ({ date: e.date, amount: e.amount }));
+      return [...expenses, ...incomes];
+    } catch {
+      return [];
+    }
+  }
 
   async function handleFile(file) {
     if (!file) return;
@@ -32,6 +52,13 @@ export default function ImportSection({ accounts, categories, onImport }) {
             ? { ...r, account_id: selectedAccount }
             : r
         );
+      }
+
+      // Duplicate detection — fetch existing entries for the date range in the file
+      if (rows.length > 0) {
+        const dates = rows.map(r => r.date).filter(Boolean).sort();
+        const existing = await fetchExistingEntries(dates[0], dates[dates.length - 1]);
+        rows = flagDuplicates(rows, existing);
       }
 
       setPreview({ ...result, rows, filename: file.name });
@@ -72,6 +99,7 @@ export default function ImportSection({ accounts, categories, onImport }) {
   };
 
   const selectedAccountName = accounts.find(a => String(a.id) === selectedAccount)?.name;
+  const duplicateCount = preview?.rows.filter(r => r._isDuplicate).length ?? 0;
 
   return (
     <div className="mb-6 bg-white border border-brand-sand rounded-xl p-5">
@@ -151,7 +179,7 @@ export default function ImportSection({ accounts, categories, onImport }) {
               onChange={handleFileInput}
             />
             {parsing ? (
-              <p className="text-sm text-gray-400">Parsing file…</p>
+              <p className="text-sm text-gray-400">Parsing file and checking for duplicates…</p>
             ) : (
               <>
                 <svg className="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,6 +207,11 @@ export default function ImportSection({ accounts, categories, onImport }) {
               {!preview.isFynBeeTemplate && (
                 <span className="ml-2 text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">bank statement</span>
               )}
+              {duplicateCount > 0 && (
+                <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
+                  {duplicateCount} possible duplicate{duplicateCount !== 1 ? 's' : ''}
+                </span>
+              )}
             </div>
             <button onClick={handleDiscard} className="text-xs text-gray-400 hover:text-red-400 transition-colors">
               Discard
@@ -189,6 +222,13 @@ export default function ImportSection({ accounts, categories, onImport }) {
           {preview.warnings.length > 0 && (
             <div className="mb-3 text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 rounded px-3 py-2 space-y-0.5">
               {preview.warnings.map((w, i) => <p key={i}>⚠ {w}</p>)}
+            </div>
+          )}
+
+          {/* Duplicate notice */}
+          {duplicateCount > 0 && (
+            <div className="mb-3 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded px-3 py-2">
+              ⚠ {duplicateCount} row{duplicateCount !== 1 ? 's' : ''} may already exist (same date &amp; amount found in your records). They are highlighted below — review before loading.
             </div>
           )}
 
@@ -203,6 +243,7 @@ export default function ImportSection({ accounts, categories, onImport }) {
                   <th className="px-3 py-2 text-left text-gray-500 font-medium">Type</th>
                   <th className="px-3 py-2 text-left text-gray-500 font-medium">Account</th>
                   <th className="px-3 py-2 text-left text-gray-500 font-medium">Category</th>
+                  <th className="px-3 py-2 text-left text-gray-500 font-medium"></th>
                 </tr>
               </thead>
               <tbody>
@@ -215,7 +256,7 @@ export default function ImportSection({ accounts, categories, onImport }) {
                     : row.category_new || '—';
 
                   return (
-                    <tr key={i} className="border-t border-gray-50">
+                    <tr key={i} className={`border-t border-gray-50 ${row._isDuplicate ? 'bg-orange-50' : ''}`}>
                       <td className="px-3 py-1.5 text-gray-600 whitespace-nowrap">{row.date}</td>
                       <td className="px-3 py-1.5 text-gray-700 max-w-[200px] truncate">{row.description || '—'}</td>
                       <td className="px-3 py-1.5 font-medium text-gray-700">{row.amount}</td>
@@ -226,6 +267,11 @@ export default function ImportSection({ accounts, categories, onImport }) {
                       </td>
                       <td className="px-3 py-1.5 text-gray-500">{accName}</td>
                       <td className="px-3 py-1.5 text-gray-500">{catName}</td>
+                      <td className="px-3 py-1.5">
+                        {row._isDuplicate && (
+                          <span title="Possible duplicate — same date and amount already in your records" className="text-orange-500 cursor-help">⚠</span>
+                        )}
+                      </td>
                     </tr>
                   );
                 })}
