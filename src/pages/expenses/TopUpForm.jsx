@@ -31,7 +31,8 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
         const response = await axios.get('/accounts/', {
           headers: { Authorization: `Bearer ${auth?.access}` },
         });
-        setAccounts(response.data.results);
+        const data = Array.isArray(response.data) ? response.data : (response.data?.results || []);
+        setAccounts(data);
       } catch (err) {
         console.error('Failed to fetch accounts:', err);
         setError('Failed to load accounts for top-up.');
