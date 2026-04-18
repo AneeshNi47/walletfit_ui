@@ -14,6 +14,19 @@ export function useTheme() {
     localStorage.setItem('fynbee-theme', theme);
   }, [theme]);
 
+  // Track system preference — only react when the user hasn't set an
+  // explicit preference yet (no stored value means "follow the OS").
+  useEffect(() => {
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = (e) => {
+      if (!localStorage.getItem('fynbee-theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+    mql.addEventListener?.('change', onChange);
+    return () => mql.removeEventListener?.('change', onChange);
+  }, []);
+
   const toggle = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
   return { theme, setTheme, toggle };
 }
