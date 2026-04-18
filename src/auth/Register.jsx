@@ -1,9 +1,61 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../api/axios';
-import AnimatedLogo from '../components/AnimatedLogo';
+import AuthLayout from '../layouts/AuthLayout';
+import { Button } from '../components/ui/Button';
+import { Eyebrow } from '../components/ui/Eyebrow';
+
+const INPUT_CLASS =
+  'w-full px-4 py-3 bg-surface border rounded-md text-[14px] font-sans text-text-main placeholder:text-text-dim focus:outline-none focus:border-border-mid focus-ring';
+
+function passwordStrength(pw) {
+  if (!pw) return 0;
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  return score; // 0..4
+}
+
+const STRENGTH_LABEL = ['Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+const STRENGTH_COLOR = ['var(--clay)', 'var(--clay)', 'var(--gold)', 'var(--sage)', 'var(--emerald)'];
+
+function Field({ label, name, value, onChange, error, type = 'text', placeholder, as = 'input', children, className = '' }) {
+  const border = error ? 'border-clay' : 'border-border-soft';
+  if (as === 'select') {
+    return (
+      <div className={className}>
+        <label className="block font-ui uppercase text-[10px] tracking-[0.12em] text-text-dim mb-1.5">{label}</label>
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          className={`${INPUT_CLASS} ${border}`}
+        >
+          {children}
+        </select>
+        {error && <p className="text-clay text-[12px] mt-1">{error}</p>}
+      </div>
+    );
+  }
+  return (
+    <div className={className}>
+      <label className="block font-ui uppercase text-[10px] tracking-[0.12em] text-text-dim mb-1.5">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`${INPUT_CLASS} ${border}`}
+      />
+      {error && <p className="text-clay text-[12px] mt-1">{error}</p>}
+    </div>
+  );
+}
 
 export default function Register() {
   const { login } = useAuth();
@@ -24,37 +76,25 @@ export default function Register() {
       theme: 'light',
     },
   });
-
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
 
+  const strength = useMemo(() => passwordStrength(form.password), [form.password]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Clear field-specific error when user starts typing
-    if (fieldErrors[name]) {
-      setFieldErrors(prev => ({ ...prev, [name]: '' }));
-    }
-    
+    if (fieldErrors[name]) setFieldErrors((p) => ({ ...p, [name]: '' }));
+
     if (name in form.profile) {
-      setForm((prev) => ({
-        ...prev,
-        profile: {
-          ...prev.profile,
-          [name]: value,
-        },
-      }));
+      setForm((p) => ({ ...p, profile: { ...p.profile, [name]: value } }));
     } else {
-      setForm((prev) => {
-        const updatedForm = { ...prev, [name]: value };
-        
-        // Auto-generate household name when first name is entered
-        if (name === 'first_name' && value.trim() && !prev.household_name) {
-          const householdName = `${value.trim()}'s Household`;
-          updatedForm.household_name = householdName;
+      setForm((p) => {
+        const updated = { ...p, [name]: value };
+        if (name === 'first_name' && value.trim() && !p.household_name) {
+          updated.household_name = `${value.trim()}'s household`;
         }
-        
-        return updatedForm;
+        return updated;
       });
     }
   };
@@ -68,51 +108,21 @@ export default function Register() {
     try {
       const res = await axios.post('/users/register/', form);
       const { access, refresh, username, email, id } = res.data;
-
-      login(null, null, {
-        access,
-        refresh,
-        user: { id, username, email },
-      });
-
+      login(null, null, { access, refresh, user: { id, username, email } });
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      
-      // Handle field-specific validation errors
       if (err?.response?.data && typeof err.response.data === 'object') {
-        const backendErrors = err.response.data;
-        const newFieldErrors = {};
-        
-        // Map backend field names to form field names
-        Object.keys(backendErrors).forEach(key => {
-          let fieldName = key;
-          
-          // Handle nested profile fields
-          if (key.startsWith('profile.')) {
-            fieldName = key.replace('profile.', '');
-          }
-          
-          // Handle special cases
-          if (key === 'household_name') {
-            fieldName = 'household_name';
-          }
-          
-          newFieldErrors[fieldName] = Array.isArray(backendErrors[key]) 
-            ? backendErrors[key][0] 
-            : backendErrors[key];
+        const errs = err.response.data;
+        const mapped = {};
+        Object.keys(errs).forEach((k) => {
+          const key = k.startsWith('profile.') ? k.replace('profile.', '') : k;
+          mapped[key] = Array.isArray(errs[k]) ? errs[k][0] : errs[k];
         });
-        
-        setFieldErrors(newFieldErrors);
-        
-        // Set general error message if no specific field errors
-        if (Object.keys(newFieldErrors).length === 0) {
-          setError('Registration failed. Please check your inputs.');
-        }
+        setFieldErrors(mapped);
+        if (Object.keys(mapped).length === 0) setError('Registration failed.');
       } else {
-        // Fallback for network errors or other issues
-        const message = err?.response?.data?.message || 'Registration failed. Please check your inputs.';
-        setError(message);
+        setError(err?.response?.data?.message || 'Registration failed.');
       }
     } finally {
       setLoading(false);
@@ -120,130 +130,82 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-cream via-brand-warm to-brand-cream px-4">
+    <AuthLayout>
       <Helmet>
-        <title>Create Account - FynBee</title>
-        <meta name="description" content="Sign up for FynBee for free. Create your account, set up a household, and start tracking expenses, budgets, and income in minutes." />
+        <title>Create account — Fynbee</title>
       </Helmet>
-      <div className="bg-white/90 p-10 rounded-2xl shadow-2xl w-full max-w-xl flex flex-col items-center animate-fade-in">
-        <div className="flex flex-col items-center mb-6">
-          <AnimatedLogo size={72} showWordmark={false} theme="light" className="mb-2" />
-          <h1 className="text-3xl font-extrabold mb-2 text-brand-forest tracking-tight">Create Your FynBee Account</h1>
-          <p className="text-gray-500 text-sm">Join us and start managing your finances smarter.</p>
+
+      <Eyebrow>Get started</Eyebrow>
+      <h1 className="font-serif font-normal text-[32px] leading-tight text-text-strong mt-2 mb-6">
+        Start your <span className="italic text-accent-deep">hive</span>.
+      </h1>
+
+      {error && (
+        <div className="bg-[rgba(196,122,90,0.12)] border border-[rgba(196,122,90,0.3)] text-clay text-[12.5px] px-3 py-2 rounded-md mb-4">
+          {error}
         </div>
+      )}
 
-        {error && (
-          <div className="bg-red-100 text-red-700 text-sm p-2 rounded mb-4 text-center w-full">
-            {error}
-          </div>
-        )}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="First name" name="first_name" value={form.first_name} onChange={handleChange} error={fieldErrors.first_name} placeholder="Aisha" />
+          <Field label="Last name" name="last_name" value={form.last_name} onChange={handleChange} error={fieldErrors.last_name} placeholder="Khan" />
+        </div>
+        <Field label="Username" name="username" value={form.username} onChange={handleChange} error={fieldErrors.username} placeholder="aisha" />
+        <Field label="Email" name="email" type="email" value={form.email} onChange={handleChange} error={fieldErrors.email} placeholder="you@example.com" />
 
-        <form onSubmit={handleSubmit} className="space-y-4 grid grid-cols-2 gap-4 w-full">
-          <div className="col-span-2">
-            <input name="username" type="text" placeholder="Username" value={form.username} onChange={handleChange} required className={`p-3 border rounded-lg col-span-2 focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.username ? 'border-red-500' : 'border-gray-300'}`} />
-            {fieldErrors.username && <p className="text-red-500 text-sm mt-1">{fieldErrors.username}</p>}
-          </div>
-          
-          <div className="col-span-2">
-            <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required className={`p-3 border rounded-lg col-span-2 focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'}`} />
-            {fieldErrors.email && <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>}
-          </div>
-          
-          <div className="col-span-2">
-            <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required className={`p-3 border rounded-lg col-span-2 focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'}`} />
-            {fieldErrors.password && <p className="text-red-500 text-sm mt-1">{fieldErrors.password}</p>}
-          </div>
-          
-          <div>
-            <input name="first_name" type="text" placeholder="First Name" value={form.first_name} onChange={handleChange} className={`p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.first_name ? 'border-red-500' : 'border-gray-300'}`} />
-            {fieldErrors.first_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.first_name}</p>}
-          </div>
-          
-          <div>
-            <input name="last_name" type="text" placeholder="Last Name" value={form.last_name} onChange={handleChange} className={`p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.last_name ? 'border-red-500' : 'border-gray-300'}`} />
-            {fieldErrors.last_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.last_name}</p>}
-          </div>
-          
-                      <div className="col-span-2">
-              <div className="relative group">
-                <input name="household_name" type="text" placeholder="Household Name" value={form.household_name} onChange={handleChange} className={`p-3 pr-10 border rounded-lg col-span-2 focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.household_name ? 'border-red-500' : 'border-gray-300'}`} />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  <svg className="h-5 w-5 text-gray-400 cursor-help" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                  </svg>
-                  <div className="absolute right-0 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                    <p className="text-gray-300">A household name helps you organize your finances with family members or roommates. You can create shared accounts and track expenses together.</p>
-                    <div className="absolute top-0 right-4 transform -translate-y-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
-                  </div>
-                </div>
+        <div>
+          <Field label="Password" name="password" type="password" value={form.password} onChange={handleChange} error={fieldErrors.password} placeholder="••••••••" />
+          {form.password && (
+            <div className="mt-2 space-y-1">
+              <div className="flex gap-1">
+                {[0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="flex-1 h-1 rounded-pill transition-colors"
+                    style={{
+                      background: i < strength ? STRENGTH_COLOR[strength] : 'var(--surface-2)',
+                    }}
+                  />
+                ))}
               </div>
-              {fieldErrors.household_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.household_name}</p>}
+              <div
+                className="font-ui text-[10px] uppercase tracking-[0.12em]"
+                style={{ color: STRENGTH_COLOR[strength] }}
+              >
+                {STRENGTH_LABEL[strength]}
+              </div>
             </div>
-          
-          <div>
-            <input name="phone_number" type="text" placeholder="Phone Number" value={form.profile.phone_number} onChange={handleChange} className={`p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.phone_number ? 'border-red-500' : 'border-gray-300'}`} />
-            {fieldErrors.phone_number && <p className="text-red-500 text-sm mt-1">{fieldErrors.phone_number}</p>}
-          </div>
-          
-          <div>
-            <input name="address" type="text" placeholder="Address" value={form.profile.address} onChange={handleChange} className={`p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.address ? 'border-red-500' : 'border-gray-300'}`} />
-            {fieldErrors.address && <p className="text-red-500 text-sm mt-1">{fieldErrors.address}</p>}
-          </div>
-          
-          <div>
-            <select name="gender" value={form.profile.gender} onChange={handleChange} className={`p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.gender ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="">Gender</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="other">Other</option>
-            </select>
-            {fieldErrors.gender && <p className="text-red-500 text-sm mt-1">{fieldErrors.gender}</p>}
-          </div>
-          
-          <div>
-            <select name="currency" value={form.profile.currency} onChange={handleChange} className={`p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.currency ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="AED">AED</option>
-              <option value="INR">INR</option>
-              <option value="USD">USD</option>
-            </select>
-            {fieldErrors.currency && <p className="text-red-500 text-sm mt-1">{fieldErrors.currency}</p>}
-          </div>
-          
-          <div className="col-span-2">
-            <select name="theme" value={form.profile.theme} onChange={handleChange} className={`p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base w-full ${fieldErrors.theme ? 'border-red-500' : 'border-gray-300'}`}>
-              <option value="light">Light Theme</option>
-              <option value="dark">Dark Theme</option>
-            </select>
-            {fieldErrors.theme && <p className="text-red-500 text-sm mt-1">{fieldErrors.theme}</p>}
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="col-span-2 w-full bg-brand-emerald text-white py-3 rounded-lg font-semibold text-lg hover:bg-brand-forest transition shadow-md disabled:opacity-60"
-          >
-            {loading ? 'Creating Account...' : 'Register'}
-          </button>
-        </form>
-        <div className="w-full flex items-center my-6">
-          <div className="flex-grow border-t border-gray-200" />
-          <span className="mx-3 text-gray-400 text-sm">or</span>
-          <div className="flex-grow border-t border-gray-200" />
+          )}
         </div>
-        <p className="text-center text-sm text-gray-600 mb-2">
-          Already have an account?{' '}
-          <Link to="/login" className="text-brand-emerald hover:underline font-medium">
-            Login here
-          </Link>
-        </p>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="w-full mt-2 bg-gray-100 text-brand-forest py-2 rounded-lg hover:bg-gray-200 transition font-medium"
-        >
-          ← Back to Home
-        </button>
-      </div>
-    </div>
+
+        <Field label="Household name" name="household_name" value={form.household_name} onChange={handleChange} error={fieldErrors.household_name} placeholder="The Khan hive" />
+
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Currency" name="currency" as="select" value={form.profile.currency} onChange={handleChange} error={fieldErrors.currency}>
+            <option value="AED">AED</option>
+            <option value="INR">INR</option>
+            <option value="USD">USD</option>
+          </Field>
+          <Field label="Gender" name="gender" as="select" value={form.profile.gender} onChange={handleChange} error={fieldErrors.gender}>
+            <option value="">Prefer not to say</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+          </Field>
+        </div>
+
+        <Button type="submit" size="lg" className="w-full" disabled={loading}>
+          {loading ? 'Creating account…' : 'Create account'}
+        </Button>
+      </form>
+
+      <p className="text-center font-sans text-[13px] text-text-muted mt-6">
+        Already have an account?{' '}
+        <Link to="/login" className="italic text-accent-deep hover:text-accent">
+          Sign in
+        </Link>
+      </p>
+    </AuthLayout>
   );
 }
