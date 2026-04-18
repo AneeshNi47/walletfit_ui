@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
+import { Card, CardEyebrow, CardTitle } from '../../components/ui/Card';
 
 export default function FinancialOverview() {
   const { auth, logout } = useAuth();
@@ -22,16 +23,13 @@ export default function FinancialOverview() {
             headers: { Authorization: `Bearer ${auth?.access}` },
           }),
         ]);
+        setIncome(parseFloat(incomeRes.data?.total_income || incomeRes.data?.total || 0));
 
-        const totalIncome = parseFloat(incomeRes.data?.total_income || incomeRes.data?.total || 0);
-        setIncome(totalIncome);
-
-        const expenseData = expenseRes.data;
-        if (Array.isArray(expenseData) && expenseData.length > 0) {
-          const latest = expenseData[expenseData.length - 1];
-          setExpenses(parseFloat(latest.total || 0));
-        } else if (typeof expenseData === 'object' && !Array.isArray(expenseData)) {
-          setExpenses(parseFloat(expenseData.total_expenses || expenseData.total || 0));
+        const ed = expenseRes.data;
+        if (Array.isArray(ed) && ed.length > 0) {
+          setExpenses(parseFloat(ed[ed.length - 1]?.total || 0));
+        } else if (ed && typeof ed === 'object') {
+          setExpenses(parseFloat(ed.total_expenses || ed.total || 0));
         }
       } catch (err) {
         console.error('Failed to fetch financial overview:', err);
@@ -41,67 +39,90 @@ export default function FinancialOverview() {
         setLoading(false);
       }
     };
-
-    if (auth?.access) {
-      fetchData();
-    }
+    if (auth?.access) fetchData();
   }, [auth, logout]);
 
   const net = income - expenses;
+  const total = Math.max(income + expenses, 1);
+  const incomePct = (income / total) * 100;
 
-  if (loading) {
-    return (
-      <div className="bg-white shadow rounded-lg p-5 flex items-center justify-center">
-        <p className="text-sm text-gray-500">Loading financial overview...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-white shadow rounded-lg p-5">
-        <p className="text-sm text-red-500">{error}</p>
-      </div>
-    );
-  }
+  const month = new Date()
+    .toLocaleString('en-US', { month: 'long' })
+    .toUpperCase();
 
   return (
-    <div className="bg-white shadow rounded-lg p-5">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">This Month</h2>
-      <div className="space-y-4">
-        <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
-              </svg>
-            </div>
-            <span className="text-sm font-medium text-gray-600">Income</span>
-          </div>
-          <span className="text-base sm:text-lg font-bold text-green-600">+{income.toFixed(2)}</span>
-        </div>
+    <Card>
+      <CardEyebrow>{month} in a glance</CardEyebrow>
+      <CardTitle className="mt-2 mb-5">Income vs expenses</CardTitle>
 
-        <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-              <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 13l-5 5m0 0l-5-5m5 5V6" />
-              </svg>
-            </div>
-            <span className="text-sm font-medium text-gray-600">Expenses</span>
-          </div>
-          <span className="text-base sm:text-lg font-bold text-red-600">-{expenses.toFixed(2)}</span>
+      {loading ? (
+        <div className="space-y-3">
+          <div className="h-6 bg-surface-2 rounded animate-pulse" />
+          <div className="h-6 bg-surface-2 rounded animate-pulse" />
+          <div className="h-2 bg-surface-2 rounded-pill animate-pulse" />
         </div>
+      ) : error ? (
+        <div className="text-[13px] text-clay">{error}</div>
+      ) : (
+        <>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-pill bg-emerald" />
+                <span className="font-ui uppercase text-[10px] tracking-[0.12em] text-text-muted">
+                  Income
+                </span>
+              </div>
+              <span className="font-serif font-normal text-[20px] tnum text-emerald">
+                +{income.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-pill bg-clay" />
+                <span className="font-ui uppercase text-[10px] tracking-[0.12em] text-text-muted">
+                  Expenses
+                </span>
+              </div>
+              <span className="font-serif font-normal text-[20px] tnum text-clay">
+                -{expenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            </div>
+          </div>
 
-        <div className="border-t pt-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-gray-700">Net</span>
-            <span className={`text-lg sm:text-xl font-bold ${net >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {net >= 0 ? '+' : ''}{net.toFixed(2)}
+          {/* Gradient split bar */}
+          <div className="mt-5 h-2 bg-surface-2 rounded-pill overflow-hidden flex">
+            <div
+              style={{
+                width: `${incomePct}%`,
+                background:
+                  'linear-gradient(90deg, var(--emerald), var(--sage))',
+              }}
+            />
+            <div
+              style={{
+                flex: 1,
+                background:
+                  'linear-gradient(90deg, var(--clay), #a8573d)',
+              }}
+            />
+          </div>
+
+          <div className="mt-5 pt-4 border-t border-border-soft flex items-center justify-between">
+            <span className="font-ui uppercase text-[10px] tracking-[0.18em] text-text-dim">
+              Net this month
+            </span>
+            <span
+              className={`font-serif italic text-[26px] tnum ${
+                net >= 0 ? 'text-emerald' : 'text-clay'
+              }`}
+            >
+              {net >= 0 ? '+' : ''}
+              {net.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
-        </div>
-      </div>
-    </div>
+        </>
+      )}
+    </Card>
   );
 }

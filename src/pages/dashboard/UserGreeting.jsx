@@ -1,23 +1,32 @@
-// src/pages/dashboard/UserGreeting.jsx
+import { Eyebrow } from '../../components/ui/Eyebrow';
+
 export default function UserGreeting({ user }) {
   const hour = new Date().getHours();
-  let timeGreeting = 'Good evening';
-  if (hour < 12) timeGreeting = 'Good morning';
-  else if (hour < 17) timeGreeting = 'Good afternoon';
+  const timeGreeting =
+    hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
-  const today = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const dateLabel = new Date()
+    .toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+    .toUpperCase();
+
+  const name = user?.first_name || user?.username || '';
 
   return (
-    <div className="space-y-1">
-      <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">
-        {timeGreeting}, {user?.first_name || user?.username}
+    <div className="flex flex-col gap-2">
+      <Eyebrow size="lg">
+        Today · {dateLabel}
+      </Eyebrow>
+      <h1 className="font-serif font-normal text-[32px] md:text-[40px] leading-tight tracking-[-0.02em] text-text-strong">
+        {timeGreeting}
+        {name && <>, {name}</>}
+        {' '}
+        <span className="italic text-accent-deep">— your hive is humming</span>
       </h1>
-      <p className="text-sm text-gray-500">{today}</p>
     </div>
   );
 }

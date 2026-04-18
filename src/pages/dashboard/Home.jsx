@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
-import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
+import { Button } from '../../components/ui/Button';
 import UserGreeting from './UserGreeting';
 import AccountSummary from './AccountSummary';
 import FinancialOverview from './FinancialOverview';
@@ -16,16 +16,14 @@ import AddTransactionForm from '../expenses/AddTransactionForm';
 import TopUpForm from '../expenses/TopUpForm';
 import TransferForm from '../accounts/TransferForm';
 
-
 export default function Dashboard() {
   const { auth, logout } = useAuth();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAccountForm, setShowAccountForm] = useState(false);
-  const [showTransactionForm, setShowTransactionForm] = useState(false); // This is now 'Add Expense' modal
-  const [showTopUpForm, setShowTopUpForm] = useState(false); // NEW: State for TopUp modal
-  const [showTransferForm, setShowTransferForm] = useState(false); // NEW: State for Transfer modal
-
+  const [showTransactionForm, setShowTransactionForm] = useState(false);
+  const [showTopUpForm, setShowTopUpForm] = useState(false);
+  const [showTransferForm, setShowTransferForm] = useState(false);
 
   const refetchDashboard = useCallback(async () => {
     setLoading(true);
@@ -46,93 +44,96 @@ export default function Dashboard() {
     refetchDashboard();
   }, [auth, refetchDashboard]);
 
-  // Handler for successful form submissions in modals (consolidated)
   const handleActionSuccess = () => {
     setShowAccountForm(false);
-    setShowTransactionForm(false); // For Add Expense
-    setShowTopUpForm(false);      // For Top Up
-    setShowTransferForm(false);   // For Transfer
-    refetchDashboard(); // Re-fetch dashboard data to update summaries etc.
+    setShowTransactionForm(false);
+    setShowTopUpForm(false);
+    setShowTransferForm(false);
+    refetchDashboard();
   };
-
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center text-xl">
-        Loading Dashboard...
+      <div className="flex items-center justify-center min-h-[60vh] font-serif italic text-text-muted text-lg">
+        Loading dashboard…
       </div>
     );
   }
 
   if (!dashboardData) {
     return (
-      <div className="min-h-screen flex justify-center items-center text-red-500 text-xl">
+      <div className="flex items-center justify-center min-h-[60vh] text-clay">
         Failed to load dashboard data.
       </div>
     );
   }
 
-  const { user, profile, transactions = [] } = dashboardData;
+  const { user, profile } = dashboardData;
+  const currency = profile?.currency || 'AED';
 
   return (
-    <>
-      <Navbar />
-      <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
+    <div className="space-y-6">
+      {/* Greeting row */}
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <UserGreeting user={user} />
-
-        {/* Row 1: Account Summary + Financial Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AccountSummary currency={profile.currency} />
-          <FinancialOverview />
+        <div className="flex gap-2 shrink-0">
+          <Button onClick={() => setShowTransactionForm(true)}>Add expense</Button>
+          <Button variant="ghost" onClick={() => setShowTopUpForm(true)}>
+            Log income
+          </Button>
         </div>
+      </div>
 
-        {/* Row 2: Quick Actions (full width) */}
+      {/* Row: balance (2/3) + monthly flow (1/3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <AccountSummary currency={currency} />
+        </div>
+        <FinancialOverview />
+      </div>
+
+      {/* Row: budgets + 14-day spending (2 cols) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <BudgetAlerts />
+        <SpendingTrends />
+      </div>
+
+      {/* Row: quick actions (2 cols) + recent activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <QuickActions
           onAddAccount={() => setShowAccountForm(true)}
           onAddExpense={() => setShowTransactionForm(true)}
           onTopUp={() => setShowTopUpForm(true)}
           onTransfer={() => setShowTransferForm(true)}
         />
+        <RecentTransactions currency={currency} />
+      </div>
 
-        {/* Row 3: Budget Alerts + Upcoming Bills */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <BudgetAlerts />
-          <UpcomingBills />
-        </div>
+      {/* Row: upcoming bills full-width */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <UpcomingBills />
+      </div>
 
-        {/* Add Account Modal */}
-        {showAccountForm && (
-          <Modal title="➕ Add New Account" onClose={() => setShowAccountForm(false)}>
-            <AddAccountForm onSuccess={handleActionSuccess} onCancel={() => setShowAccountForm(false)} />
-          </Modal>
-        )}
-
-        {/* Add Expense Modal (previously Add Transaction) */}
-        {showTransactionForm && (
-          <Modal title="➖ Add Expense" onClose={() => setShowTransactionForm(false)}>
-            <AddTransactionForm onSuccess={handleActionSuccess} onCancel={() => setShowTransactionForm(false)} />
-          </Modal>
-        )}
-
-        {/* NEW: Top Up Modal */}
-        {showTopUpForm && (
-          <Modal title="⬆️ Top Up Account" onClose={() => setShowTopUpForm(false)}>
-            <TopUpForm onSuccess={handleActionSuccess} onCancel={() => setShowTopUpForm(false)} />
-          </Modal>
-        )}
-
-        {/* NEW: Transfer Modal */}
-        {showTransferForm && (
-          <Modal title="🔄 Transfer Funds" onClose={() => setShowTransferForm(false)}>
-            <TransferForm onSuccess={handleActionSuccess} onCancel={() => setShowTransferForm(false)} />
-          </Modal>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <RecentTransactions currency={profile.currency} />
-          <SpendingTrends transactions={transactions} />
-        </div>
-      </main>
-    </>
+      {showAccountForm && (
+        <Modal title="Add account" onClose={() => setShowAccountForm(false)}>
+          <AddAccountForm onSuccess={handleActionSuccess} onCancel={() => setShowAccountForm(false)} />
+        </Modal>
+      )}
+      {showTransactionForm && (
+        <Modal title="Add expense" onClose={() => setShowTransactionForm(false)}>
+          <AddTransactionForm onSuccess={handleActionSuccess} onCancel={() => setShowTransactionForm(false)} />
+        </Modal>
+      )}
+      {showTopUpForm && (
+        <Modal title="Top up account" onClose={() => setShowTopUpForm(false)}>
+          <TopUpForm onSuccess={handleActionSuccess} onCancel={() => setShowTopUpForm(false)} />
+        </Modal>
+      )}
+      {showTransferForm && (
+        <Modal title="Transfer funds" onClose={() => setShowTransferForm(false)}>
+          <TransferForm onSuccess={handleActionSuccess} onCancel={() => setShowTransferForm(false)} />
+        </Modal>
+      )}
+    </div>
   );
 }
