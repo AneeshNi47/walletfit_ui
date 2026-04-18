@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
-import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 
 export default function CategoriesPage() {
@@ -142,7 +141,6 @@ export default function CategoriesPage() {
 
   return (
     <>
-      <Navbar />
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h1 className="text-3xl font-bold text-gray-800">Your Categories</h1>

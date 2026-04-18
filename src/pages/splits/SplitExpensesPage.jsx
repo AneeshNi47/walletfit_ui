@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
-import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 
 export default function SplitExpensesPage() {
@@ -212,7 +211,6 @@ export default function SplitExpensesPage() {
 
   return (
     <>
-      <Navbar />
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Split Expenses</h1>
