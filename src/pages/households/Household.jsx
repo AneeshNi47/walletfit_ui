@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
-import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 import SummaryCards from './SummaryCards';
 import FairnessCard from './FairnessCard';
@@ -325,7 +324,6 @@ export default function HouseholdPage() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen flex justify-center items-center text-xl">
           Loading Household...
         </div>
@@ -336,7 +334,6 @@ export default function HouseholdPage() {
   if (error && !hasHousehold) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
           <p>Error: {error}</p>
           <button onClick={fetchHousehold} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
@@ -349,7 +346,6 @@ export default function HouseholdPage() {
 
   return (
     <>
-      <Navbar />
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         <h1 className="text-3xl font-bold text-gray-800">Household</h1>
 

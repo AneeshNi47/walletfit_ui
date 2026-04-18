@@ -10,6 +10,7 @@ import Household from './pages/households/Household';
 import Profile from './pages/profile/Profile';
 import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
+import AppShell from './components/AppShell';
 import CategoriesPage from './pages/categories/CategoriesPage';
 import BudgetsPage from './pages/budgets/BudgetsPage';
 import IncomePage from './pages/income/IncomePage';
@@ -19,11 +20,16 @@ import ReportPage from './pages/reports/ReportPage';
 import BulkEntryPage from './pages/bulk/BulkEntryPage';
 import Footer from './components/Footer';
 
+const APP_SHELL_PATHS = [
+  '/dashboard', '/expenses', '/accounts', '/household', '/categories',
+  '/budgets', '/income', '/recurring', '/splits', '/reports',
+  '/bulk-entry', '/profile',
+];
+
 function ConditionalFooter() {
-  var location = useLocation();
-  if (location.pathname === '/') {
-    return null;
-  }
+  const location = useLocation();
+  if (location.pathname === '/') return null;
+  if (APP_SHELL_PATHS.some((p) => location.pathname.startsWith(p))) return null;
   return <Footer />;
 }
 
@@ -39,19 +45,21 @@ function App() {
               <Route path="/" element={<Landing />} />
             </Route>
             <Route element={<PrivateRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/expenses" element={<ListExpenses />} />
-              <Route path="/expenses/add" element={<AddTransactionForm />} />
-              <Route path="/accounts" element={<AccountsPage />} />
-              <Route path="/household" element={<Household />} />
-              <Route path="/categories" element={<CategoriesPage />} />
-              <Route path="/budgets" element={<BudgetsPage />} />
-              <Route path="/income" element={<IncomePage />} />
-              <Route path="/recurring" element={<RecurringPage />} />
-              <Route path="/splits" element={<SplitExpensesPage />} />
-              <Route path="/reports" element={<ReportPage />} />
-              <Route path="/bulk-entry" element={<BulkEntryPage />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route element={<AppShell />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/expenses" element={<ListExpenses />} />
+                <Route path="/expenses/add" element={<AddTransactionForm />} />
+                <Route path="/accounts" element={<AccountsPage />} />
+                <Route path="/household" element={<Household />} />
+                <Route path="/categories" element={<CategoriesPage />} />
+                <Route path="/budgets" element={<BudgetsPage />} />
+                <Route path="/income" element={<IncomePage />} />
+                <Route path="/recurring" element={<RecurringPage />} />
+                <Route path="/splits" element={<SplitExpensesPage />} />
+                <Route path="/reports" element={<ReportPage />} />
+                <Route path="/bulk-entry" element={<BulkEntryPage />} />
+                <Route path="/profile" element={<Profile />} />
+              </Route>
             </Route>
           </Routes>
         </div>

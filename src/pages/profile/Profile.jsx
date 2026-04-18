@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
-import Navbar from '../../components/Navbar';
 import TelegramConnect from './TelegramConnect';
 
 export default function Profile() {
@@ -65,7 +64,6 @@ export default function Profile() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen flex justify-center items-center text-xl">
           Loading Profile...
         </div>
@@ -75,7 +73,6 @@ export default function Profile() {
 
   return (
     <>
-      <Navbar />
       <main className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <h1 className="text-2xl font-bold text-gray-800">My Profile</h1>

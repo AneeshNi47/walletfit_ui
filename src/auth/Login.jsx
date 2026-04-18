@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import AnimatedLogo from '../components/AnimatedLogo';
+import { Eye, EyeOff } from 'lucide-react';
+import AuthLayout from '../layouts/AuthLayout';
+import { Button } from '../components/ui/Button';
+import { Eyebrow } from '../components/ui/Eyebrow';
 
 export default function Login() {
   const { login } = useAuth();
@@ -10,6 +13,7 @@ export default function Login() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +21,6 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError('');
-
     try {
       await login(username, password);
       navigate('/dashboard');
@@ -30,79 +33,87 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-cream via-brand-warm to-brand-cream px-4">
+    <AuthLayout>
       <Helmet>
-        <title>Login - FynBee</title>
-        <meta name="description" content="Sign in to your FynBee account to manage your household finances, track expenses, and monitor budgets." />
+        <title>Sign in — Fynbee</title>
       </Helmet>
-      <div className="bg-white/90 p-10 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center animate-fade-in">
-        <div className="flex flex-col items-center mb-6">
-          <AnimatedLogo size={72} showWordmark={false} theme="light" className="mb-2" />
-          <h1 className="text-3xl font-extrabold mb-2 text-brand-forest tracking-tight">Sign in to FynBee</h1>
-          <p className="text-gray-500 text-sm">Welcome back! Please enter your details.</p>
+
+      <Eyebrow>Welcome back</Eyebrow>
+      <h1 className="font-serif font-normal text-[32px] leading-tight text-text-strong mt-2 mb-6">
+        Good to see you <span className="italic text-accent-deep">again</span>.
+      </h1>
+
+      {error && (
+        <div
+          role="alert"
+          className="bg-[rgba(196,122,90,0.12)] border border-[rgba(196,122,90,0.3)] text-clay text-[12.5px] px-3 py-2 rounded-md mb-4"
+        >
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleLogin} className="space-y-4">
+        <div>
+          <label className="block font-ui uppercase text-[10px] tracking-[0.12em] text-text-dim mb-1.5">
+            Email or username
+          </label>
+          <input
+            type="text"
+            className="w-full px-4 py-3.5 bg-surface border border-border-soft rounded-md text-[14px] font-sans text-text-main placeholder:text-text-dim focus:outline-none focus:border-border-mid focus-ring"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            placeholder="you@example.com"
+            autoFocus
+          />
         </div>
 
-        {error && (
-          <div className="bg-red-100 text-red-700 text-sm p-2 rounded mb-4 text-center w-full">
-            {error}
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="font-ui uppercase text-[10px] tracking-[0.12em] text-text-dim">
+              Password
+            </label>
+            <a href="#forgot" className="text-[12px] text-accent-deep hover:text-accent">
+              Forgot password?
+            </a>
           </div>
-        )}
-
-        <form onSubmit={handleLogin} className="space-y-5 w-full">
-          <div>
-            <label className="block text-sm text-gray-600 mb-1 font-medium">Username or Email</label>
+          <div className="relative">
             <input
-              type="text"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              placeholder="admin@example.com"
-              autoFocus
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm text-gray-600 mb-1 font-medium">Password</label>
-            <input
-              type="password"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-base"
+              type={showPassword ? 'text' : 'password'}
+              className="w-full px-4 py-3.5 pr-12 bg-surface border border-border-soft rounded-md text-[14px] font-sans text-text-main placeholder:text-text-dim focus:outline-none focus:border-border-mid focus-ring"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-dim hover:text-text-strong p-1"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-brand-emerald text-white py-3 rounded-lg font-semibold text-lg hover:bg-brand-forest transition shadow-md disabled:opacity-60"
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-
-        <div className="w-full flex items-center my-6">
-          <div className="flex-grow border-t border-gray-200" />
-          <span className="mx-3 text-gray-400 text-sm">or</span>
-          <div className="flex-grow border-t border-gray-200" />
         </div>
 
-        <p className="text-center text-sm text-gray-600 mb-2">
-          Don’t have an account?{' '}
-          <Link to="/register" className="text-brand-emerald hover:underline font-medium">
-            Register here
-          </Link>
-        </p>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="w-full mt-2 bg-gray-100 text-brand-forest py-2 rounded-lg hover:bg-gray-200 transition font-medium"
-        >
-          ← Back to Home
-        </button>
+        <Button type="submit" size="lg" className="w-full" disabled={loading}>
+          {loading ? 'Signing in…' : 'Sign in'}
+        </Button>
+      </form>
+
+      <div className="flex items-center my-6 gap-3">
+        <div className="flex-1 border-t border-border-soft" />
+        <span className="font-ui text-[11px] uppercase tracking-[0.14em] text-text-dim">or</span>
+        <div className="flex-1 border-t border-border-soft" />
       </div>
-    </div>
+
+      <p className="text-center font-sans text-[13px] text-text-muted">
+        New to Fynbee?{' '}
+        <Link to="/register" className="italic text-accent-deep hover:text-accent">
+          Create an account
+        </Link>
+      </p>
+    </AuthLayout>
   );
 }

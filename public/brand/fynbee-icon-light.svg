@@ -1,0 +1,60 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Fynbee Logo Mark (light)</title>
+  <desc>Fynbee — household finance app. Coin-bee mark inside hexagon frame.</desc>
+  <defs>
+    <radialGradient id="topCoin_light" cx="38%" cy="32%" r="66%">
+      <stop offset="0%" stop-color="#fce05a"></stop>
+      <stop offset="45%" stop-color="#e8a830"></stop>
+      <stop offset="100%" stop-color="#a85e12"></stop>
+    </radialGradient>
+    <radialGradient id="botCoin_light" cx="38%" cy="32%" r="66%">
+      <stop offset="0%" stop-color="#f5c842"></stop>
+      <stop offset="50%" stop-color="#d08828"></stop>
+      <stop offset="100%" stop-color="#9a5610"></stop>
+    </radialGradient>
+    <linearGradient id="edgeShimmer_light" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="rgba(255,220,100,0.5)"></stop>
+      <stop offset="50%" stop-color="rgba(255,200,60,0.15)"></stop>
+      <stop offset="100%" stop-color="rgba(160,80,16,0.3)"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <polygon points="48,4 88,26 88,70 48,92 8,70 8,26" fill="none" stroke="rgba(30,107,74,0.3)" stroke-width="1.2"></polygon>
+  <polygon points="48,10 82,29 82,67 48,86 14,67 14,29" fill="rgba(30,107,74,0.04)" stroke="rgba(30,107,74,0.12)" stroke-width="0.7"></polygon>
+
+  
+  <line x1="42" y1="22" x2="34" y2="13" stroke="#1e6b4a" stroke-width="1.5" stroke-linecap="round"></line>
+  <line x1="54" y1="22" x2="62" y2="13" stroke="#1e6b4a" stroke-width="1.5" stroke-linecap="round"></line>
+  <circle cx="33.5" cy="12.5" r="2.2" fill="#c8852a"></circle>
+  <circle cx="62.5" cy="12.5" r="2.2" fill="#c8852a"></circle>
+
+  
+  <ellipse cx="26" cy="42" rx="14" ry="7" fill="rgba(30,107,74,0.1)" stroke="rgba(30,107,74,0.3)" stroke-width="1.1" transform="rotate(-22 26 42)"></ellipse>
+  <ellipse cx="70" cy="42" rx="14" ry="7" fill="rgba(30,107,74,0.1)" stroke="rgba(30,107,74,0.3)" stroke-width="1.1" transform="rotate(22 70 42)"></ellipse>
+  
+  <ellipse cx="24" cy="54" rx="10" ry="5" fill="rgba(30,107,74,0.06)" stroke="rgba(30,107,74,0.18)" stroke-width="0.9" transform="rotate(-14 24 54)"></ellipse>
+  <ellipse cx="72" cy="54" rx="10" ry="5" fill="rgba(30,107,74,0.06)" stroke="rgba(30,107,74,0.18)" stroke-width="0.9" transform="rotate(14 72 54)"></ellipse>
+
+  
+  <circle cx="48" cy="35" r="14" fill="url(#topCoin_light)"></circle>
+  <circle cx="48" cy="35" r="13.3" fill="none" stroke="url(#edgeShimmer_light)" stroke-width="1.4" stroke-dasharray="3 2"></circle>
+  <circle cx="48" cy="35" r="9.5" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="0.7"></circle>
+  <circle cx="48" cy="35" r="4.5" fill="rgba(160,80,16,0.22)"></circle>
+  <ellipse cx="43" cy="29" rx="4.5" ry="2.5" fill="rgba(255,255,255,0.28)" transform="rotate(-35 43 29)"></ellipse>
+  <ellipse cx="44" cy="30" rx="1.8" ry="1" fill="rgba(255,255,255,0.35)" transform="rotate(-35 44 30)"></ellipse>
+
+  
+  <circle cx="48" cy="63" r="19" fill="url(#botCoin_light)"></circle>
+  <circle cx="48" cy="63" r="18.3" fill="none" stroke="url(#edgeShimmer_light)" stroke-width="1.4" stroke-dasharray="3 2"></circle>
+  <circle cx="48" cy="63" r="13.5" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.7"></circle>
+  
+  <path d="M30 57 Q48 52 66 57" stroke="rgba(15,35,15,0.30)" stroke-width="3" fill="none" stroke-linecap="round"></path>
+  <path d="M29 64 Q48 59 67 64" stroke="rgba(15,35,15,0.24)" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+  <path d="M30 70 Q48 66 66 70" stroke="rgba(15,35,15,0.16)" stroke-width="2" fill="none" stroke-linecap="round"></path>
+  <ellipse cx="37" cy="54" rx="6" ry="3.5" fill="rgba(255,255,255,0.2)" transform="rotate(-35 37 54)"></ellipse>
+  <ellipse cx="39" cy="56" rx="2.5" ry="1.4" fill="rgba(255,255,255,0.28)" transform="rotate(-35 39 56)"></ellipse>
+
+  
+  <path d="M45.5 81 Q48 89 50.5 81 Q48 84.5 45.5 81Z" fill="url(#botCoin_light)" opacity="0.88"></path>
+</svg>

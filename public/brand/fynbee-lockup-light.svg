@@ -1,0 +1,33 @@
+<svg width="360" height="100" viewBox="0 0 360 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Fynbee Lockup (light)</title>
+  <rect width="360" height="100" fill="#fdf6e8" rx="12"></rect>
+  
+  <g transform="translate(10,2) scale(1.0)">
+    <polygon points="48,4 88,26 88,70 48,92 8,70 8,26" fill="none" stroke="rgba(74,140,106,0.5)" stroke-width="1.2"></polygon>
+    <defs>
+      <radialGradient id="tCL_light" cx="38%" cy="32%" r="66%"><stop offset="0%" stop-color="#fce05a"></stop><stop offset="45%" stop-color="#e8a830"></stop><stop offset="100%" stop-color="#a85e12"></stop></radialGradient>
+      <radialGradient id="bCL_light" cx="38%" cy="32%" r="66%"><stop offset="0%" stop-color="#f5c842"></stop><stop offset="50%" stop-color="#d08828"></stop><stop offset="100%" stop-color="#9a5610"></stop></radialGradient>
+    </defs>
+    <line x1="42" y1="22" x2="34" y2="13" stroke="#4a8c6a" stroke-width="1.5" stroke-linecap="round"></line>
+    <line x1="54" y1="22" x2="62" y2="13" stroke="#4a8c6a" stroke-width="1.5" stroke-linecap="round"></line>
+    <circle cx="33.5" cy="12.5" r="2.2" fill="#f5c842"></circle>
+    <circle cx="62.5" cy="12.5" r="2.2" fill="#f5c842"></circle>
+    <ellipse cx="26" cy="42" rx="14" ry="7" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.38)" stroke-width="1.1" transform="rotate(-22 26 42)"></ellipse>
+    <ellipse cx="70" cy="42" rx="14" ry="7" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.38)" stroke-width="1.1" transform="rotate(22 70 42)"></ellipse>
+    <circle cx="48" cy="35" r="14" fill="url(#tCL_light)"></circle>
+    <ellipse cx="43" cy="29" rx="4.5" ry="2.5" fill="rgba(255,255,255,0.28)" transform="rotate(-35 43 29)"></ellipse>
+    <circle cx="48" cy="63" r="19" fill="url(#bCL_light)"></circle>
+    <path d="M30 57 Q48 52 66 57" stroke="rgba(15,35,15,0.30)" stroke-width="3" fill="none" stroke-linecap="round"></path>
+    <path d="M29 64 Q48 59 67 64" stroke="rgba(15,35,15,0.24)" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+    <path d="M30 70 Q48 66 66 70" stroke="rgba(15,35,15,0.16)" stroke-width="2" fill="none" stroke-linecap="round"></path>
+    <path d="M45.5 81 Q48 89 50.5 81 Q48 84.5 45.5 81Z" fill="url(#bCL_light)" opacity="0.88"></path>
+  </g>
+  
+  <path d="M112 25 L112 75 M112 25 L140 25 M112 48 L132 48" stroke="#1a3a2a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M152 35 L164 60 M176 35 L164 60 L161 75" stroke="#1a3a2a" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M188 75 L188 35 Q188 35 188 46 Q188 35 200 35 Q214 35 214 50 L214 75" stroke="#1a3a2a" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"></path>
+  
+  <path d="M226 18 L226 75 M226 50 Q226 35 240 35 Q256 35 256 55 Q256 75 240 75 Q226 75 226 75" stroke="#c8852a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M268 55 Q268 35 282 35 Q298 35 298 55 L268 55 Q268 75 282 75 Q291 75 297 68" stroke="#c8852a" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M310 55 Q310 35 324 35 Q340 35 340 55 L310 55 Q310 75 324 75 Q333 75 339 68" stroke="#c8852a" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>

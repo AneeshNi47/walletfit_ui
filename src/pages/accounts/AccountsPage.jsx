@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
-import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 import AddAccountForm from './AddAccountForm';
 import AddTransactionForm from '../expenses/AddTransactionForm';
@@ -120,7 +119,6 @@ export default function AccountsPage() {
 
   return (
     <>
-      <Navbar />
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Your Accounts</h1>
 

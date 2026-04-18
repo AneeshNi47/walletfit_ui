@@ -1,71 +1,97 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowDownIcon, ArrowUpIcon, ArrowsRightLeftIcon, PlusIcon, DocumentTextIcon } from '@heroicons/react/24/solid';
+import { Plus, ArrowUpRight, ArrowDownLeft, ArrowLeftRight, FileText } from 'lucide-react';
+import { Card, CardEyebrow, CardHeader } from '../../components/ui/Card';
 
 export default function QuickActions({ onAddAccount, onAddExpense, onTopUp, onTransfer }) {
   const navigate = useNavigate();
 
   const actions = [
     {
-      label: 'Add Account',
-      onClick: onAddAccount,
-      icon: <PlusIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
-      bg: 'bg-brand-cream',
-      hover: 'hover:bg-brand-warm',
-      text: 'text-brand-forest',
-      ring: 'hover:ring-brand-sand',
-    },
-    {
-      label: 'Add Expense',
+      label: 'Add expense',
       onClick: onAddExpense,
-      icon: <ArrowUpIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
-      bg: 'bg-red-50',
-      hover: 'hover:bg-red-100',
-      text: 'text-red-700',
-      ring: 'hover:ring-red-200',
+      icon: ArrowUpRight,
+      tile: 'bg-[rgba(196,122,90,0.14)] text-clay',
+      shortcut: 'E',
     },
     {
-      label: 'Top Up',
+      label: 'Log income',
       onClick: onTopUp,
-      icon: <ArrowDownIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
-      bg: 'bg-green-50',
-      hover: 'hover:bg-green-100',
-      text: 'text-green-700',
-      ring: 'hover:ring-green-200',
+      icon: ArrowDownLeft,
+      tile: 'bg-[rgba(30,107,74,0.14)] text-emerald',
+      shortcut: 'I',
+    },
+    {
+      label: 'Top up',
+      onClick: onTopUp,
+      icon: Plus,
+      tile: 'bg-[rgba(232,168,48,0.18)] text-accent-deep',
+      shortcut: 'T',
     },
     {
       label: 'Transfer',
       onClick: onTransfer,
-      icon: <ArrowsRightLeftIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
-      bg: 'bg-indigo-50',
-      hover: 'hover:bg-indigo-100',
-      text: 'text-indigo-700',
-      ring: 'hover:ring-indigo-200',
+      icon: ArrowLeftRight,
+      tile: 'bg-[rgba(74,140,106,0.18)] text-sage',
+      shortcut: 'R',
     },
     {
-      label: 'View Report',
+      label: 'Report',
       onClick: () => navigate('/reports'),
-      icon: <DocumentTextIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
-      bg: 'bg-gray-50',
-      hover: 'hover:bg-gray-100',
-      text: 'text-gray-700',
-      ring: 'hover:ring-gray-200',
+      icon: FileText,
+      tile: 'bg-surface-2 text-text-muted',
+      shortcut: 'V',
     },
   ];
 
   return (
-    <div className="bg-white shadow rounded-lg p-4">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-        {actions.map((action) => (
+    <Card className="relative overflow-hidden lg:col-span-2">
+      {/* Honeycomb motif */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-[0.05]"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 20% 20%, var(--accent), transparent 28%), radial-gradient(circle at 80% 70%, var(--sage), transparent 32%)',
+        }}
+      />
+
+      <CardHeader className="relative">
+        <div className="flex flex-col gap-1">
+          <CardEyebrow>Quick actions</CardEyebrow>
+          <h3 className="font-serif font-normal text-[24px] leading-tight text-text-strong">
+            What would you like to{' '}
+            <span className="italic text-accent-deep">do</span>?
+          </h3>
+        </div>
+        <button
+          type="button"
+          onClick={onAddAccount}
+          className="font-ui text-[11px] uppercase tracking-[0.12em] text-accent-deep hover:text-accent"
+        >
+          + Add account
+        </button>
+      </CardHeader>
+
+      <div className="relative grid grid-cols-2 md:grid-cols-5 gap-3 mt-2">
+        {actions.map(({ label, onClick, icon: Icon, tile, shortcut }) => (
           <button
-            key={action.label}
-            onClick={action.onClick}
-            className={`flex flex-col items-center justify-center gap-2 p-3 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-md hover:ring-2 ${action.bg} ${action.hover} ${action.text} ${action.ring}`}
+            key={label}
+            type="button"
+            onClick={onClick}
+            className="group flex flex-col items-start gap-2.5 p-4 bg-surface border border-border-soft rounded-md hover:border-border-mid hover:-translate-y-px transition-all focus-ring text-left"
           >
-            {action.icon}
-            <span className="whitespace-nowrap">{action.label}</span>
+            <span className={`w-10 h-10 rounded-md flex items-center justify-center ${tile}`}>
+              <Icon size={18} />
+            </span>
+            <span className="font-sans font-medium text-[13px] text-text-strong">
+              {label}
+            </span>
+            <kbd className="font-ui text-[9px] tracking-[0.08em] text-text-dim bg-surface-2 border border-border-soft rounded-sm px-1.5 py-0.5 uppercase">
+              ⌘{shortcut}
+            </kbd>
           </button>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

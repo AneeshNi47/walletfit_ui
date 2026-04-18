@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
-import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 import Select from 'react-select'; // For account and category selection
 import DatePicker from 'react-datepicker';
@@ -323,7 +322,6 @@ export default function ReportPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow p-4 sm:p-6 max-w-7xl mx-auto w-full space-y-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Financial Reports</h1>
 
