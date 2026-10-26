@@ -7,6 +7,7 @@ import {
   PiggyBank,
   Landmark,
   HandCoins,
+  Contact,
   Repeat,
   Users,
   Split,
@@ -45,6 +46,7 @@ export const SECTIONS = [
       { to: '/household', label: 'Households', icon: Users },
       { to: '/splits', label: 'Split expenses', icon: Split },
       { to: '/categories', label: 'Categories', icon: Mail },
+      { to: '/payees', label: 'Payees', icon: Contact },
     ],
   },
 ];

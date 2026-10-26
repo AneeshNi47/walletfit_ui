@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { fieldClass, labelClass, reactSelectTheme } from '../../components/ui/formStyles';
 import { fmt } from '../../components/charts/FilterCharts';
+import IbanSection from '../../components/IbanSection';
 
 /**
  * Edit an expense after the fact: category, description, savings flag + note.
@@ -116,6 +117,8 @@ export default function EditExpenseForm({ expense, onSuccess, onCancel, focusSav
         <span className="font-semibold text-clay shrink-0">- {fmt(expense.amount)}</span>
       </div>
       <p className="text-[12px] text-text-dim -mt-2">Amount, date and account come from the bank and can’t be changed.</p>
+
+      <IbanSection ibans={expense.ibans} payee={expense.payee} />
 
       <div className={kind === 'split' ? 'hidden' : ''}>
         <span className={labelClass}>Category</span>

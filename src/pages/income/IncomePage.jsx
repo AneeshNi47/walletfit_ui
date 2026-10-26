@@ -8,6 +8,7 @@ import ListToolbar, {
   EMPTY_FILTERS, filtersToParams, monthKeyOf, activeFilterChips,
 } from '../../components/lists/ListToolbar';
 import EditIncomeForm from './EditIncomeForm';
+import { PayeeBadge } from '../../components/PayeeForm';
 
 export default function IncomePage() {
   const { auth } = useAuth();
@@ -358,6 +359,7 @@ export default function IncomePage() {
                     <span className="font-semibold text-text-strong text-sm sm:text-base truncate">
                       {income.source_name || 'Unknown Source'}
                     </span>
+                    <PayeeBadge payee={income.payee} />
                   </div>
                   {income.description && (
                     <p className="text-sm text-text-muted">{income.description}</p>
