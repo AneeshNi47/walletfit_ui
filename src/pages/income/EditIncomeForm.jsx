@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { fieldClass, labelClass, reactSelectTheme } from '../../components/ui/formStyles';
 import { fmt } from '../../components/charts/FilterCharts';
+import IbanSection from '../../components/IbanSection';
 
 /** Edit an income entry's source + description. Amount, date and account stay read-only. */
 export default function EditIncomeForm({ income, onSuccess, onCancel }) {
@@ -70,6 +71,8 @@ export default function EditIncomeForm({ income, onSuccess, onCancel }) {
         <span className="font-semibold text-emerald shrink-0">+{fmt(income.amount)}</span>
       </div>
       <p className="text-[12px] text-text-dim -mt-2">Amount, date and account come from the bank and can’t be changed.</p>
+
+      <IbanSection ibans={income.ibans} payee={income.payee} />
 
       <div>
         <span className={labelClass}>Source</span>

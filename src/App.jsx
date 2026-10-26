@@ -16,6 +16,7 @@ import BudgetsPage from './pages/budgets/BudgetsPage';
 import IncomePage from './pages/income/IncomePage';
 import SavingsPage from './pages/savings/SavingsPage';
 import OwedPage from './pages/owed/OwedPage';
+import PayeesPage from './pages/payees/PayeesPage';
 import RecurringPage from './pages/recurring/RecurringPage';
 import SplitExpensesPage from './pages/splits/SplitExpensesPage';
 import ReportPage from './pages/reports/ReportPage';
@@ -58,6 +59,7 @@ function App() {
                 <Route path="/income" element={<IncomePage />} />
                 <Route path="/savings" element={<SavingsPage />} />
                 <Route path="/owed" element={<OwedPage />} />
+                <Route path="/payees" element={<PayeesPage />} />
                 <Route path="/recurring" element={<RecurringPage />} />
                 <Route path="/splits" element={<SplitExpensesPage />} />
                 <Route path="/reports" element={<ReportPage />} />

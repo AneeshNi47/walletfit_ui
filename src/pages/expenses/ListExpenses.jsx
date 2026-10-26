@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import AddTransactionForm from './AddTransactionForm';
 import EditExpenseForm from './EditExpenseForm';
+import { PayeeBadge } from '../../components/PayeeForm';
 import ListToolbar, {
   EMPTY_FILTERS, filtersToParams, monthKeyOf, activeFilterChips,
 } from '../../components/lists/ListToolbar';
@@ -380,6 +381,7 @@ export default function ListExpenses() {
 }
 
 function SavingsTag({ expense }) {
+  const payee = expense.payee && <div className="mt-1"><PayeeBadge payee={expense.payee} /></div>;
   const loan = expense.is_loan && (
     <div className="mt-1 flex flex-wrap items-center gap-2">
       <span className="inline-block bg-[rgba(196,122,90,0.14)] text-clay text-[11px] font-semibold px-2 py-0.5 rounded-full">
@@ -401,10 +403,10 @@ function SavingsTag({ expense }) {
       ))}
     </ul>
   );
-  if (!expense.is_savings) return (loan || split) ? <>{loan}{split}</> : null;
+  if (!expense.is_savings) return (payee || loan || split) ? <>{payee}{loan}{split}</> : null;
   return (
     <>
-    {loan}{split}
+    {payee}{loan}{split}
     <div className="mt-1 flex flex-wrap items-center gap-2">
       <span className="inline-block bg-accent-soft text-accent-deep text-[11px] font-semibold px-2 py-0.5 rounded-full">
         Savings
