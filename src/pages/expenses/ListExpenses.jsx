@@ -3,7 +3,10 @@ import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import AddTransactionForm from './AddTransactionForm';
-import SavingsForm from './SavingsForm';
+import EditExpenseForm from './EditExpenseForm';
+import ListToolbar, {
+  EMPTY_FILTERS, filtersToParams, monthKeyOf, activeFilterChips,
+} from '../../components/lists/ListToolbar';
 import FilterCharts, {
   FilterChips, SummaryCards, monthRange, currentMonthKey, fmt,
 } from '../../components/charts/FilterCharts';
@@ -21,18 +24,20 @@ export default function ListExpenses() {
 
   // Modal state
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
-  const [savingsExpense, setSavingsExpense] = useState(null);
+  const [editingExpense, setEditingExpense] = useState(null);
 
-  // Chart data + click-to-filter state
+  // Chart data + search/sort/filter state (charts write into the same filters)
   const [monthly, setMonthly] = useState([]);
   const [byCategory, setByCategory] = useState([]);
-  const [monthFilter, setMonthFilter] = useState(null);      // 'YYYY-MM'
-  const [categoryFilter, setCategoryFilter] = useState(null); // category id
+  const [filters, setFilters] = useState(EMPTY_FILTERS);
 
-  const filterParams = useMemo(() => ({
-    ...(monthFilter ? monthRange(monthFilter) : {}),
-    ...(categoryFilter ? { category: categoryFilter } : {}),
-  }), [monthFilter, categoryFilter]);
+  const filterParams = useMemo(() => filtersToParams(filters, 'category'), [filters]);
+  const monthFilter = monthKeyOf(filters);
+  const categoryFilter = filters.group ? Number(filters.group) : null;
+  const setMonthFilter = (key) => setFilters((prev) => ({
+    ...prev, ...(key ? monthRange(key) : { start_date: '', end_date: '' }),
+  }));
+  const setCategoryFilter = (id) => setFilters((prev) => ({ ...prev, group: id ? String(id) : '' }));
 
   const fetchSummary = useCallback(async () => {
     const headers = { Authorization: `Bearer ${auth?.access}` };
@@ -99,9 +104,10 @@ export default function ListExpenses() {
     fetchSummary();
   };
 
-  const handleSavingsSuccess = (updated) => {
-    setSavingsExpense(null);
+  const handleEditSuccess = (updated) => {
+    setEditingExpense(null);
     setExpenses((prev) => prev.map((e) => (e.id === updated.id ? updated : e)));
+    fetchSummary(); // category totals may have moved
   };
 
   // DRF returns absolute "next"/"previous" URLs like https://api.fynbee.app/api/expenses/?page=2.
@@ -129,6 +135,10 @@ export default function ListExpenses() {
   const slices = byCategory.map((c) => ({ id: c.id, label: c.category, total: c.total }));
   const monthLabel = monthly.find((m) => m.key === monthFilter)?.month || monthFilter;
   const categoryLabel = byCategory.find((c) => c.id === categoryFilter)?.category;
+  const categoryOptions = byCategory.filter((c) => c.id != null).map((c) => ({ value: String(c.id), label: c.category }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+  const chips = activeFilterChips(filters, setFilters, { groupLabel: categoryLabel, monthLabel });
+  const isFiltered = chips.length > 0;
 
   if (error) {
     return (
@@ -154,6 +164,15 @@ export default function ListExpenses() {
           </button>
         </div>
 
+        <ListToolbar
+          filters={filters}
+          setFilters={setFilters}
+          groupOptions={categoryOptions}
+          groupLabel="Category"
+          showSavings
+          searchPlaceholder="Search description or savings note…"
+        />
+
         <SummaryCards cards={[
           { label: 'Total Spent (All Time)', value: fmt(allTime), tone: 'text-clay' },
           { label: 'This Month', value: fmt(thisMonth?.total), tone: 'text-clay' },
@@ -178,14 +197,11 @@ export default function ListExpenses() {
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <FilterChips
-            chips={[
-              { label: monthFilter && monthLabel, onClear: () => setMonthFilter(null) },
-              { label: categoryFilter && categoryLabel, onClear: () => setCategoryFilter(null) },
-            ]}
-            onClearAll={() => { setMonthFilter(null); setCategoryFilter(null); }}
+            chips={chips}
+            onClearAll={() => setFilters((prev) => ({ ...EMPTY_FILTERS, ordering: prev.ordering }))}
           />
           <p className="text-sm text-text-muted ml-auto">
-            {totalCount} expense{totalCount !== 1 ? 's' : ''}{monthFilter || categoryFilter ? ' matching' : ' total'}
+            {totalCount} expense{totalCount !== 1 ? 's' : ''}{isFiltered ? ' matching' : ' total'}
           </p>
         </div>
 
@@ -195,7 +211,7 @@ export default function ListExpenses() {
           <div className="text-center py-10 text-text-muted">
             <p className="text-lg">No expenses found.</p>
             <p className="text-sm mt-2">
-              {monthFilter || categoryFilter ? 'Try clearing the filter.' : 'Click "Add New Expense" to get started!'}
+              {isFiltered ? 'Try clearing a filter.' : 'Click "Add New Expense" to get started!'}
             </p>
           </div>
         ) : (
@@ -222,7 +238,11 @@ export default function ListExpenses() {
                         <SavingsTag expense={expense} />
                       </td>
                       <td className="px-6 py-4 text-sm text-text-strong">
-                        {expense.category ? (
+                        {expense.splits?.length ? (
+                          <span className="text-xs text-text-muted">
+                            Split: {expense.splits.map((p) => p.category?.name || 'Uncategorized').join(' + ')}
+                          </span>
+                        ) : expense.category ? (
                           <span className="inline-block bg-brand-warm text-brand-forest text-xs px-2 py-1 rounded-full">
                             {expense.category.name}
                           </span>
@@ -242,11 +262,11 @@ export default function ListExpenses() {
                       </td>
                       <td className="px-6 py-4 text-right whitespace-nowrap">
                         <button
-                          onClick={() => setSavingsExpense(expense)}
+                          onClick={() => setEditingExpense(expense)}
                           className="px-3 py-1 mr-2 bg-surface-2 text-text-main border border-border-soft text-sm rounded hover:border-border-mid transition duration-200"
-                          title="Mark as savings / edit note"
+                          title="Change category, description or savings"
                         >
-                          {expense.is_savings ? 'Edit savings' : 'Savings'}
+                          Edit
                         </button>
                         <button
                           onClick={() => handleDelete(expense.id)}
@@ -277,10 +297,10 @@ export default function ListExpenses() {
                     </div>
                     <div className="flex flex-col gap-2 shrink-0">
                       <button
-                        onClick={() => setSavingsExpense(expense)}
+                        onClick={() => setEditingExpense(expense)}
                         className="px-3 py-1 bg-surface-2 text-text-main border border-border-soft text-sm rounded"
                       >
-                        {expense.is_savings ? 'Edit savings' : 'Savings'}
+                        Edit
                       </button>
                       <button
                         onClick={() => handleDelete(expense.id)}
@@ -336,12 +356,12 @@ export default function ListExpenses() {
         )}
       </main>
 
-      {savingsExpense && (
-        <Modal title="Savings" onClose={() => setSavingsExpense(null)}>
-          <SavingsForm
-            expense={savingsExpense}
-            onSuccess={handleSavingsSuccess}
-            onCancel={() => setSavingsExpense(null)}
+      {editingExpense && (
+        <Modal title="Edit expense" onClose={() => setEditingExpense(null)}>
+          <EditExpenseForm
+            expense={editingExpense}
+            onSuccess={handleEditSuccess}
+            onCancel={() => setEditingExpense(null)}
           />
         </Modal>
       )}
@@ -360,8 +380,31 @@ export default function ListExpenses() {
 }
 
 function SavingsTag({ expense }) {
-  if (!expense.is_savings) return null;
+  const loan = expense.is_loan && (
+    <div className="mt-1 flex flex-wrap items-center gap-2">
+      <span className="inline-block bg-[rgba(196,122,90,0.14)] text-clay text-[11px] font-semibold px-2 py-0.5 rounded-full">
+        {expense.loan_written_off ? 'Loan written off' : 'Loan'} · {expense.loan_person}
+      </span>
+      {!expense.loan_written_off && (
+        <span className="text-[12px] text-text-muted">
+          {Number(expense.loan_outstanding) > 0 ? `${Number(expense.loan_outstanding).toFixed(2)} still owed` : 'fully repaid'}
+        </span>
+      )}
+    </div>
+  );
+  const split = expense.splits?.length > 0 && (
+    <ul className="mt-1 text-[12px] text-text-muted space-y-0.5">
+      {expense.splits.map((p) => (
+        <li key={p.id}>
+          {Number(p.amount).toFixed(2)} · {p.category?.name || 'Uncategorized'}{p.note ? ` · ${p.note}` : ''}
+        </li>
+      ))}
+    </ul>
+  );
+  if (!expense.is_savings) return (loan || split) ? <>{loan}{split}</> : null;
   return (
+    <>
+    {loan}{split}
     <div className="mt-1 flex flex-wrap items-center gap-2">
       <span className="inline-block bg-accent-soft text-accent-deep text-[11px] font-semibold px-2 py-0.5 rounded-full">
         Savings
@@ -370,5 +413,6 @@ function SavingsTag({ expense }) {
         <span className="text-[12px] text-text-muted italic">{expense.savings_note}</span>
       )}
     </div>
+    </>
   );
 }

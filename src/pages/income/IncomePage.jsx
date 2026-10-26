@@ -4,6 +4,10 @@ import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import CreatableSelect from 'react-select/creatable';
 import FilterCharts, { FilterChips, monthRange } from '../../components/charts/FilterCharts';
+import ListToolbar, {
+  EMPTY_FILTERS, filtersToParams, monthKeyOf, activeFilterChips,
+} from '../../components/lists/ListToolbar';
+import EditIncomeForm from './EditIncomeForm';
 
 export default function IncomePage() {
   const { auth } = useAuth();
@@ -27,12 +31,17 @@ export default function IncomePage() {
   const [showModal, setShowModal] = useState(false);
 
   // Click-to-filter from the charts
-  const [monthFilter, setMonthFilter] = useState(null);   // 'YYYY-MM'
-  const [sourceFilter, setSourceFilter] = useState(null); // source id
-  const filterParams = useMemo(() => ({
-    ...(monthFilter ? monthRange(monthFilter) : {}),
-    ...(sourceFilter ? { source: sourceFilter } : {}),
-  }), [monthFilter, sourceFilter]);
+  // Search/sort/filter state; the charts write into the same filters
+  const [filters, setFilters] = useState(EMPTY_FILTERS);
+  const filterParams = useMemo(() => filtersToParams(filters, 'source'), [filters]);
+  const monthFilter = monthKeyOf(filters);
+  const sourceFilter = filters.group ? Number(filters.group) : null;
+  const setMonthFilter = (key) => setFilters((prev) => ({
+    ...prev, ...(key ? monthRange(key) : { start_date: '', end_date: '' }),
+  }));
+  const setSourceFilter = (id) => setFilters((prev) => ({ ...prev, group: id ? String(id) : '' }));
+  const [editingIncome, setEditingIncome] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -70,6 +79,7 @@ export default function IncomePage() {
         params: { page: p, ...filterParams },
       });
       setIncomes(res.data.results);
+      setTotalCount(res.data.count ?? res.data.results.length);
       setHasNext(!!res.data.next);
       setHasPrev(!!res.data.previous);
       setPage(p);
@@ -235,6 +245,11 @@ export default function IncomePage() {
     }),
   };
 
+  const chips = activeFilterChips(filters, setFilters, {
+    groupLabel: (summary.income_by_source || []).find((x) => x.source__id === sourceFilter)?.source__name,
+    monthLabel: (summary.monthly_trend || []).find((m) => m.key === monthFilter)?.month,
+  });
+
   return (
     <div className="min-h-screen bg-bg">
       <div className="max-w-5xl mx-auto px-4 py-6">
@@ -246,6 +261,18 @@ export default function IncomePage() {
           >
             + Add Income
           </button>
+        </div>
+
+        <div className="mb-6">
+          <ListToolbar
+            filters={filters}
+            setFilters={setFilters}
+            groupOptions={(summary.income_by_source || [])
+              .map((x) => ({ value: String(x.source__id), label: x.source__name }))
+              .sort((a, b) => a.label.localeCompare(b.label))}
+            groupLabel="Source"
+            searchPlaceholder="Search description or source…"
+          />
         </div>
 
         {/* Summary Cards */}
@@ -299,20 +326,14 @@ export default function IncomePage() {
           onSelectSlice={setSourceFilter}
         />
 
-        <div className="mt-4 mb-4">
+        <div className="mt-4 mb-4 flex flex-wrap items-center justify-between gap-3">
           <FilterChips
-            chips={[
-              {
-                label: monthFilter && ((summary.monthly_trend || []).find((m) => m.key === monthFilter)?.month || monthFilter),
-                onClear: () => setMonthFilter(null),
-              },
-              {
-                label: sourceFilter && (summary.income_by_source || []).find((x) => x.source__id === sourceFilter)?.source__name,
-                onClear: () => setSourceFilter(null),
-              },
-            ]}
-            onClearAll={() => { setMonthFilter(null); setSourceFilter(null); }}
+            chips={chips}
+            onClearAll={() => setFilters((prev) => ({ ...EMPTY_FILTERS, ordering: prev.ordering }))}
           />
+          <p className="text-sm text-text-muted ml-auto">
+            {totalCount} entr{totalCount !== 1 ? 'ies' : 'y'}{chips.length ? ' matching' : ' total'}
+          </p>
         </div>
 
         {/* Income List */}
@@ -320,8 +341,8 @@ export default function IncomePage() {
           <p className="text-center text-text-muted py-8">Loading...</p>
         ) : incomes.length === 0 ? (
           <p className="text-center text-text-muted py-8">
-            {monthFilter || sourceFilter
-              ? 'No income matches this filter.'
+            {chips.length
+              ? 'No income matches these filters.'
               : <>No income entries yet. Click &quot;+ Add Income&quot; to get started.</>}
           </p>
         ) : (
@@ -341,6 +362,11 @@ export default function IncomePage() {
                   {income.description && (
                     <p className="text-sm text-text-muted">{income.description}</p>
                   )}
+                  {income.repays_loan && (
+                    <span className="inline-block mt-1 bg-[rgba(30,107,74,0.14)] text-emerald text-[11px] font-semibold px-2 py-0.5 rounded-full">
+                      Repayment of loan to {income.repays_loan.person}, not counted as income
+                    </span>
+                  )}
                   {income.account_name && (
                     <p className="text-xs text-text-dim mt-1">
                       Account: {income.account_name}
@@ -354,6 +380,13 @@ export default function IncomePage() {
                       maximumFractionDigits: 2,
                     })}
                   </span>
+                  <button
+                    onClick={() => setEditingIncome(income)}
+                    className="text-text-main hover:text-text-strong text-sm"
+                    title="Change source or description"
+                  >
+                    Edit
+                  </button>
                   <button
                     onClick={() => handleDelete(income.id)}
                     className="text-clay hover:text-clay text-sm"
@@ -400,7 +433,21 @@ export default function IncomePage() {
       </div>
 
       {/* Add Income Modal */}
-      {showModal && (
+      {editingIncome && (
+          <Modal title="Edit income" onClose={() => setEditingIncome(null)}>
+            <EditIncomeForm
+              income={editingIncome}
+              onSuccess={(updated) => {
+                setEditingIncome(null);
+                setIncomes((prev) => prev.map((x) => (x.id === updated.id ? updated : x)));
+                fetchSummary();
+              }}
+              onCancel={() => setEditingIncome(null)}
+            />
+          </Modal>
+        )}
+
+        {showModal && (
         <Modal title="Add Income" onClose={() => setShowModal(false)}>
           <form onSubmit={handleSubmit} className="space-y-3">
             {formError && <p className="text-clay text-sm">{formError}</p>}

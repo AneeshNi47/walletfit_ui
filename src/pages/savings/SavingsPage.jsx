@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
-import SavingsForm from '../expenses/SavingsForm';
+import EditExpenseForm from '../expenses/EditExpenseForm';
 import FilterCharts, {
   FilterChips, SummaryCards, monthRange, fmt,
 } from '../../components/charts/FilterCharts';
@@ -168,8 +168,8 @@ export default function SavingsPage() {
       )}
 
       {editing && (
-        <Modal title="Savings" onClose={() => setEditing(null)}>
-          <SavingsForm expense={editing} onSuccess={handleSaved} onCancel={() => setEditing(null)} />
+        <Modal title="Edit expense" onClose={() => setEditing(null)}>
+          <EditExpenseForm expense={editing} onSuccess={handleSaved} onCancel={() => setEditing(null)} />
         </Modal>
       )}
     </main>
