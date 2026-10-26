@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
+import { Button } from '../../components/ui/Button';
+import { fieldClass, labelClass } from '../../components/ui/formStyles';
 
 export default function TransferForm({ onSuccess, onCancel, initialAccountId = null }) {
   const { auth } = useAuth();
@@ -111,7 +113,7 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
 
   if (loadingAccounts) {
     return (
-      <div className="text-center py-4">
+      <div className="text-center py-4 text-text-muted">
         Loading Accounts...
       </div>
     );
@@ -119,16 +121,10 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
 
   if (!accounts.length && !loadingAccounts) {
     return (
-      <div className="text-center py-4 text-red-500">
+      <div className="text-center py-4 text-clay">
         No accounts found. Please add accounts to perform transfers.
         <div className="flex justify-center mt-4">
-            <button
-                type="button"
-                onClick={onCancel}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-            >
-                Close
-            </button>
+            <Button type="button" variant="ghost" onClick={onCancel}>Close</Button>
         </div>
       </div>
     );
@@ -140,16 +136,16 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-clay text-sm">{error}</p>}
 
       {/* From Account */}
-      <label htmlFor="from_account" className="block text-sm font-medium text-gray-700">From Account:</label>
+      <label htmlFor="from_account" className={labelClass}>From Account:</label>
       <select
         id="from_account"
         name="from_account"
         value={formData.from_account}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
         disabled={!!initialAccountId} // Disable if pre-filled by parent (e.g., from AccountsPage)
       >
@@ -162,13 +158,13 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
       </select>
 
       {/* To Account */}
-      <label htmlFor="to_account" className="block text-sm font-medium text-gray-700">To Account:</label>
+      <label htmlFor="to_account" className={labelClass}>To Account:</label>
       <select
         id="to_account"
         name="to_account"
         value={formData.to_account}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
       >
         <option value="">Select Destination Account</option>
@@ -183,7 +179,7 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
 
       {/* Amount */}
       <div>
-        <label htmlFor="amount" className="block text-sm font-medium text-gray-700">Amount:</label>
+        <label htmlFor="amount" className={labelClass}>Amount:</label>
         <input
           type="number"
           id="amount"
@@ -191,17 +187,17 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
           value={formData.amount}
           onChange={handleChange}
           placeholder="Amount to Transfer"
-          className={`w-full p-2 border rounded ${isAmountExceeded ? 'border-red-500 text-red-600' : ''}`}
+          className={`${fieldClass} ${isAmountExceeded ? 'border-clay text-clay' : ''}`}
           required
           min="0.01"
           max={sourceBalance}
           step="0.01"
         />
         {formData.from_account && (
-          <p className={`text-sm mt-1 ${isAmountExceeded ? 'text-red-600' : 'text-gray-600'}`}>
+          <p className={`text-sm mt-1 ${isAmountExceeded ? 'text-clay' : 'text-text-main'}`}>
             Available balance: {sourceBalance.toFixed(2)} {accounts.find(acc => acc.id.toString() === formData.from_account.toString())?.currency}
             {isAmountExceeded && (
-              <span className="block text-red-500 font-medium">
+              <span className="block text-clay font-medium">
                 ⚠️ Amount exceeds available balance by {(transferAmount - sourceBalance).toFixed(2)}
               </span>
             )}
@@ -216,7 +212,7 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
         value={formData.note}
         onChange={handleChange}
         placeholder="Note (optional)"
-        className="w-full p-2 border rounded"
+        className={fieldClass}
       />
 
       {/* Date */}
@@ -225,29 +221,13 @@ export default function TransferForm({ onSuccess, onCancel, initialAccountId = n
         name="date"
         value={formData.date}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
       />
 
-      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 w-full sm:w-auto"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className={`px-4 py-2 rounded w-full sm:w-auto ${
-            isAmountExceeded || loadingAccounts || loadingSubmission
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-brand-emerald hover:bg-brand-forest'
-          } text-white`}
-          disabled={isAmountExceeded || loadingAccounts || loadingSubmission}
-        >
-          {loadingSubmission ? 'Transferring...' : 'Transfer Funds'}
-        </button>
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-end pt-2">
+        <Button type="button" variant="ghost" onClick={onCancel} className="w-full sm:w-auto">Cancel</Button>
+        <Button type="submit" variant="primary" className="w-full sm:w-auto" disabled={isAmountExceeded || loadingAccounts || loadingSubmission}>{loadingSubmission ? 'Transferring...' : 'Transfer Funds'}</Button>
       </div>
     </form>
   );

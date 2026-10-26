@@ -64,7 +64,7 @@ export default function BulkEntryGrid({ rows, accounts, categories, localAccount
         <thead>
           <tr className="bg-brand-cream border-b border-brand-sand">
             {HEADERS.map((h, i) => (
-              <th key={i} className="px-2 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
+              <th key={i} className="px-2 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wide whitespace-nowrap">
                 {h}
               </th>
             ))}
@@ -89,7 +89,7 @@ export default function BulkEntryGrid({ rows, accounts, categories, localAccount
         </tbody>
       </table>
 
-      <div className="px-3 py-2 bg-gray-50 border-t border-brand-sand">
+      <div className="px-3 py-2 bg-bg border-t border-brand-sand">
         <button
           onClick={onAdd}
           className="text-sm text-brand-emerald hover:text-brand-forest font-medium flex items-center gap-1 transition-colors"

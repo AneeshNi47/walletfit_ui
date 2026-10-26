@@ -6,6 +6,7 @@ import SummaryCards from './SummaryCards';
 import FairnessCard from './FairnessCard';
 import WhoSpentCard from './WhoSpentCard';
 import HouseholdBudgets from './HouseholdBudgets';
+import HouseholdContributions from './HouseholdContributions';
 import ExpenseChart from './ExpenseChart';
 import CategoryPieChart from './CategoryPieChart';
 import AccountBarChart from './AccountBarChart';
@@ -96,9 +97,12 @@ export default function HouseholdPage() {
       if (filters.amount_max) params.append('amount_max', filters.amount_max);
 
       const res = await axios.get(`/expenses/household/?${params.toString()}`, { headers });
-      const data = res.data?.results || res.data;
-      setExpenses(data.results || []);
-      setTotalExpense(data.total_expense || 0);
+      // backend wraps as {..., results: {total_expense, results: [...]}}; also
+      // tolerate a plain array / flat object.
+      const d = res.data;
+      const inner = (d && !Array.isArray(d) && d.results) ? d.results : d;
+      setExpenses(Array.isArray(inner) ? inner : (inner?.results ?? []));
+      setTotalExpense(inner?.total_expense ?? d?.total_expense ?? 0);
     } catch (err) {
       console.error('Failed to fetch household expenses:', err);
     } finally {
@@ -334,7 +338,7 @@ export default function HouseholdPage() {
   if (error && !hasHousehold) {
     return (
       <>
-        <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
+        <div className="min-h-screen flex flex-col justify-center items-center text-clay text-xl">
           <p>Error: {error}</p>
           <button onClick={fetchHousehold} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
             Retry
@@ -347,16 +351,16 @@ export default function HouseholdPage() {
   return (
     <>
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-gray-800">Household</h1>
+        <h1 className="text-3xl font-bold text-text-strong">Household</h1>
 
         {/* Action messages */}
         {actionSuccess && (
-          <div className="bg-green-100 text-green-700 p-3 rounded-lg text-sm">
+          <div className="bg-accent-soft text-emerald p-3 rounded-lg text-sm">
             {actionSuccess}
           </div>
         )}
         {actionError && (
-          <div className="bg-red-100 text-red-700 p-3 rounded-lg text-sm">
+          <div className="bg-[rgba(196,122,90,0.12)] text-clay p-3 rounded-lg text-sm">
             {actionError}
           </div>
         )}
@@ -366,12 +370,12 @@ export default function HouseholdPage() {
           <div className="max-w-lg mx-auto mt-10 space-y-6">
             {/* Pending Invites */}
             {pendingInvitesLoading ? (
-              <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500">
+              <div className="bg-surface rounded-lg shadow-md p-6 text-center text-text-muted">
                 Checking for invites...
               </div>
             ) : pendingInvites.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">Pending Invites</h2>
+              <div className="bg-surface rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-semibold text-text-strong mb-4">Pending Invites</h2>
                 <div className="space-y-3">
                   {pendingInvites.map((invite) => (
                     <div
@@ -379,8 +383,8 @@ export default function HouseholdPage() {
                       className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-brand-cream p-4 rounded-lg border border-brand-sand"
                     >
                       <div>
-                        <p className="font-medium text-gray-800">{invite.household}</p>
-                        <p className="text-sm text-gray-500">
+                        <p className="font-medium text-text-strong">{invite.household}</p>
+                        <p className="text-sm text-text-muted">
                           Invited by {invite.invited_by} &middot;{' '}
                           {new Date(invite.created_at).toLocaleDateString()}
                         </p>
@@ -388,13 +392,13 @@ export default function HouseholdPage() {
                       <div className="flex gap-2 mt-2 sm:mt-0">
                         <button
                           onClick={() => handleAcceptInvite(invite.id, invite.household)}
-                          className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
+                          className="px-4 py-2 bg-emerald text-white text-sm rounded-lg hover:bg-forest transition"
                         >
                           Accept
                         </button>
                         <button
                           onClick={() => handleDeclineInvite(invite.id)}
-                          className="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 transition"
+                          className="px-4 py-2 bg-surface-2 text-text-strong border border-border-soft text-sm rounded-lg hover:bg-surface-tint transition"
                         >
                           Decline
                         </button>
@@ -406,14 +410,14 @@ export default function HouseholdPage() {
             )}
 
             {/* Create Household */}
-            <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            <div className="bg-surface rounded-lg shadow-md p-8">
+              <h2 className="text-xl font-semibold text-text-strong mb-2">
                 {pendingInvites.length > 0 ? 'Or create a new household' : 'You are not part of a household'}
               </h2>
-              <p className="text-gray-500 mb-6">Create a new household to start tracking shared expenses with your family or roommates.</p>
+              <p className="text-text-muted mb-6">Create a new household to start tracking shared expenses with your family or roommates.</p>
               <form onSubmit={handleCreateHousehold} className="space-y-4">
                 <div>
-                  <label htmlFor="householdName" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="householdName" className="block text-sm font-medium text-text-strong mb-1">
                     Household Name
                   </label>
                   <input
@@ -422,7 +426,7 @@ export default function HouseholdPage() {
                     value={householdName}
                     onChange={(e) => setHouseholdName(e.target.value)}
                     placeholder="e.g. The Smith Family"
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                    className="w-full p-2 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                     required
                   />
                 </div>
@@ -440,11 +444,11 @@ export default function HouseholdPage() {
           /* ======================== STATE 2: Has Household ======================== */
           <div className="space-y-6">
             {/* Household Info Card */}
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-surface rounded-lg shadow-md p-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
                 <div>
                   <h2 className="text-2xl font-bold text-brand-forest">{household.name}</h2>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-text-muted mt-1">
                     Created on {new Date(household.created_at).toLocaleDateString('en-US', {
                       year: 'numeric', month: 'long', day: 'numeric'
                     })}
@@ -453,7 +457,7 @@ export default function HouseholdPage() {
                 {!isOwner && (
                   <button
                     onClick={handleLeave}
-                    className="mt-3 sm:mt-0 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm"
+                    className="mt-3 sm:mt-0 px-4 py-2 bg-clay text-white rounded-lg hover:opacity-90 transition text-sm"
                   >
                     Leave Household
                   </button>
@@ -462,28 +466,28 @@ export default function HouseholdPage() {
 
               {/* Members List */}
               <div className="mt-4">
-                <h3 className="text-lg font-semibold text-gray-700 mb-3">Members</h3>
+                <h3 className="text-lg font-semibold text-text-strong mb-3">Members</h3>
                 <div className="space-y-2">
                   {household.members?.map((member) => (
                     <div
                       key={member.id}
-                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-gray-50 p-3 rounded-lg border border-gray-200"
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-bg p-3 rounded-lg border border-border-soft"
                     >
                       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <div className="w-10 h-10 bg-brand-warm rounded-full flex items-center justify-center text-brand-forest font-bold text-sm flex-shrink-0">
                           {(member.first_name?.[0] || member.username?.[0] || '?').toUpperCase()}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-gray-800 truncate">
+                          <p className="font-medium text-text-strong truncate">
                             {member.first_name && member.last_name
                               ? `${member.first_name} ${member.last_name}`
                               : member.username}
                           </p>
-                          <p className="text-sm text-gray-500 truncate">{member.email}</p>
+                          <p className="text-sm text-text-muted truncate">{member.email}</p>
                         </div>
                         <span className={`px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 ${
                           member.role === 'owner'
-                            ? 'bg-yellow-100 text-yellow-800'
+                            ? 'bg-accent-soft text-accent-deep'
                             : 'bg-brand-warm text-brand-forest'
                         }`}>
                           {member.role === 'owner' ? 'Owner' : 'Member'}
@@ -502,7 +506,7 @@ export default function HouseholdPage() {
                           </button>
                           <button
                             onClick={() => handleRemoveMember(member.id, member.username)}
-                            className="px-3 py-2 min-h-[40px] text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
+                            className="px-3 py-2 min-h-[40px] text-xs bg-clay text-white rounded hover:opacity-90 transition"
                           >
                             Remove
                           </button>
@@ -515,21 +519,21 @@ export default function HouseholdPage() {
 
               {/* Invite Form (Owner only) */}
               {isOwner && (
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-3">Invite a Member</h3>
+                <div className="mt-6 pt-4 border-t border-border-soft">
+                  <h3 className="text-lg font-semibold text-text-strong mb-3">Invite a Member</h3>
                   <form onSubmit={handleInvite} className="flex flex-col sm:flex-row gap-3">
                     <input
                       type="email"
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
                       placeholder="Enter email address"
-                      className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                      className="flex-1 p-2 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                       required
                     />
                     <button
                       type="submit"
                       disabled={inviting}
-                      className="px-6 py-2 min-h-[44px] bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 w-full sm:w-auto"
+                      className="px-6 py-2 min-h-[44px] bg-emerald text-white rounded-lg hover:bg-forest transition disabled:opacity-50 w-full sm:w-auto"
                     >
                       {inviting ? 'Inviting...' : 'Send Invite'}
                     </button>
@@ -538,23 +542,23 @@ export default function HouseholdPage() {
                   {/* Sent Invites (pending) */}
                   {sentInvites.length > 0 && (
                     <div className="mt-4">
-                      <h4 className="text-sm font-semibold text-gray-600 mb-2">Pending Invites</h4>
+                      <h4 className="text-sm font-semibold text-text-main mb-2">Pending Invites</h4>
                       <div className="space-y-2">
                         {sentInvites.map((invite) => (
                           <div
                             key={invite.id}
-                            className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-yellow-50 p-3 rounded-lg border border-yellow-200"
+                            className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-accent-soft p-3 rounded-lg border border-yellow-200"
                           >
                             <div>
-                              <p className="text-sm font-medium text-gray-800">{invite.email}</p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-sm font-medium text-text-strong">{invite.email}</p>
+                              <p className="text-xs text-text-muted">
                                 Sent by {invite.invited_by} &middot;{' '}
                                 {new Date(invite.created_at).toLocaleDateString()}
                               </p>
                             </div>
                             <button
                               onClick={() => handleCancelInvite(invite.id, invite.email)}
-                              className="mt-2 sm:mt-0 px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+                              className="mt-2 sm:mt-0 px-3 py-1.5 text-xs bg-[rgba(196,122,90,0.12)] text-clay rounded hover:opacity-90 transition"
                             >
                               Cancel Invite
                             </button>
@@ -577,6 +581,9 @@ export default function HouseholdPage() {
                 expenses={expenses}
               />
 
+              {/* Member contributions to the household pool */}
+              <HouseholdContributions />
+
               {/* Household Budgets, Fairness & Who Spent */}
               <HouseholdBudgets />
 
@@ -586,25 +593,25 @@ export default function HouseholdPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white p-4 rounded-lg shadow-md">
+                <div className="bg-surface p-4 rounded-lg shadow-md">
                   <h3 className="font-semibold text-brand-forest mb-2">Expense Trend</h3>
                   {trendData.length > 0 ? (
                     <ExpenseChart data={trendData} />
                   ) : (
-                    <p className="text-gray-500 text-sm text-center py-8">No trend data available.</p>
+                    <p className="text-text-muted text-sm text-center py-8">No trend data available.</p>
                   )}
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-md">
+                <div className="bg-surface p-4 rounded-lg shadow-md">
                   <h3 className="font-semibold text-brand-forest mb-2">Expenses by Category</h3>
                   {categoryData.length > 0 ? (
                     <CategoryPieChart data={categoryData} />
                   ) : (
-                    <p className="text-gray-500 text-sm text-center py-8">No category data available.</p>
+                    <p className="text-text-muted text-sm text-center py-8">No category data available.</p>
                   )}
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow-md">
+              <div className="bg-surface p-4 rounded-lg shadow-md">
                 <h3 className="font-semibold text-brand-forest mb-2">Account Balances</h3>
                 <AccountBarChart />
               </div>
@@ -625,7 +632,7 @@ export default function HouseholdPage() {
           setTransferAndLeave(false);
         }}>
           <div className="space-y-4">
-            <p className="text-gray-600">
+            <p className="text-text-main">
               Are you sure you want to transfer ownership to{' '}
               <span className="font-semibold">
                 {household.members?.find(m => m.id === transferUserId)?.username || 'this member'}
@@ -639,7 +646,7 @@ export default function HouseholdPage() {
                 onChange={(e) => setTransferAndLeave(e.target.checked)}
                 className="rounded"
               />
-              <label htmlFor="transferAndLeave" className="text-sm text-gray-700">
+              <label htmlFor="transferAndLeave" className="text-sm text-text-strong">
                 Also leave the household after transferring
               </label>
             </div>
@@ -650,7 +657,7 @@ export default function HouseholdPage() {
                   setTransferUserId(null);
                   setTransferAndLeave(false);
                 }}
-                className="px-4 py-2 min-h-[44px] border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition w-full sm:w-auto"
+                className="px-4 py-2 min-h-[44px] border border-border-soft rounded-lg text-text-strong hover:bg-surface-2 transition w-full sm:w-auto"
               >
                 Cancel
               </button>

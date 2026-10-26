@@ -14,7 +14,7 @@ import axios from '../api/axios';
 
 // Helper component to test the auth context
 function AuthTestConsumer() {
-  const { auth, login, logout } = useAuth();
+  const { auth, login, logout, refreshToken } = useAuth();
 
   return (
     <div>
@@ -24,6 +24,9 @@ function AuthTestConsumer() {
       {auth && (
         <div data-testid="auth-user">{auth.user?.username}</div>
       )}
+      {auth && (
+        <div data-testid="auth-refresh">{auth.refresh}</div>
+      )}
       <button onClick={() => login(null, null, {
         access: 'test-access',
         refresh: 'test-refresh',
@@ -32,6 +35,7 @@ function AuthTestConsumer() {
         Login
       </button>
       <button onClick={logout}>Logout</button>
+      <button onClick={refreshToken}>Refresh</button>
     </div>
   );
 }
@@ -126,6 +130,67 @@ describe('AuthContext', () => {
     await waitFor(() => {
       expect(screen.getByTestId('auth-status')).toHaveTextContent('unauthenticated');
       expect(localStorage.getItem('auth')).toBeNull();
+    });
+  });
+
+  // Regression: backend runs ROTATE_REFRESH_TOKENS + BLACKLIST_AFTER_ROTATION, so each
+  // refresh returns a NEW refresh token and blacklists the old one. refreshToken() must
+  // persist the rotated refresh, otherwise the next refresh sends a blacklisted token and
+  // the user is logged out on the following page refresh.
+  it('persists the rotated refresh token after refreshToken()', async () => {
+    const user = userEvent.setup();
+
+    localStorage.setItem('auth', JSON.stringify({
+      access: 'old-access',
+      refresh: 'old-refresh',
+      user: { username: 'testuser' },
+    }));
+
+    axios.post.mockResolvedValueOnce({
+      data: { access: 'new-access', refresh: 'rotated-refresh' },
+    });
+
+    render(
+      <AuthProvider>
+        <AuthTestConsumer />
+      </AuthProvider>
+    );
+
+    await user.click(screen.getByText('Refresh'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('auth-refresh')).toHaveTextContent('rotated-refresh');
+      const stored = JSON.parse(localStorage.getItem('auth'));
+      expect(stored.access).toBe('new-access');
+      expect(stored.refresh).toBe('rotated-refresh');
+    });
+  });
+
+  it('keeps the existing refresh token when the server does not rotate', async () => {
+    const user = userEvent.setup();
+
+    localStorage.setItem('auth', JSON.stringify({
+      access: 'old-access',
+      refresh: 'old-refresh',
+      user: { username: 'testuser' },
+    }));
+
+    axios.post.mockResolvedValueOnce({
+      data: { access: 'new-access' }, // no rotated refresh in response
+    });
+
+    render(
+      <AuthProvider>
+        <AuthTestConsumer />
+      </AuthProvider>
+    );
+
+    await user.click(screen.getByText('Refresh'));
+
+    await waitFor(() => {
+      const stored = JSON.parse(localStorage.getItem('auth'));
+      expect(stored.access).toBe('new-access');
+      expect(stored.refresh).toBe('old-refresh');
     });
   });
 });

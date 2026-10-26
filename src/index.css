@@ -95,7 +95,11 @@
 /* 4. Theme variables — swap on data-theme="dark"                  */
 /* ────────────────────────────────────────────────────────────── */
 @layer base {
-  :root {
+  /* The light palette applies at :root AND to any subtree explicitly tagged
+     data-theme="light" (e.g. modal panels), so light "islands" render with
+     dark text even while the app is in dark mode. */
+  :root,
+  [data-theme="light"] {
     --bg:           #f9f5ec;
     --bg-soft:      #fdf6e8;
     --surface:      #ffffff;
@@ -116,6 +120,9 @@
     --accent-soft: rgba(232,168,48,0.12);
 
     color-scheme: light;
+    /* re-assert text colour so a light island overrides the inherited
+       (computed) dark-theme colour on its own subtree */
+    color: var(--text);
   }
 
   [data-theme="dark"] {
@@ -175,6 +182,28 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
     color: var(--text-strong);
+  }
+
+  /* Native form controls inside a forced-light island (e.g. modal panels) must
+     render light regardless of the OS/browser dark preference. Preflight makes
+     controls background:transparent + color:inherit, so in OS dark mode a native
+     <select> popup and its <option>s can otherwise paint dark-on-dark and become
+     unreadable even though the surrounding modal is light. Force them explicitly. */
+  [data-theme="light"] select,
+  [data-theme="light"] input,
+  [data-theme="light"] textarea {
+    background-color: #ffffff;
+    color: #0e2018;
+    color-scheme: light;
+    border-color: rgba(30, 107, 74, 0.20);
+  }
+  [data-theme="light"] select option {
+    background-color: #ffffff;
+    color: #0e2018;
+  }
+  [data-theme="light"] ::placeholder {
+    color: #96a097;
+    opacity: 1;
   }
 }
 

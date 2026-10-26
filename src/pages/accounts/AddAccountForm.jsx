@@ -1,38 +1,53 @@
 import { useState } from 'react';
 import axios from '../../api/axios'; // Make sure this path is correct
 import { useAuth } from '../../context/AuthContext'; // Import useAuth
+import { Button } from '../../components/ui/Button';
+import { fieldClass } from '../../components/ui/formStyles';
 
-export default function AddAccountForm({ onSuccess, onCancel }) {
-  const { auth } = useAuth(); // Get auth context
+export default function AddAccountForm({ onSuccess, onCancel, account = null }) {
+  const { auth } = useAuth();
+  const isEdit = !!account;
   const [form, setForm] = useState({
-    name: '',
-    type: 'wallet',
-    balance: 0.0,
-    currency: 'AED',
-    account_number: ''
+    name: account?.name ?? '',
+    type: account?.type ?? 'wallet',
+    balance: account?.balance ?? 0.0,
+    currency: account?.currency ?? 'AED',
+    account_number: account?.account_number ?? '',
   });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     const newValue = name === 'balance' ? parseFloat(value) || 0 : value;
-  setForm((prev) => ({ ...prev, [name]: newValue }));
+    setForm((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(form)
-    setError(''); // Clear previous errors
+    setError('');
+    // On edit, balance is server-read-only — don't send it.
+    const payload = isEdit
+      ? { name: form.name, type: form.type, currency: form.currency, account_number: form.account_number }
+      : form;
     try {
-      await axios.post('/accounts/', form, { // Assuming your endpoint for accounts is /accounts/
-        headers: { Authorization: `Bearer ${auth?.access}` },
-      });
-      onSuccess(); // Call onSuccess after successful API call
+      if (isEdit) {
+        await axios.patch(`/accounts/${account.id}/`, payload, {
+          headers: { Authorization: `Bearer ${auth?.access}` },
+        });
+      } else {
+        await axios.post('/accounts/', payload, {
+          headers: { Authorization: `Bearer ${auth?.access}` },
+        });
+      }
+      onSuccess();
     } catch (err) {
-      console.error('Failed to add account:', err);
-      setError('Failed to add account. Please try again.'); // User-friendly error
+      const data = err.response?.data;
+      const msg = data && typeof data === 'object'
+        ? Object.values(data).flat().join(' ')
+        : `Failed to ${isEdit ? 'update' : 'add'} account. Please try again.`;
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -42,31 +57,41 @@ export default function AddAccountForm({ onSuccess, onCancel }) {
     // Remove the fixed inset-0 modal wrapper from here.
     // This component will be rendered inside the Modal from Home.jsx.
     <form onSubmit={handleSubmit} className="space-y-4">
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <p className="text-clay text-sm">{error}</p>}
       <input
         name="name"
         type="text"
         placeholder="Account Name"
         value={form.name}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
       />
+      {!isEdit && (
+        <input
+          name="balance"
+          type="number"
+          step="0.01"
+          placeholder="Opening balance"
+          value={form.balance}
+          onChange={handleChange}
+          className={fieldClass}
+          required
+        />
+      )}
       <input
-        name="balance"
-        type="number"
-        step="0.01"
-        placeholder="Account Balance"
-        value={form.balance}
+        name="account_number"
+        type="text"
+        placeholder="Account / card number (optional)"
+        value={form.account_number}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
-        required
+        className={fieldClass}
       />
       <select
         name="type"
         value={form.type}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
       >
         <option value="wallet">Wallet</option>
         <option value="bank">Bank</option>
@@ -78,29 +103,31 @@ export default function AddAccountForm({ onSuccess, onCancel }) {
         name="currency"
         value={form.currency}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
       >
         <option value="AED">AED</option>
         <option value="USD">USD</option>
         <option value="INR">INR</option>
       </select>
 
-      <div className="flex flex-col sm:flex-row sm:justify-end gap-2 sm:space-x-2">
-        <button
+      <div className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-2">
+        <Button
           type="button"
+          variant="ghost"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-200 rounded w-full sm:w-auto"
+          className="w-full sm:w-auto"
           disabled={loading}
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 w-full sm:w-auto"
+          variant="primary"
+          className="w-full sm:w-auto"
           disabled={loading}
         >
           {loading ? 'Saving...' : 'Save'}
-        </button>
+        </Button>
       </div>
     </form>
   );

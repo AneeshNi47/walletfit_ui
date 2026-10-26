@@ -83,12 +83,15 @@ export const AuthProvider = ({ children }) => {
   const refreshToken = async () => {
     if (!auth?.refresh) return;
     try {
-      const res = await axios.post('token/refresh/', {
+      const res = await axios.post('users/token/refresh/', {
         refresh: auth.refresh,
       });
+      // Rotation is on server-side: persist the rotated refresh token too, otherwise
+      // the previous refresh token is now blacklisted and the next refresh will 401.
       setAuth((prev) => ({
         ...prev,
         access: res.data.access,
+        refresh: res.data.refresh || prev.refresh,
       }));
     } catch (err) {
       console.error('Token refresh failed:', err);

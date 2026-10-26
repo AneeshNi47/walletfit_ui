@@ -1,9 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import AddTransactionForm from './AddTransactionForm';
-import ExpenseCharts from './ExpenseCharts';
+import SavingsForm from './SavingsForm';
+import FilterCharts, {
+  FilterChips, SummaryCards, monthRange, currentMonthKey, fmt,
+} from '../../components/charts/FilterCharts';
 import { formatDate } from '../../utils/utils.jsx';
 
 export default function ListExpenses() {
@@ -18,19 +21,47 @@ export default function ListExpenses() {
 
   // Modal state
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
+  const [savingsExpense, setSavingsExpense] = useState(null);
 
-  const fetchExpenses = useCallback(async (url = '/expenses/') => {
+  // Chart data + click-to-filter state
+  const [monthly, setMonthly] = useState([]);
+  const [byCategory, setByCategory] = useState([]);
+  const [monthFilter, setMonthFilter] = useState(null);      // 'YYYY-MM'
+  const [categoryFilter, setCategoryFilter] = useState(null); // category id
+
+  const filterParams = useMemo(() => ({
+    ...(monthFilter ? monthRange(monthFilter) : {}),
+    ...(categoryFilter ? { category: categoryFilter } : {}),
+  }), [monthFilter, categoryFilter]);
+
+  const fetchSummary = useCallback(async () => {
+    const headers = { Authorization: `Bearer ${auth?.access}` };
+    try {
+      const [mRes, cRes] = await Promise.all([
+        axios.get('expenses/monthly-summary/', { headers }),
+        axios.get('expenses/category-summary/', { headers }),
+      ]);
+      setMonthly(mRes.data);
+      setByCategory(cRes.data);
+    } catch (err) {
+      console.error('Failed to fetch expense summary:', err);
+    }
+  }, [auth]);
+
+  // `params` only applies to the first page; DRF's next/previous URLs already carry the filters.
+  const fetchExpenses = useCallback(async (url = '/expenses/', params) => {
     setLoading(true);
     setError('');
     try {
       const response = await axios.get(url, {
         headers: { Authorization: `Bearer ${auth?.access}` },
+        params,
       });
       setExpenses(response.data.results);
       setNextPage(response.data.next);
       setPrevPage(response.data.previous);
       setTotalCount(response.data.count);
-      setCurrentUrl(url);
+      setCurrentUrl(params ? axios.getUri({ url, params }) : url);
     } catch (err) {
       console.error('Failed to fetch expenses:', err);
       setError('Failed to load expenses. Please try again.');
@@ -40,10 +71,12 @@ export default function ListExpenses() {
   }, [auth]);
 
   useEffect(() => {
-    if (auth?.access) {
-      fetchExpenses();
-    }
-  }, [auth, fetchExpenses]);
+    if (auth?.access) fetchSummary();
+  }, [auth, fetchSummary]);
+
+  useEffect(() => {
+    if (auth?.access) fetchExpenses('/expenses/', filterParams);
+  }, [auth, fetchExpenses, filterParams]);
 
   const handleDelete = async (expenseId) => {
     if (!window.confirm('Are you sure you want to delete this expense?')) return;
@@ -52,7 +85,8 @@ export default function ListExpenses() {
       await axios.delete(`/expenses/${expenseId}/delete/`, {
         headers: { Authorization: `Bearer ${auth?.access}` },
       });
-      fetchExpenses(currentUrl);
+      fetchExpenses(toApiRelative(currentUrl));
+      fetchSummary();
     } catch (err) {
       console.error('Failed to delete expense:', err);
       alert('Failed to delete expense. Please try again.');
@@ -61,35 +95,44 @@ export default function ListExpenses() {
 
   const handleAddExpenseSuccess = () => {
     setShowAddExpenseModal(false);
-    fetchExpenses(currentUrl);
+    fetchExpenses(toApiRelative(currentUrl));
+    fetchSummary();
+  };
+
+  const handleSavingsSuccess = (updated) => {
+    setSavingsExpense(null);
+    setExpenses((prev) => prev.map((e) => (e.id === updated.id ? updated : e)));
+  };
+
+  // DRF returns absolute "next"/"previous" URLs like https://api.fynbee.app/api/expenses/?page=2.
+  // axios baseURL already ends in /api, so strip a leading /api from the path to avoid /api/api/...
+  const toApiRelative = (fullUrl) => {
+    try {
+      const u = new URL(fullUrl, window.location.origin);
+      return u.pathname.replace(/^\/api(?=\/)/, '') + u.search;
+    } catch {
+      return fullUrl;
+    }
   };
 
   const handleNextPage = () => {
-    if (nextPage) {
-      // Extract relative URL from full URL if needed
-      const url = nextPage.includes('http') ? new URL(nextPage).pathname + new URL(nextPage).search : nextPage;
-      fetchExpenses(url);
-    }
+    if (nextPage) fetchExpenses(toApiRelative(nextPage));
   };
 
   const handlePrevPage = () => {
-    if (prevPage) {
-      const url = prevPage.includes('http') ? new URL(prevPage).pathname + new URL(prevPage).search : prevPage;
-      fetchExpenses(url);
-    }
+    if (prevPage) fetchExpenses(toApiRelative(prevPage));
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center text-xl">
-        Loading Expenses...
-      </div>
-    );
-  }
+  const thisMonth = monthly.find((m) => m.key === currentMonthKey());
+  const allTime = monthly.reduce((sum, m) => sum + Number(m.total), 0);
+  const topCategory = byCategory[0];
+  const slices = byCategory.map((c) => ({ id: c.id, label: c.category, total: c.total }));
+  const monthLabel = monthly.find((m) => m.key === monthFilter)?.month || monthFilter;
+  const categoryLabel = byCategory.find((c) => c.id === categoryFilter)?.category;
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
+      <div className="min-h-screen flex flex-col justify-center items-center text-clay text-xl">
         <p>Error: {error}</p>
         <button onClick={() => fetchExpenses()} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
@@ -102,69 +145,112 @@ export default function ListExpenses() {
     <>
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold text-gray-800">Your Expenses</h1>
+          <h1 className="text-3xl font-bold text-text-strong">Your Expenses</h1>
           <button
             onClick={() => setShowAddExpenseModal(true)}
-            className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-300 w-full sm:w-auto"
+            className="px-6 py-3 bg-emerald text-white rounded-lg shadow-md hover:bg-forest transition duration-300 w-full sm:w-auto"
           >
             + Add New Expense
           </button>
         </div>
 
-        <p className="text-sm text-gray-500">{totalCount} expense{totalCount !== 1 ? 's' : ''} total</p>
+        <SummaryCards cards={[
+          { label: 'Total Spent (All Time)', value: fmt(allTime), tone: 'text-clay' },
+          { label: 'This Month', value: fmt(thisMonth?.total), tone: 'text-clay' },
+          {
+            label: 'Top Category',
+            value: topCategory ? topCategory.category : 'N/A',
+            sub: topCategory ? fmt(topCategory.total) : null,
+          },
+        ]} />
 
-        <ExpenseCharts />
+        <FilterCharts
+          monthly={monthly}
+          slices={slices}
+          barColor="#ef4444"
+          barTitle="Monthly Spending"
+          sliceTitle="By Category"
+          selectedMonth={monthFilter}
+          selectedSlice={categoryFilter}
+          onSelectMonth={setMonthFilter}
+          onSelectSlice={setCategoryFilter}
+        />
 
-        {expenses.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <FilterChips
+            chips={[
+              { label: monthFilter && monthLabel, onClear: () => setMonthFilter(null) },
+              { label: categoryFilter && categoryLabel, onClear: () => setCategoryFilter(null) },
+            ]}
+            onClearAll={() => { setMonthFilter(null); setCategoryFilter(null); }}
+          />
+          <p className="text-sm text-text-muted ml-auto">
+            {totalCount} expense{totalCount !== 1 ? 's' : ''}{monthFilter || categoryFilter ? ' matching' : ' total'}
+          </p>
+        </div>
+
+        {loading ? (
+          <div className="py-10 text-center text-text-muted">Loading expenses…</div>
+        ) : expenses.length === 0 ? (
+          <div className="text-center py-10 text-text-muted">
             <p className="text-lg">No expenses found.</p>
-            <p className="text-sm mt-2">Click "Add New Expense" to get started!</p>
+            <p className="text-sm mt-2">
+              {monthFilter || categoryFilter ? 'Try clearing the filter.' : 'Click "Add New Expense" to get started!'}
+            </p>
           </div>
         ) : (
           <>
             {/* Desktop Table */}
-            <div className="hidden md:block bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="hidden md:block bg-surface rounded-lg shadow-md overflow-hidden">
               <table className="w-full text-left">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-bg border-b border-border-soft">
                   <tr>
-                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Date</th>
-                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Description</th>
-                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Category</th>
-                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Amount</th>
-                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Personal</th>
-                    <th className="px-6 py-3 text-sm font-semibold text-gray-600 text-right">Actions</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-text-main">Date</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-text-main">Description</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-text-main">Category</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-text-main">Amount</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-text-main">Personal</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-text-main text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-border-soft">
                   {expenses.map((expense) => (
-                    <tr key={expense.id} className="hover:bg-gray-50 transition duration-150">
-                      <td className="px-6 py-4 text-sm text-gray-700">{formatDate(expense.date)}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        {expense.description || <span className="text-gray-400 italic">No description</span>}
+                    <tr key={expense.id} className="hover:bg-surface-2 transition duration-150">
+                      <td className="px-6 py-4 text-sm text-text-strong">{formatDate(expense.date)}</td>
+                      <td className="px-6 py-4 text-sm text-text-strong">
+                        {expense.description || <span className="text-text-dim italic">No description</span>}
+                        <SavingsTag expense={expense} />
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
+                      <td className="px-6 py-4 text-sm text-text-strong">
                         {expense.category ? (
                           <span className="inline-block bg-brand-warm text-brand-forest text-xs px-2 py-1 rounded-full">
                             {expense.category.name}
                           </span>
                         ) : (
-                          <span className="text-gray-400 italic">Uncategorized</span>
+                          <span className="text-text-dim italic">Uncategorized</span>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-red-600">
+                      <td className="px-6 py-4 text-sm font-semibold text-clay">
                         - {parseFloat(expense.amount).toFixed(2)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
+                      <td className="px-6 py-4 text-sm text-text-strong">
                         {expense.is_personal ? (
-                          <span className="text-green-600 font-medium">Yes</span>
+                          <span className="text-emerald font-medium">Yes</span>
                         ) : (
-                          <span className="text-gray-400">No</span>
+                          <span className="text-text-dim">No</span>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right whitespace-nowrap">
+                        <button
+                          onClick={() => setSavingsExpense(expense)}
+                          className="px-3 py-1 mr-2 bg-surface-2 text-text-main border border-border-soft text-sm rounded hover:border-border-mid transition duration-200"
+                          title="Mark as savings / edit note"
+                        >
+                          {expense.is_savings ? 'Edit savings' : 'Savings'}
+                        </button>
                         <button
                           onClick={() => handleDelete(expense.id)}
-                          className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition duration-200"
+                          className="px-3 py-1 bg-clay text-white text-sm rounded hover:opacity-90 transition duration-200"
                         >
                           Delete
                         </button>
@@ -178,24 +264,33 @@ export default function ListExpenses() {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-3">
               {expenses.map((expense) => (
-                <div key={expense.id} className="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+                <div key={expense.id} className="bg-surface rounded-lg shadow-md p-4 border border-border-soft">
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <p className="text-lg font-semibold text-red-600">
+                      <p className="text-lg font-semibold text-clay">
                         - {parseFloat(expense.amount).toFixed(2)}
                       </p>
-                      <p className="text-sm text-gray-700">
-                        {expense.description || <span className="text-gray-400 italic">No description</span>}
+                      <p className="text-sm text-text-strong">
+                        {expense.description || <span className="text-text-dim italic">No description</span>}
                       </p>
+                      <SavingsTag expense={expense} />
                     </div>
-                    <button
-                      onClick={() => handleDelete(expense.id)}
-                      className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition duration-200"
-                    >
-                      Delete
-                    </button>
+                    <div className="flex flex-col gap-2 shrink-0">
+                      <button
+                        onClick={() => setSavingsExpense(expense)}
+                        className="px-3 py-1 bg-surface-2 text-text-main border border-border-soft text-sm rounded"
+                      >
+                        {expense.is_savings ? 'Edit savings' : 'Savings'}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(expense.id)}
+                        className="px-3 py-1 bg-clay text-white text-sm rounded hover:opacity-90 transition duration-200"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-2 items-center text-sm text-gray-500">
+                  <div className="flex flex-wrap gap-2 items-center text-sm text-text-muted">
                     <span>{formatDate(expense.date)}</span>
                     {expense.category && (
                       <span className="inline-block bg-brand-warm text-brand-forest text-xs px-2 py-1 rounded-full">
@@ -203,7 +298,7 @@ export default function ListExpenses() {
                       </span>
                     )}
                     {expense.is_personal && (
-                      <span className="inline-block bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
+                      <span className="inline-block bg-accent-soft text-emerald text-xs px-2 py-1 rounded-full">
                         Personal
                       </span>
                     )}
@@ -220,7 +315,7 @@ export default function ListExpenses() {
                 className={`px-4 py-2 min-h-[44px] rounded text-sm font-medium transition duration-200 ${
                   prevPage
                     ? 'bg-brand-emerald text-white hover:bg-brand-forest'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-surface-2 text-text-dim cursor-not-allowed'
                 }`}
               >
                 Previous
@@ -231,7 +326,7 @@ export default function ListExpenses() {
                 className={`px-4 py-2 min-h-[44px] rounded text-sm font-medium transition duration-200 ${
                   nextPage
                     ? 'bg-brand-emerald text-white hover:bg-brand-forest'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-surface-2 text-text-dim cursor-not-allowed'
                 }`}
               >
                 Next
@@ -240,6 +335,16 @@ export default function ListExpenses() {
           </>
         )}
       </main>
+
+      {savingsExpense && (
+        <Modal title="Savings" onClose={() => setSavingsExpense(null)}>
+          <SavingsForm
+            expense={savingsExpense}
+            onSuccess={handleSavingsSuccess}
+            onCancel={() => setSavingsExpense(null)}
+          />
+        </Modal>
+      )}
 
       {/* Add Expense Modal */}
       {showAddExpenseModal && (
@@ -251,5 +356,19 @@ export default function ListExpenses() {
         </Modal>
       )}
     </>
+  );
+}
+
+function SavingsTag({ expense }) {
+  if (!expense.is_savings) return null;
+  return (
+    <div className="mt-1 flex flex-wrap items-center gap-2">
+      <span className="inline-block bg-accent-soft text-accent-deep text-[11px] font-semibold px-2 py-0.5 rounded-full">
+        Savings
+      </span>
+      {expense.savings_note && (
+        <span className="text-[12px] text-text-muted italic">{expense.savings_note}</span>
+      )}
+    </div>
   );
 }

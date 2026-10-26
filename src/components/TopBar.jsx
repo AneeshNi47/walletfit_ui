@@ -2,6 +2,7 @@ import { Search, Bell, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { IconButton } from './ui/IconButton';
+import MobileNav from './MobileNav';
 
 export default function TopBar() {
   const { auth } = useAuth();
@@ -10,7 +11,10 @@ export default function TopBar() {
     .toUpperCase();
 
   return (
-    <header className="h-16 sticky top-0 z-30 bg-bg/80 backdrop-blur-md border-b border-border-soft flex items-center px-6 gap-4">
+    <header className="h-16 sticky top-0 z-30 bg-bg/80 backdrop-blur-md border-b border-border-soft flex items-center px-4 sm:px-6 gap-3 sm:gap-4">
+      {/* Mobile hamburger (hidden on lg where the sidebar shows) */}
+      <MobileNav />
+
       {/* Search */}
       <div className="flex-1 max-w-[380px]">
         <label className="relative block">

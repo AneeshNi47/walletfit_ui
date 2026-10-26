@@ -207,7 +207,7 @@ export default function RecurringPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
+      <div className="min-h-screen flex flex-col justify-center items-center text-clay text-xl">
         <p>Error: {error}</p>
         <button
           onClick={() => { setError(''); fetchRecurring(activeFilter); fetchUpcoming(); }}
@@ -224,7 +224,7 @@ export default function RecurringPage() {
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold text-gray-800">Recurring Transactions</h1>
+          <h1 className="text-3xl font-bold text-text-strong">Recurring Transactions</h1>
           <button
             onClick={openAddModal}
             className="px-6 py-3 bg-brand-emerald text-white rounded-lg shadow-md hover:bg-brand-forest transition duration-300 w-full sm:w-auto"
@@ -235,9 +235,9 @@ export default function RecurringPage() {
 
         {/* Upcoming Section */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-700 mb-3">Upcoming This Week</h2>
+          <h2 className="text-xl font-semibold text-text-strong mb-3">Upcoming This Week</h2>
           {upcoming.length === 0 ? (
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center text-gray-500">
+            <div className="bg-bg border border-border-soft rounded-lg p-6 text-center text-text-muted">
               No upcoming transactions this week
             </div>
           ) : (
@@ -248,20 +248,20 @@ export default function RecurringPage() {
                   className={
                     'rounded-lg shadow-md p-4 border-l-4 ' +
                     (item.type === 'expense'
-                      ? 'bg-red-50 border-red-500'
-                      : 'bg-green-50 border-green-500')
+                      ? 'bg-[rgba(196,122,90,0.12)] border-clay'
+                      : 'bg-accent-soft border-emerald')
                   }
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-semibold text-gray-800">{item.name}</p>
-                      <p className="text-sm text-gray-500">{item.next_due_date}</p>
+                      <p className="font-semibold text-text-strong">{item.name}</p>
+                      <p className="text-sm text-text-muted">{item.next_due_date}</p>
                     </div>
                     <div className="text-right">
                       <p
                         className={
                           'text-lg font-bold ' +
-                          (item.type === 'expense' ? 'text-red-600' : 'text-green-600')
+                          (item.type === 'expense' ? 'text-clay' : 'text-emerald')
                         }
                       >
                         {item.type === 'expense' ? '-' : '+'}{parseFloat(item.amount).toFixed(2)}
@@ -270,8 +270,8 @@ export default function RecurringPage() {
                         className={
                           'inline-block text-xs px-2 py-0.5 rounded-full mt-1 ' +
                           (item.type === 'expense'
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-green-100 text-green-700')
+                            ? 'bg-[rgba(196,122,90,0.12)] text-clay'
+                            : 'bg-accent-soft text-emerald')
                         }
                       >
                         {item.type === 'expense' ? 'Expense' : 'Income'}
@@ -294,7 +294,7 @@ export default function RecurringPage() {
                 'px-4 py-2 rounded-full text-sm font-medium transition duration-200 ' +
                 (activeFilter === tab.key
                   ? 'bg-brand-emerald text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200')
+                  : 'bg-surface-2 text-text-main hover:bg-surface-tint')
               }
             >
               {tab.label}
@@ -304,7 +304,7 @@ export default function RecurringPage() {
 
         {/* Recurring List */}
         {recurring.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
+          <div className="text-center py-10 text-text-muted">
             <p className="text-lg">No recurring transactions found.</p>
             <p className="text-sm mt-2">Click &quot;+ Add Recurring&quot; to get started!</p>
           </div>
@@ -314,21 +314,21 @@ export default function RecurringPage() {
               <div
                 key={item.id}
                 className={
-                  'bg-white rounded-lg shadow-md p-5 border border-gray-100 ' +
+                  'bg-surface rounded-lg shadow-md p-5 border border-border-soft ' +
                   (!item.is_active ? 'opacity-60' : '')
                 }
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-800 truncate">{item.name}</h3>
+                    <h3 className="text-base sm:text-lg font-semibold text-text-strong truncate">{item.name}</h3>
                     {item.description && (
-                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">{item.description}</p>
+                      <p className="text-sm text-text-muted mt-1 line-clamp-2">{item.description}</p>
                     )}
                   </div>
                   <p
                     className={
                       'text-xl font-bold ' +
-                      (item.type === 'expense' ? 'text-red-600' : 'text-green-600')
+                      (item.type === 'expense' ? 'text-clay' : 'text-emerald')
                     }
                   >
                     {item.type === 'expense' ? '-' : '+'}{parseFloat(item.amount).toFixed(2)}
@@ -340,8 +340,8 @@ export default function RecurringPage() {
                     className={
                       'inline-block text-xs px-2 py-1 rounded-full ' +
                       (item.type === 'expense'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-green-100 text-green-700')
+                        ? 'bg-[rgba(196,122,90,0.12)] text-clay'
+                        : 'bg-accent-soft text-emerald')
                     }
                   >
                     {item.type === 'expense' ? 'Expense' : 'Income'}
@@ -349,18 +349,18 @@ export default function RecurringPage() {
                   <span
                     className={
                       'inline-block text-xs px-2 py-1 rounded-full ' +
-                      (FREQUENCY_COLORS[item.frequency] || 'bg-gray-100 text-gray-700')
+                      (FREQUENCY_COLORS[item.frequency] || 'bg-surface-2 text-text-strong')
                     }
                   >
                     {FREQUENCY_LABELS[item.frequency] || item.frequency}
                   </span>
                   {item.category_name && (
-                    <span className="inline-block text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-700">
+                    <span className="inline-block text-xs px-2 py-1 rounded-full bg-accent-soft text-accent-deep">
                       {item.category_name}
                     </span>
                   )}
                   {item.account_name && (
-                    <span className="inline-block text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">
+                    <span className="inline-block text-xs px-2 py-1 rounded-full bg-surface-2 text-text-strong">
                       {item.account_name}
                     </span>
                   )}
@@ -368,8 +368,8 @@ export default function RecurringPage() {
                     className={
                       'inline-block text-xs px-2 py-1 rounded-full ' +
                       (item.is_active
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : 'bg-gray-200 text-gray-500')
+                        ? 'bg-accent-soft text-emerald'
+                        : 'bg-surface-2 text-text-muted')
                     }
                   >
                     {item.is_active ? 'Active' : 'Inactive'}
@@ -377,8 +377,8 @@ export default function RecurringPage() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                  <p className="text-sm text-gray-500">
-                    Next due: <span className="font-medium text-gray-700">{item.next_due_date}</span>
+                  <p className="text-sm text-text-muted">
+                    Next due: <span className="font-medium text-text-strong">{item.next_due_date}</span>
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <button
@@ -386,7 +386,7 @@ export default function RecurringPage() {
                       className={
                         'px-3 py-2 min-h-[44px] text-xs rounded transition duration-200 ' +
                         (item.is_active
-                          ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          ? 'bg-surface-2 text-text-strong border border-border-soft hover:bg-surface-tint'
                           : 'bg-emerald-500 text-white hover:bg-emerald-600')
                       }
                     >
@@ -400,7 +400,7 @@ export default function RecurringPage() {
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="px-3 py-2 min-h-[44px] text-xs bg-red-500 text-white rounded hover:bg-red-600 transition duration-200"
+                      className="px-3 py-2 min-h-[44px] text-xs bg-clay text-white rounded hover:opacity-90 transition duration-200"
                     >
                       Delete
                     </button>
@@ -420,33 +420,33 @@ export default function RecurringPage() {
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">Name</label>
               <input
                 type="text"
                 name="name"
                 value={form.name}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 placeholder="e.g. Netflix Subscription"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <label className="block text-sm font-medium text-text-strong mb-1">Type</label>
                 <select
                   name="type"
                   value={form.type}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                  className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="expense">Expense</option>
                   <option value="income">Income</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                <label className="block text-sm font-medium text-text-strong mb-1">Amount</label>
                 <input
                   type="number"
                   name="amount"
@@ -455,7 +455,7 @@ export default function RecurringPage() {
                   required
                   min="0.01"
                   step="0.01"
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                  className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                   placeholder="0.00"
                 />
               </div>
@@ -463,12 +463,12 @@ export default function RecurringPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Account</label>
+                <label className="block text-sm font-medium text-text-strong mb-1">Account</label>
                 <select
                   name="account"
                   value={form.account}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                  className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="">-- None --</option>
                   {accounts.map((acc) => (
@@ -477,12 +477,12 @@ export default function RecurringPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <label className="block text-sm font-medium text-text-strong mb-1">Category</label>
                 <select
                   name="category"
                   value={form.category}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                  className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="">-- None --</option>
                   {categories.map((cat) => (
@@ -494,12 +494,12 @@ export default function RecurringPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+                <label className="block text-sm font-medium text-text-strong mb-1">Frequency</label>
                 <select
                   name="frequency"
                   value={form.frequency}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                  className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
@@ -508,26 +508,26 @@ export default function RecurringPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Next Due Date</label>
+                <label className="block text-sm font-medium text-text-strong mb-1">Next Due Date</label>
                 <input
                   type="date"
                   name="next_due_date"
                   value={form.next_due_date}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                  className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">Description</label>
               <textarea
                 name="description"
                 value={form.description}
                 onChange={handleChange}
                 rows={3}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 placeholder="Optional notes..."
               />
             </div>
@@ -536,7 +536,7 @@ export default function RecurringPage() {
               <button
                 type="button"
                 onClick={closeModal}
-                className="px-4 py-2 min-h-[44px] text-sm border border-gray-300 rounded text-gray-600 hover:bg-gray-50 w-full sm:w-auto"
+                className="px-4 py-2 min-h-[44px] text-sm border border-border-soft rounded text-text-main hover:bg-surface-2 w-full sm:w-auto"
               >
                 Cancel
               </button>

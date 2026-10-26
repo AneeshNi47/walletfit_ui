@@ -5,6 +5,7 @@ import {
   Wallet,
   ArrowLeftRight,
   PiggyBank,
+  Landmark,
   Repeat,
   Users,
   Split,
@@ -17,7 +18,7 @@ import { ThemeToggle } from './ui/ThemeToggle';
 import { CoinBeeMark } from './ui/CoinBeeMark';
 import { Eyebrow } from './ui/Eyebrow';
 
-const SECTIONS = [
+export const SECTIONS = [
   {
     heading: 'Overview',
     items: [
@@ -31,6 +32,7 @@ const SECTIONS = [
       { to: '/accounts', label: 'Accounts', icon: Wallet },
       { to: '/expenses', label: 'Expenses', icon: ArrowLeftRight },
       { to: '/income', label: 'Income', icon: PiggyBank },
+      { to: '/savings', label: 'Savings', icon: Landmark },
       { to: '/budgets', label: 'Budgets', icon: PiggyBank },
       { to: '/recurring', label: 'Recurring', icon: Repeat },
     ],

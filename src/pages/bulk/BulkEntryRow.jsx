@@ -29,9 +29,9 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
   const [showNewCategory, setShowNewCategory] = useState(!!row.category_new && !row.category_id);
 
   const statusColors = {
-    created: 'bg-green-50 border-green-300',
-    error: 'bg-red-50 border-red-300',
-    rolled_back: 'bg-yellow-50 border-yellow-300',
+    created: 'bg-accent-soft border-green-300',
+    error: 'bg-[rgba(196,122,90,0.12)] border-red-300',
+    rolled_back: 'bg-accent-soft border-yellow-300',
   };
 
   const rowBg = row._status ? statusColors[row._status] ?? '' : '';
@@ -120,13 +120,13 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
 
   const locked = row._status === 'created';
   const cellClass = 'px-1';
-  const inputClass = `w-full border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-white ${locked ? 'opacity-60 pointer-events-none' : ''}`;
-  const selectClass = `w-full border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-white ${locked ? 'opacity-60 pointer-events-none' : ''}`;
+  const inputClass = `w-full border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-surface ${locked ? 'opacity-60 pointer-events-none' : ''}`;
+  const selectClass = `w-full border border-brand-sand rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-brand-emerald bg-surface ${locked ? 'opacity-60 pointer-events-none' : ''}`;
 
   return (
-    <tr className={`border-b border-gray-100 ${rowBg} transition-colors`}>
+    <tr className={`border-b border-border-soft ${rowBg} transition-colors`}>
       {/* Row number */}
-      <td className="px-2 py-2 text-xs text-gray-400 text-center w-8">{rowIndex + 1}</td>
+      <td className="px-2 py-2 text-xs text-text-dim text-center w-8">{rowIndex + 1}</td>
 
       {/* Type */}
       <td className={`${cellClass} py-2 w-36`}>
@@ -168,7 +168,7 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
           />
         )}
         {!showNewAccount && row.account_new?.name && (
-          <span className="text-xs text-blue-500 mt-0.5 block">
+          <span className="text-xs text-accent-deep mt-0.5 block">
             new: {row.account_new.name}
           </span>
         )}
@@ -221,14 +221,14 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
                   onChange={e => onUpdate(row._id, 'category_new', e.target.value)}
                 />
                 <button
-                  className="text-xs text-gray-400 hover:text-red-400"
+                  className="text-xs text-text-dim hover:text-red-400"
                   onClick={() => { setShowNewCategory(false); onUpdate(row._id, 'category_new', ''); }}
                 >✕</button>
               </div>
             )}
           </>
         ) : (
-          <span className="text-xs text-gray-300 px-2">—</span>
+          <span className="text-xs text-text-dim px-2">—</span>
         )}
       </td>
 
@@ -263,13 +263,13 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
               />
             )}
             {!showNewToAccount && row.to_account_new?.name && (
-              <span className="text-xs text-blue-500 mt-0.5 block">
+              <span className="text-xs text-accent-deep mt-0.5 block">
                 new: {row.to_account_new.name}
               </span>
             )}
           </>
         ) : (
-          <span className="text-xs text-gray-300 px-2">—</span>
+          <span className="text-xs text-text-dim px-2">—</span>
         )}
       </td>
 
@@ -297,16 +297,16 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
       {/* Status */}
       <td className="px-2 py-2 w-10 text-center">
         {row._status === 'created' && (
-          <span title="Created" className="text-green-500 text-lg">✓</span>
+          <span title="Created" className="text-emerald text-lg">✓</span>
         )}
         {(row._status === 'error' || row._status === 'rolled_back') && (
-          <span title={row._error ?? 'Error'} className="text-red-500 text-lg cursor-help">✕</span>
+          <span title={row._error ?? 'Error'} className="text-clay text-lg cursor-help">✕</span>
         )}
       </td>
 
       {/* Error message */}
       {row._status === 'error' && row._error && (
-        <td colSpan={9} className="px-3 pb-1 text-xs text-red-600">
+        <td colSpan={9} className="px-3 pb-1 text-xs text-clay">
           {row._error}
         </td>
       )}
@@ -334,7 +334,7 @@ export default function BulkEntryRow({ row, accounts, categories, localAccounts,
       <td className="px-2 py-2 w-8 text-center">
         <button
           onClick={() => onDelete(row._id)}
-          className="text-gray-300 hover:text-red-400 transition-colors text-lg leading-none"
+          className="text-text-dim hover:text-red-400 transition-colors text-lg leading-none"
           title="Delete row"
         >
           ×

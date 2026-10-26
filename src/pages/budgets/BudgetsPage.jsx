@@ -157,15 +157,15 @@ export default function BudgetsPage() {
   };
 
   const getProgressColor = (percentage) => {
-    if (percentage < 60) return 'bg-green-500';
-    if (percentage < 80) return 'bg-yellow-500';
-    return 'bg-red-500';
+    if (percentage < 60) return 'bg-emerald';
+    if (percentage < 80) return 'bg-accent-deep';
+    return 'bg-clay';
   };
 
   const getProgressBgColor = (percentage) => {
-    if (percentage < 60) return 'bg-green-100';
-    if (percentage < 80) return 'bg-yellow-100';
-    return 'bg-red-100';
+    if (percentage < 60) return 'bg-accent-soft';
+    if (percentage < 80) return 'bg-accent-soft';
+    return 'bg-[rgba(196,122,90,0.12)]';
   };
 
   if (loading) {
@@ -178,7 +178,7 @@ export default function BudgetsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
+      <div className="min-h-screen flex flex-col justify-center items-center text-clay text-xl">
         <p>Error: {error}</p>
         <button onClick={fetchBudgets} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
@@ -191,10 +191,10 @@ export default function BudgetsPage() {
     <>
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold text-gray-800">Your Budgets</h1>
+          <h1 className="text-3xl font-bold text-text-strong">Your Budgets</h1>
           <button
             onClick={() => { setAddForm({ category: '', amount: '', period: 'monthly' }); setAddError(''); setShowAddModal(true); }}
-            className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-300 w-full sm:w-auto"
+            className="px-6 py-3 bg-emerald text-white rounded-lg shadow-md hover:bg-forest transition duration-300 w-full sm:w-auto"
           >
             + Add Budget
           </button>
@@ -203,17 +203,17 @@ export default function BudgetsPage() {
         {/* Summary Section */}
         {summary && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white rounded-lg shadow-md p-5 border border-gray-200">
-              <p className="text-sm text-gray-500">Total Budget</p>
+            <div className="bg-surface rounded-lg shadow-md p-5 border border-border-soft">
+              <p className="text-sm text-text-muted">Total Budget</p>
               <p className="text-2xl font-bold text-brand-forest">{Number(summary.total_budget).toFixed(2)}</p>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-5 border border-gray-200">
-              <p className="text-sm text-gray-500">Total Spent</p>
-              <p className="text-2xl font-bold text-gray-800">{Number(summary.total_spent).toFixed(2)}</p>
+            <div className="bg-surface rounded-lg shadow-md p-5 border border-border-soft">
+              <p className="text-sm text-text-muted">Total Spent</p>
+              <p className="text-2xl font-bold text-text-strong">{Number(summary.total_spent).toFixed(2)}</p>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-5 border border-gray-200">
-              <p className="text-sm text-gray-500">Over Budget Alerts</p>
-              <p className={`text-2xl font-bold ${summary.alerts_count > 0 ? 'text-red-600' : 'text-green-600'}`}>
+            <div className="bg-surface rounded-lg shadow-md p-5 border border-border-soft">
+              <p className="text-sm text-text-muted">Over Budget Alerts</p>
+              <p className={`text-2xl font-bold ${summary.alerts_count > 0 ? 'text-clay' : 'text-emerald'}`}>
                 {summary.alerts_count} {summary.alerts_count === 1 ? 'category' : 'categories'}
               </p>
             </div>
@@ -222,7 +222,7 @@ export default function BudgetsPage() {
 
         {/* Budget Cards */}
         {budgets.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
+          <div className="text-center py-10 text-text-muted">
             <p className="text-lg">No budgets found.</p>
             <p className="text-sm mt-2">Click "Add Budget" to create your first one!</p>
           </div>
@@ -231,12 +231,12 @@ export default function BudgetsPage() {
             {budgets.map((budget) => (
               <div
                 key={budget.id}
-                className="bg-white rounded-lg shadow-md p-5 border border-gray-200 hover:shadow-lg transition duration-200"
+                className="bg-surface rounded-lg shadow-md p-5 border border-border-soft hover:shadow-lg transition duration-200"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <p className="text-lg font-semibold text-gray-800">{budget.category_name}</p>
-                    <p className="text-xs text-gray-400 capitalize">{budget.period}</p>
+                    <p className="text-lg font-semibold text-text-strong">{budget.category_name}</p>
+                    <p className="text-xs text-text-dim capitalize">{budget.period}</p>
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -247,7 +247,7 @@ export default function BudgetsPage() {
                     </button>
                     <button
                       onClick={() => openDelete(budget)}
-                      className="px-3 py-1 min-h-[40px] text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+                      className="px-3 py-1 min-h-[40px] text-sm bg-[rgba(196,122,90,0.12)] text-clay rounded hover:opacity-90 transition"
                     >
                       Delete
                     </button>
@@ -263,15 +263,15 @@ export default function BudgetsPage() {
                 </div>
 
                 <div className="flex justify-between text-xs sm:text-sm">
-                  <span className="text-gray-600 truncate mr-2">
+                  <span className="text-text-main truncate mr-2">
                     Spent: {Number(budget.spent).toFixed(2)}
                   </span>
-                  <span className="text-gray-600 truncate">
+                  <span className="text-text-main truncate">
                     Budget: {Number(budget.amount).toFixed(2)}
                   </span>
                 </div>
                 <div className="text-right mt-1">
-                  <span className={`text-sm font-semibold ${budget.percentage >= 80 ? 'text-red-600' : budget.percentage >= 60 ? 'text-yellow-600' : 'text-green-600'}`}>
+                  <span className={`text-sm font-semibold ${budget.percentage >= 80 ? 'text-clay' : budget.percentage >= 60 ? 'text-accent-deep' : 'text-emerald'}`}>
                     {budget.percentage.toFixed(1)}%
                   </span>
                 </div>
@@ -286,16 +286,16 @@ export default function BudgetsPage() {
         <Modal title="Add New Budget" onClose={() => setShowAddModal(false)}>
           <form onSubmit={handleAdd} className="space-y-4">
             {addError && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded">{addError}</p>
+              <p className="text-sm text-clay bg-[rgba(196,122,90,0.12)] p-2 rounded">{addError}</p>
             )}
             <div>
-              <label htmlFor="add-category" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <label htmlFor="add-category" className="block text-sm font-medium text-text-strong mb-1">Category</label>
               <select
                 id="add-category"
                 value={addForm.category}
                 onChange={(e) => setAddForm({ ...addForm, category: e.target.value })}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
+                className="w-full px-4 py-2 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               >
                 <option value="">Select a category</option>
                 {categories.map((cat) => (
@@ -304,7 +304,7 @@ export default function BudgetsPage() {
               </select>
             </div>
             <div>
-              <label htmlFor="add-amount" className="block text-sm font-medium text-gray-700 mb-1">Budget Amount</label>
+              <label htmlFor="add-amount" className="block text-sm font-medium text-text-strong mb-1">Budget Amount</label>
               <input
                 id="add-amount"
                 type="number"
@@ -314,17 +314,17 @@ export default function BudgetsPage() {
                 onChange={(e) => setAddForm({ ...addForm, amount: e.target.value })}
                 required
                 placeholder="e.g. 500.00"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
+                className="w-full px-4 py-2 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               />
             </div>
             <div>
-              <label htmlFor="add-period" className="block text-sm font-medium text-gray-700 mb-1">Period</label>
+              <label htmlFor="add-period" className="block text-sm font-medium text-text-strong mb-1">Period</label>
               <select
                 id="add-period"
                 value={addForm.period}
                 onChange={(e) => setAddForm({ ...addForm, period: e.target.value })}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
+                className="w-full px-4 py-2 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               >
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
@@ -335,7 +335,7 @@ export default function BudgetsPage() {
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2 min-h-[40px] text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm border border-border-soft rounded-lg text-text-main hover:bg-surface-2 transition w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -356,16 +356,16 @@ export default function BudgetsPage() {
         <Modal title="Edit Budget" onClose={() => setShowEditModal(false)}>
           <form onSubmit={handleEdit} className="space-y-4">
             {editError && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded">{editError}</p>
+              <p className="text-sm text-clay bg-[rgba(196,122,90,0.12)] p-2 rounded">{editError}</p>
             )}
             <div>
-              <label htmlFor="edit-category" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <label htmlFor="edit-category" className="block text-sm font-medium text-text-strong mb-1">Category</label>
               <select
                 id="edit-category"
                 value={editForm.category}
                 onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
                 required
-                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
+                className="w-full px-4 py-2 min-h-[40px] border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               >
                 <option value="">Select a category</option>
                 {categories.map((cat) => (
@@ -374,7 +374,7 @@ export default function BudgetsPage() {
               </select>
             </div>
             <div>
-              <label htmlFor="edit-amount" className="block text-sm font-medium text-gray-700 mb-1">Budget Amount</label>
+              <label htmlFor="edit-amount" className="block text-sm font-medium text-text-strong mb-1">Budget Amount</label>
               <input
                 id="edit-amount"
                 type="number"
@@ -384,17 +384,17 @@ export default function BudgetsPage() {
                 onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })}
                 required
                 placeholder="e.g. 500.00"
-                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
+                className="w-full px-4 py-2 min-h-[40px] border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               />
             </div>
             <div>
-              <label htmlFor="edit-period" className="block text-sm font-medium text-gray-700 mb-1">Period</label>
+              <label htmlFor="edit-period" className="block text-sm font-medium text-text-strong mb-1">Period</label>
               <select
                 id="edit-period"
                 value={editForm.period}
                 onChange={(e) => setEditForm({ ...editForm, period: e.target.value })}
                 required
-                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
+                className="w-full px-4 py-2 min-h-[40px] border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               >
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
@@ -405,7 +405,7 @@ export default function BudgetsPage() {
               <button
                 type="button"
                 onClick={() => setShowEditModal(false)}
-                className="px-4 py-2 min-h-[40px] text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm border border-border-soft rounded-lg text-text-main hover:bg-surface-2 transition w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -426,16 +426,16 @@ export default function BudgetsPage() {
         <Modal title="Delete Budget" onClose={() => setShowDeleteModal(false)}>
           <div className="space-y-4">
             {deleteError && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded">{deleteError}</p>
+              <p className="text-sm text-clay bg-[rgba(196,122,90,0.12)] p-2 rounded">{deleteError}</p>
             )}
-            <p className="text-gray-700">
+            <p className="text-text-strong">
               Are you sure you want to delete the budget for <span className="font-semibold">"{deleteBudget.category_name}"</span>? This action cannot be undone.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-end">
               <button
                 type="button"
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 min-h-[40px] text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm border border-border-soft rounded-lg text-text-main hover:bg-surface-2 transition w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -443,7 +443,7 @@ export default function BudgetsPage() {
                 type="button"
                 onClick={handleDelete}
                 disabled={deleteLoading}
-                className="px-4 py-2 min-h-[40px] text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm bg-clay text-white rounded-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {deleteLoading ? 'Deleting...' : 'Delete'}
               </button>

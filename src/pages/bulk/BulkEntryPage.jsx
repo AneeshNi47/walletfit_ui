@@ -14,21 +14,21 @@ export default function BulkEntryPage() {
   const hasResults = rows.some(r => r._status !== null);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg">
       <div className="max-w-7xl mx-auto px-4 py-8">
 
         {/* Header */}
         <div className="mb-6 flex items-start justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-bold text-brand-forest">Bulk Entry</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-text-muted mt-1">
               Enter multiple transactions at once. Paste from Excel using the same column order.
             </p>
           </div>
 
           {/* Mode toggle */}
           <div className="flex items-center gap-3 text-sm">
-            <span className="text-gray-500 font-medium">Submit mode:</span>
+            <span className="text-text-muted font-medium">Submit mode:</span>
             <label className="flex items-center gap-1 cursor-pointer">
               <input
                 type="radio" name="mode" value="partial"
@@ -36,7 +36,7 @@ export default function BulkEntryPage() {
                 onChange={() => setMode('partial')}
                 className="accent-brand-emerald"
               />
-              <span className="text-gray-700">Partial <span className="text-gray-400">(skip errors)</span></span>
+              <span className="text-text-strong">Partial <span className="text-text-dim">(skip errors)</span></span>
             </label>
             <label className="flex items-center gap-1 cursor-pointer">
               <input
@@ -45,7 +45,7 @@ export default function BulkEntryPage() {
                 onChange={() => setMode('atomic')}
                 className="accent-brand-emerald"
               />
-              <span className="text-gray-700">Atomic <span className="text-gray-400">(all or nothing)</span></span>
+              <span className="text-text-strong">Atomic <span className="text-text-dim">(all or nothing)</span></span>
             </label>
           </div>
         </div>
@@ -58,9 +58,9 @@ export default function BulkEntryPage() {
         />
 
         {/* Paste hint */}
-        <div className="mb-3 text-xs text-gray-400 bg-white border border-dashed border-gray-200 rounded px-3 py-2">
+        <div className="mb-3 text-xs text-text-dim bg-surface border border-dashed border-border-soft rounded px-3 py-2">
           Tip: Copy rows from Excel with columns in order —{' '}
-          <span className="font-mono text-gray-500">Type · Account · Amount · Category · Description · Date</span>
+          <span className="font-mono text-text-muted">Type · Account · Amount · Category · Description · Date</span>
           {' '}— then paste anywhere on the table.
         </div>
 
@@ -81,13 +81,13 @@ export default function BulkEntryPage() {
 
         {/* Submit bar */}
         <div className="mt-4 flex items-center justify-between flex-wrap gap-3">
-          <span className="text-sm text-gray-400">{rows.length} row{rows.length !== 1 ? 's' : ''}</span>
+          <span className="text-sm text-text-dim">{rows.length} row{rows.length !== 1 ? 's' : ''}</span>
 
           <div className="flex items-center gap-3">
             {hasResults && (
               <button
                 onClick={clearResults}
-                className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-sm text-text-dim hover:text-text-main transition-colors"
               >
                 Clear results
               </button>
@@ -106,10 +106,10 @@ export default function BulkEntryPage() {
         {submitSummary && (
           <div className={`mt-4 rounded-lg px-4 py-3 text-sm font-medium ${
             submitSummary.failed === 0
-              ? 'bg-green-50 text-green-800 border border-green-200'
+              ? 'bg-accent-soft text-emerald border border-green-200'
               : submitSummary.created === 0
-              ? 'bg-red-50 text-red-800 border border-red-200'
-              : 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+              ? 'bg-[rgba(196,122,90,0.12)] text-clay border border-red-200'
+              : 'bg-accent-soft text-accent-deep border border-yellow-200'
           }`}>
             {submitSummary.error ? (
               submitSummary.error
@@ -127,15 +127,15 @@ export default function BulkEntryPage() {
         )}
 
         {/* Legend */}
-        <div className="mt-6 flex gap-4 text-xs text-gray-400">
+        <div className="mt-6 flex gap-4 text-xs text-text-dim">
           <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-sm bg-green-100 border border-green-300 inline-block"></span> Created
+            <span className="w-3 h-3 rounded-sm bg-accent-soft border border-green-300 inline-block"></span> Created
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-sm bg-red-100 border border-red-300 inline-block"></span> Error
+            <span className="w-3 h-3 rounded-sm bg-[rgba(196,122,90,0.12)] border border-red-300 inline-block"></span> Error
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-sm bg-yellow-100 border border-yellow-300 inline-block"></span> Rolled back
+            <span className="w-3 h-3 rounded-sm bg-accent-soft border border-yellow-300 inline-block"></span> Rolled back
           </span>
         </div>
       </div>

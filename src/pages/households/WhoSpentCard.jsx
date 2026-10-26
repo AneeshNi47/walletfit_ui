@@ -28,18 +28,18 @@ export default function WhoSpentCard() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">Who Spent What</h3>
-        <p className="text-gray-400 text-sm">Loading...</p>
+      <div className="bg-surface rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold text-text-strong mb-4">Who Spent What</h3>
+        <p className="text-text-dim text-sm">Loading...</p>
       </div>
     );
   }
 
   if (!data || !data.members?.length || data.total_household_expenses === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">Who Spent What</h3>
-        <p className="text-gray-500 text-sm">No household expenses this period.</p>
+      <div className="bg-surface rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold text-text-strong mb-4">Who Spent What</h3>
+        <p className="text-text-muted text-sm">No household expenses this period.</p>
       </div>
     );
   }
@@ -48,13 +48,13 @@ export default function WhoSpentCard() {
   const lightColors = ['bg-brand-warm text-brand-forest', 'bg-green-100 text-green-700', 'bg-yellow-100 text-yellow-700', 'bg-purple-100 text-purple-700', 'bg-pink-100 text-pink-700', 'bg-indigo-100 text-indigo-700'];
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-surface rounded-lg shadow-md p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
-        <h3 className="text-lg font-semibold text-gray-700">Who Spent What</h3>
+        <h3 className="text-lg font-semibold text-text-strong">Who Spent What</h3>
         <select
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
-          className="px-3 py-1.5 border rounded text-sm bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none"
+          className="px-3 py-1.5 border border-border-soft rounded text-sm bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none"
         >
           <option value="weekly">This Week</option>
           <option value="monthly">This Month</option>
@@ -64,12 +64,12 @@ export default function WhoSpentCard() {
 
       {/* Total bar */}
       <div className="mb-6">
-        <p className="text-sm text-gray-500 mb-2">
-          Total: <span className="font-semibold text-gray-800">
+        <p className="text-sm text-text-muted mb-2">
+          Total: <span className="font-semibold text-text-strong">
             {data.total_household_expenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </span>
         </p>
-        <div className="w-full bg-gray-100 rounded-full h-4 flex overflow-hidden">
+        <div className="w-full bg-surface-2 rounded-full h-4 flex overflow-hidden">
           {data.members.map((member, i) => (
             <div
               key={member.user_id}
@@ -82,7 +82,7 @@ export default function WhoSpentCard() {
         {/* Legend */}
         <div className="flex flex-wrap gap-3 mt-2">
           {data.members.map((member, i) => (
-            <div key={member.user_id} className="flex items-center gap-1.5 text-xs text-gray-600">
+            <div key={member.user_id} className="flex items-center gap-1.5 text-xs text-text-main">
               <div className={`w-3 h-3 rounded-full ${colors[i % colors.length]}`} />
               {member.username} ({member.percentage}%)
             </div>
@@ -93,15 +93,15 @@ export default function WhoSpentCard() {
       {/* Per member details */}
       <div className="space-y-3">
         {data.members.map((member, i) => (
-          <div key={member.user_id} className="border border-gray-100 rounded-lg p-4">
+          <div key={member.user_id} className="border border-border-soft rounded-lg p-4">
             <div className="flex justify-between items-center mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-brand-warm rounded-full flex items-center justify-center text-brand-forest font-bold text-xs">
                   {member.username[0].toUpperCase()}
                 </div>
-                <p className="font-medium text-gray-800 text-sm">{member.username}</p>
+                <p className="font-medium text-text-strong text-sm">{member.username}</p>
               </div>
-              <p className="font-bold text-gray-800">
+              <p className="font-bold text-text-strong">
                 {member.total_spent.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </p>
             </div>
