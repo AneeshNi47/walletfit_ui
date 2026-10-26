@@ -34,10 +34,10 @@ describe('Login', () => {
 
   it('renders login form', () => {
     renderLogin();
-    expect(screen.getByText('Sign in to FynBee')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('admin@example.com')).toBeInTheDocument();
+    expect(screen.getByText('Welcome back')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('you@example.com')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('••••••••')).toBeInTheDocument();
-    expect(screen.getByText('Login')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument();
   });
 
   it('submits form with username and password', async () => {
@@ -46,9 +46,9 @@ describe('Login', () => {
 
     renderLogin();
 
-    await user.type(screen.getByPlaceholderText('admin@example.com'), 'testuser');
+    await user.type(screen.getByPlaceholderText('you@example.com'), 'testuser');
     await user.type(screen.getByPlaceholderText('••••••••'), 'password123');
-    await user.click(screen.getByText('Login'));
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(mockLogin).toHaveBeenCalledWith('testuser', 'password123');
   });
@@ -59,9 +59,9 @@ describe('Login', () => {
 
     renderLogin();
 
-    await user.type(screen.getByPlaceholderText('admin@example.com'), 'testuser');
+    await user.type(screen.getByPlaceholderText('you@example.com'), 'testuser');
     await user.type(screen.getByPlaceholderText('••••••••'), 'password123');
-    await user.click(screen.getByText('Login'));
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
@@ -74,9 +74,9 @@ describe('Login', () => {
 
     renderLogin();
 
-    await user.type(screen.getByPlaceholderText('admin@example.com'), 'wronguser');
+    await user.type(screen.getByPlaceholderText('you@example.com'), 'wronguser');
     await user.type(screen.getByPlaceholderText('••••••••'), 'wrongpass');
-    await user.click(screen.getByText('Login'));
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     await waitFor(() => {
       expect(screen.getByText('Invalid username or password')).toBeInTheDocument();
@@ -90,16 +90,16 @@ describe('Login', () => {
 
     renderLogin();
 
-    await user.type(screen.getByPlaceholderText('admin@example.com'), 'testuser');
+    await user.type(screen.getByPlaceholderText('you@example.com'), 'testuser');
     await user.type(screen.getByPlaceholderText('••••••••'), 'password123');
-    await user.click(screen.getByText('Login'));
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    expect(screen.getByText('Logging in...')).toBeInTheDocument();
+    expect(await screen.findByText('Signing in…')).toBeInTheDocument();
   });
 
   it('has a link to register page', () => {
     renderLogin();
-    const registerLink = screen.getByText('Register here');
+    const registerLink = screen.getByText('Create an account');
     expect(registerLink).toBeInTheDocument();
     expect(registerLink.closest('a')).toHaveAttribute('href', '/register');
   });

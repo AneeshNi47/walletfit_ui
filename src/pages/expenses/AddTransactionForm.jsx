@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import CreatableSelect from 'react-select/creatable';
+import { Button } from '../../components/ui/Button';
+import { fieldClass, reactSelectTheme } from '../../components/ui/formStyles';
 
 // Add initialAccountId to props
 export default function AddTransactionForm({ onSuccess, onCancel, initialAccountId = null }) {
@@ -146,7 +148,7 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
 
   if (loadingCategories || loadingAccounts) {
     return (
-      <div className="text-center py-4">
+      <div className="text-center py-4 text-text-muted">
         Loading Accounts and Categories...
       </div>
     );
@@ -154,52 +156,24 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
 
   if (!accounts.length && !loadingAccounts) {
     return (
-      <div className="text-center py-4 text-red-500">
+      <div className="text-center py-4 text-clay">
         No accounts found. Please add an account first.
         <div className="flex justify-center mt-4">
-            <button
-                type="button"
-                onClick={onCancel}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-            >
-                Close
-            </button>
+          <Button type="button" variant="ghost" onClick={onCancel}>Close</Button>
         </div>
       </div>
     );
   }
 
-  const selectStyles = {
-    control: (provided) => ({
-      ...provided,
-      borderColor: '#d1d5db',
-      borderRadius: '0.25rem',
-      padding: '0.25rem',
-      minHeight: '38px',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: '#1f2937',
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isFocused ? '#e5e7eb' : 'white',
-      color: '#1f2937',
-      '&:active': {
-        backgroundColor: '#d1d5db',
-      },
-    }),
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-clay text-sm">{error}</p>}
 
       <select
         name="account"
         value={formData.account}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
         disabled={!!initialAccountId} // Disable if initialAccountId is provided
       >
@@ -217,7 +191,7 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
         value={formData.amount}
         onChange={handleChange}
         placeholder="Amount"
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
         min="0.01"
         step="0.01"
@@ -234,15 +208,15 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
         placeholder="Select or type a category..."
         className="w-full text-sm"
         classNamePrefix="react-select"
-        styles={selectStyles}
+        styles={reactSelectTheme}
       />
-    <label className="flex items-center space-x-2">
+    <label className="flex items-center gap-2 text-[14px] text-text-main">
       <input
         type="checkbox"
         name="is_personal"
         checked={formData.is_personal}
         onChange={(e) => setFormData(prev => ({ ...prev, is_personal: e.target.checked }))}
-        className="mr-2"
+        className="accent-accent"
       />
       <span>Mark as Personal Expense</span>
     </label>
@@ -252,7 +226,7 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
         value={formData.description}
         onChange={handleChange}
         placeholder="Description (optional)"
-        className="w-full p-2 border rounded"
+        className={fieldClass}
       />
 
       <input
@@ -260,25 +234,22 @@ export default function AddTransactionForm({ onSuccess, onCancel, initialAccount
         name="date"
         value={formData.date}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
       />
 
-      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 w-full sm:w-auto"
-        >
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-end pt-2">
+        <Button type="button" variant="ghost" onClick={onCancel} className="w-full sm:w-auto">
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-full sm:w-auto"
+          variant="primary"
+          className="w-full sm:w-auto"
           disabled={isCreatingCategory || loadingAccounts || loadingCategories}
         >
           Add Expense
-        </button>
+        </Button>
       </div>
     </form>
   );

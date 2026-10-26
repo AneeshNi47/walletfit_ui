@@ -92,9 +92,9 @@ export default function ImportSection({ accounts, categories, onImport }) {
   }
 
   const typeColors = {
-    expense: 'bg-red-100 text-red-700',
-    income: 'bg-green-100 text-green-700',
-    transfer_in: 'bg-blue-100 text-blue-700',
+    expense: 'bg-[rgba(196,122,90,0.12)] text-clay',
+    income: 'bg-accent-soft text-emerald',
+    transfer_in: 'bg-blue-100 text-accent-deep',
     transfer_out: 'bg-orange-100 text-orange-700',
   };
 
@@ -106,11 +106,11 @@ export default function ImportSection({ accounts, categories, onImport }) {
   const duplicateCount = preview?.rows.filter(r => r._isDuplicate).length ?? 0;
 
   return (
-    <div className="mb-6 bg-white border border-brand-sand rounded-xl p-5">
+    <div className="mb-6 bg-surface border border-brand-sand rounded-xl p-5">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div>
           <h2 className="text-sm font-semibold text-brand-forest">Import from File</h2>
-          <p className="text-xs text-gray-400 mt-0.5">Upload a bank statement or use the FynBee template</p>
+          <p className="text-xs text-text-dim mt-0.5">Upload a bank statement or use the FynBee template</p>
         </div>
         <button
           onClick={downloadTemplate}
@@ -125,11 +125,11 @@ export default function ImportSection({ accounts, categories, onImport }) {
 
       {/* Step 1 — Account selection (always visible) */}
       <div className="mb-4">
-        <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+        <label className="block text-xs font-semibold text-text-main mb-1.5">
           Step 1 — Select the account for this statement
         </label>
         <select
-          className="border border-brand-sand rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald bg-white w-full max-w-xs"
+          className="border border-brand-sand rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald bg-surface w-full max-w-xs"
           value={selectedAccount}
           onChange={e => {
             setSelectedAccount(e.target.value);
@@ -162,7 +162,7 @@ export default function ImportSection({ accounts, categories, onImport }) {
       {/* Step 2 — File upload */}
       {!preview && (
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+          <label className="block text-xs font-semibold text-text-main mb-1.5">
             Step 2 — Upload your file
           </label>
           <div
@@ -172,7 +172,7 @@ export default function ImportSection({ accounts, categories, onImport }) {
             onClick={() => fileRef.current?.click()}
             className={[
               'border-2 border-dashed rounded-lg px-6 py-8 text-center cursor-pointer transition-colors',
-              dragging ? 'border-brand-emerald bg-green-50' : 'border-gray-200 hover:border-brand-emerald hover:bg-gray-50',
+              dragging ? 'border-brand-emerald bg-accent-soft' : 'border-border-soft hover:border-brand-emerald hover:bg-surface-2',
             ].join(' ')}
           >
             <input
@@ -183,14 +183,14 @@ export default function ImportSection({ accounts, categories, onImport }) {
               onChange={handleFileInput}
             />
             {parsing ? (
-              <p className="text-sm text-gray-400">Parsing file and checking for duplicates…</p>
+              <p className="text-sm text-text-dim">Parsing file and checking for duplicates…</p>
             ) : (
               <>
-                <svg className="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 text-text-dim mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
-                <p className="text-sm text-gray-500 font-medium">Drop your file here or click to browse</p>
-                <p className="text-xs text-gray-400 mt-1">Supports .xlsx, .xls, .csv — bank statements or FynBee template</p>
+                <p className="text-sm text-text-muted font-medium">Drop your file here or click to browse</p>
+                <p className="text-xs text-text-dim mt-1">Supports .xlsx, .xls, .csv — bank statements or FynBee template</p>
               </>
             )}
           </div>
@@ -198,7 +198,7 @@ export default function ImportSection({ accounts, categories, onImport }) {
       )}
 
       {error && (
-        <p className="mt-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
+        <p className="mt-2 text-xs text-clay bg-[rgba(196,122,90,0.12)] border border-red-200 rounded px-3 py-2">{error}</p>
       )}
 
       {/* Preview panel */}
@@ -206,10 +206,10 @@ export default function ImportSection({ accounts, categories, onImport }) {
         <div className="mt-3">
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
             <div>
-              <span className="text-xs font-medium text-gray-600">{preview.filename}</span>
-              <span className="ml-2 text-xs text-gray-400">— {preview.rows.length} rows detected</span>
+              <span className="text-xs font-medium text-text-main">{preview.filename}</span>
+              <span className="ml-2 text-xs text-text-dim">— {preview.rows.length} rows detected</span>
               {!preview.isFynBeeTemplate && (
-                <span className="ml-2 text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">bank statement</span>
+                <span className="ml-2 text-xs bg-accent-soft text-accent-deep px-2 py-0.5 rounded-full">bank statement</span>
               )}
               {duplicateCount > 0 && (
                 <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
@@ -217,14 +217,14 @@ export default function ImportSection({ accounts, categories, onImport }) {
                 </span>
               )}
             </div>
-            <button onClick={handleDiscard} className="text-xs text-gray-400 hover:text-red-400 transition-colors">
+            <button onClick={handleDiscard} className="text-xs text-text-dim hover:text-red-400 transition-colors">
               Discard
             </button>
           </div>
 
           {/* Warnings */}
           {preview.warnings.length > 0 && (
-            <div className="mb-3 text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 rounded px-3 py-2 space-y-0.5">
+            <div className="mb-3 text-xs text-accent-deep bg-accent-soft border border-yellow-200 rounded px-3 py-2 space-y-0.5">
               {preview.warnings.map((w, i) => <p key={i}>⚠ {w}</p>)}
             </div>
           )}
@@ -243,17 +243,17 @@ export default function ImportSection({ accounts, categories, onImport }) {
           )}
 
           {/* Row preview table */}
-          <div className="overflow-x-auto rounded border border-gray-100 max-h-56 overflow-y-auto mb-3">
+          <div className="overflow-x-auto rounded border border-border-soft max-h-56 overflow-y-auto mb-3">
             <table className="min-w-full text-xs">
-              <thead className="bg-gray-50 sticky top-0">
+              <thead className="bg-bg sticky top-0">
                 <tr>
-                  <th className="px-3 py-2 text-left text-gray-500 font-medium">Date</th>
-                  <th className="px-3 py-2 text-left text-gray-500 font-medium">Description</th>
-                  <th className="px-3 py-2 text-left text-gray-500 font-medium">Amount</th>
-                  <th className="px-3 py-2 text-left text-gray-500 font-medium">Type</th>
-                  <th className="px-3 py-2 text-left text-gray-500 font-medium">Account</th>
-                  <th className="px-3 py-2 text-left text-gray-500 font-medium">Category</th>
-                  <th className="px-3 py-2 text-left text-gray-500 font-medium"></th>
+                  <th className="px-3 py-2 text-left text-text-muted font-medium">Date</th>
+                  <th className="px-3 py-2 text-left text-text-muted font-medium">Description</th>
+                  <th className="px-3 py-2 text-left text-text-muted font-medium">Amount</th>
+                  <th className="px-3 py-2 text-left text-text-muted font-medium">Type</th>
+                  <th className="px-3 py-2 text-left text-text-muted font-medium">Account</th>
+                  <th className="px-3 py-2 text-left text-text-muted font-medium">Category</th>
+                  <th className="px-3 py-2 text-left text-text-muted font-medium"></th>
                 </tr>
               </thead>
               <tbody>
@@ -266,17 +266,17 @@ export default function ImportSection({ accounts, categories, onImport }) {
                     : row.category_new || '—';
 
                   return (
-                    <tr key={i} className={`border-t border-gray-50 ${row._isDuplicate ? 'bg-orange-50' : ''}`}>
-                      <td className="px-3 py-1.5 text-gray-600 whitespace-nowrap">{row.date}</td>
-                      <td className="px-3 py-1.5 text-gray-700 max-w-[200px] truncate">{row.description || '—'}</td>
-                      <td className="px-3 py-1.5 font-medium text-gray-700">{row.amount}</td>
+                    <tr key={i} className={`border-t border-border-soft ${row._isDuplicate ? 'bg-orange-50' : ''}`}>
+                      <td className="px-3 py-1.5 text-text-main whitespace-nowrap">{row.date}</td>
+                      <td className="px-3 py-1.5 text-text-strong max-w-[200px] truncate">{row.description || '—'}</td>
+                      <td className="px-3 py-1.5 font-medium text-text-strong">{row.amount}</td>
                       <td className="px-3 py-1.5">
-                        <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${typeColors[row.type] ?? 'bg-gray-100 text-gray-600'}`}>
+                        <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${typeColors[row.type] ?? 'bg-surface-2 text-text-main'}`}>
                           {row.type}
                         </span>
                       </td>
-                      <td className="px-3 py-1.5 text-gray-500">{accName}</td>
-                      <td className="px-3 py-1.5 text-gray-500">{catName}</td>
+                      <td className="px-3 py-1.5 text-text-muted">{accName}</td>
+                      <td className="px-3 py-1.5 text-text-muted">{catName}</td>
                       <td className="px-3 py-1.5">
                         {row._isDuplicate && (
                           <span title="Possible duplicate — same date and amount already in your records" className="text-orange-500 cursor-help">⚠</span>
@@ -292,7 +292,7 @@ export default function ImportSection({ accounts, categories, onImport }) {
           <div className="flex items-center justify-between flex-wrap gap-2">
             <button
               onClick={() => fileRef.current?.click()}
-              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-xs text-text-dim hover:text-text-main transition-colors"
             >
               Upload a different file
             </button>

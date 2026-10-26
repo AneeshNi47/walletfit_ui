@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
+import { Button } from '../../components/ui/Button';
+import { fieldClass } from '../../components/ui/formStyles';
 // CreatableSelect is not strictly needed if category is removed, but keep import if other forms use it or for future
 // import CreatableSelect from 'react-select/creatable';
 
@@ -98,7 +100,7 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
   // Simplified loading check (removed loadingCategories)
   if (loadingAccounts) {
     return (
-      <div className="text-center py-4">
+      <div className="text-center py-4 text-text-muted">
         Loading Accounts...
       </div>
     );
@@ -106,16 +108,10 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
 
   if (!accounts.length && !loadingAccounts) {
     return (
-      <div className="text-center py-4 text-red-500">
+      <div className="text-center py-4 text-clay">
         No accounts found. Please add an account first.
         <div className="flex justify-center mt-4">
-            <button
-                type="button"
-                onClick={onCancel}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-            >
-                Close
-            </button>
+            <Button type="button" variant="ghost" onClick={onCancel}>Close</Button>
         </div>
       </div>
     );
@@ -126,13 +122,13 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-clay text-sm">{error}</p>}
 
       <select
         name="account"
         value={formData.account}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
         disabled={!!initialAccountId}
       >
@@ -150,7 +146,7 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
         value={formData.amount}
         onChange={handleChange}
         placeholder="Amount"
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
         min="0.01"
         step="0.01"
@@ -163,7 +159,7 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
         value={formData.method}
         onChange={handleChange}
         placeholder="Top-up Method (e.g., Cash, Bank Transfer)"
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
       />
 
@@ -174,7 +170,7 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
         value={formData.note}
         onChange={handleChange}
         placeholder="Note (optional)"
-        className="w-full p-2 border rounded"
+        className={fieldClass}
       />
 
       <input
@@ -182,25 +178,13 @@ export default function TopUpForm({ onSuccess, onCancel, initialAccountId = null
         name="date"
         value={formData.date}
         onChange={handleChange}
-        className="w-full p-2 border rounded"
+        className={fieldClass}
         required
       />
 
-      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 w-full sm:w-auto"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full sm:w-auto"
-          disabled={loadingAccounts}
-        >
-          Top Up Account
-        </button>
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-end pt-2">
+        <Button type="button" variant="ghost" onClick={onCancel} className="w-full sm:w-auto">Cancel</Button>
+        <Button type="submit" variant="primary" className="w-full sm:w-auto" disabled={loadingAccounts}>Top Up Account</Button>
       </div>
     </form>
   );

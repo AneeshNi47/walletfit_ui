@@ -23,11 +23,15 @@ export default function FinancialOverview() {
             headers: { Authorization: `Bearer ${auth?.access}` },
           }),
         ]);
-        setIncome(parseFloat(incomeRes.data?.total_income || incomeRes.data?.total || 0));
+        // This card is a "this month" glance, so use current-month figures on both sides
+        // (previously income was all-time while expenses were the latest month -> mismatch).
+        setIncome(parseFloat(incomeRes.data?.monthly_income ?? incomeRes.data?.total_income ?? 0));
 
         const ed = expenseRes.data;
-        if (Array.isArray(ed) && ed.length > 0) {
-          setExpenses(parseFloat(ed[ed.length - 1]?.total || 0));
+        const monthKey = new Date().toLocaleString('en-US', { month: 'short', year: 'numeric' }); // e.g. "Aug 2026"
+        if (Array.isArray(ed)) {
+          const m = ed.find((x) => x.month === monthKey);
+          setExpenses(m ? parseFloat(m.total || 0) : 0);
         } else if (ed && typeof ed === 'object') {
           setExpenses(parseFloat(ed.total_expenses || ed.total || 0));
         }

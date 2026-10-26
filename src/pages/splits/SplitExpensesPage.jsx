@@ -26,7 +26,8 @@ export default function SplitExpensesPage() {
   const fetchSplits = useCallback(async () => {
     try {
       const res = await axios.get('/splits/', { headers });
-      setSplits(res.data);
+      // endpoint is paginated ({results}) — normalise to an array
+      setSplits(Array.isArray(res.data) ? res.data : (res.data?.results ?? []));
     } catch (err) {
       console.error('Failed to fetch splits:', err);
       setError('Failed to load splits.');
@@ -213,7 +214,7 @@ export default function SplitExpensesPage() {
     <>
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Split Expenses</h1>
+          <h1 className="text-2xl font-bold text-text-strong">Split Expenses</h1>
           {hasHousehold && (
             <button
               onClick={openCreateModal}
@@ -226,11 +227,11 @@ export default function SplitExpensesPage() {
 
         {/* No household message */}
         {!hasHousehold && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center mb-6">
-            <p className="text-yellow-700 text-lg font-medium">
+          <div className="bg-accent-soft border border-yellow-200 rounded-lg p-6 text-center mb-6">
+            <p className="text-accent-deep text-lg font-medium">
               Join a household to split expenses
             </p>
-            <p className="text-yellow-600 text-sm mt-1">
+            <p className="text-accent-deep text-sm mt-1">
               Go to the Household page to create or join one.
             </p>
           </div>
@@ -239,43 +240,43 @@ export default function SplitExpensesPage() {
         {/* Balance Summary */}
         {hasHousehold && (
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-700 mb-3">Balance Summary</h2>
+            <h2 className="text-lg font-semibold text-text-strong mb-3">Balance Summary</h2>
             {balances.length === 0 ? (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-                <p className="text-green-700 font-medium">All settled up!</p>
-                <p className="text-green-600 text-sm">No outstanding balances in your household.</p>
+              <div className="bg-accent-soft border border-green-200 rounded-lg p-4 text-center">
+                <p className="text-emerald font-medium">All settled up!</p>
+                <p className="text-emerald text-sm">No outstanding balances in your household.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {youOwe.map((b, idx) => (
                   <div
                     key={'owe-' + idx}
-                    className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3"
+                    className="bg-[rgba(196,122,90,0.12)] border border-red-200 rounded-lg p-4 flex items-center gap-3"
                   >
-                    <div className="w-10 h-10 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold text-sm">
+                    <div className="w-10 h-10 rounded-full bg-red-200 flex items-center justify-center text-clay font-bold text-sm">
                       {getInitial(b.to_username)}
                     </div>
                     <div>
-                      <p className="text-red-700 font-medium">
+                      <p className="text-clay font-medium">
                         You owe {b.to_username}
                       </p>
-                      <p className="text-red-600 text-lg font-bold">{b.amount} AED</p>
+                      <p className="text-clay text-lg font-bold">{b.amount} AED</p>
                     </div>
                   </div>
                 ))}
                 {owedToYou.map((b, idx) => (
                   <div
                     key={'owed-' + idx}
-                    className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3"
+                    className="bg-accent-soft border border-green-200 rounded-lg p-4 flex items-center gap-3"
                   >
-                    <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-700 font-bold text-sm">
+                    <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-emerald font-bold text-sm">
                       {getInitial(b.from_username)}
                     </div>
                     <div>
-                      <p className="text-green-700 font-medium">
+                      <p className="text-emerald font-medium">
                         {b.from_username} owes you
                       </p>
-                      <p className="text-green-600 text-lg font-bold">{b.amount} AED</p>
+                      <p className="text-emerald text-lg font-bold">{b.amount} AED</p>
                     </div>
                   </div>
                 ))}
@@ -286,7 +287,7 @@ export default function SplitExpensesPage() {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded p-3 mb-4 text-red-700 text-sm">
+          <div className="bg-[rgba(196,122,90,0.12)] border border-red-200 rounded p-3 mb-4 text-clay text-sm">
             {error}
           </div>
         )}
@@ -294,34 +295,34 @@ export default function SplitExpensesPage() {
         {/* Loading */}
         {loading && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading splits...</p>
+            <p className="text-text-muted">Loading splits...</p>
           </div>
         )}
 
         {/* Split List */}
         {!loading && hasHousehold && (
           <div>
-            <h2 className="text-lg font-semibold text-gray-700 mb-3">Your Splits</h2>
+            <h2 className="text-lg font-semibold text-text-strong mb-3">Your Splits</h2>
             {splits.length === 0 ? (
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
-                <p className="text-gray-500">No splits yet. Create one to get started!</p>
+              <div className="bg-bg border border-border-soft rounded-lg p-6 text-center">
+                <p className="text-text-muted">No splits yet. Create one to get started!</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {splits.map((split) => (
                   <div
                     key={split.id}
-                    className="bg-white border border-gray-200 rounded-lg shadow-sm p-5"
+                    className="bg-surface border border-border-soft rounded-lg shadow-sm p-5"
                   >
                     <div className="flex flex-col sm:flex-row items-start justify-between gap-2 mb-3">
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold text-gray-800 truncate">
+                        <h3 className="font-semibold text-text-strong truncate">
                           {split.expense_description || 'Expense #' + split.expense}
                         </h3>
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 text-sm text-gray-500">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 text-sm text-text-muted">
                           <span>{split.expense_date}</span>
                           {split.expense_category && (
-                            <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">
+                            <span className="bg-surface-2 px-2 py-0.5 rounded text-xs">
                               {split.expense_category}
                             </span>
                           )}
@@ -338,17 +339,17 @@ export default function SplitExpensesPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-bold text-gray-800">
+                        <p className="text-lg font-bold text-text-strong">
                           {split.expense_amount} AED
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-text-dim">
                           by {split.created_by_username}
                         </p>
                       </div>
                     </div>
 
                     {/* Shares */}
-                    <div className="border-t border-gray-100 pt-3 space-y-2">
+                    <div className="border-t border-border-soft pt-3 space-y-2">
                       {split.shares.map((share) => (
                         <div
                           key={share.id}
@@ -359,20 +360,20 @@ export default function SplitExpensesPage() {
                               className={
                                 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ' +
                                 (share.is_paid
-                                  ? 'bg-green-100 text-green-700'
+                                  ? 'bg-accent-soft text-emerald'
                                   : 'bg-orange-100 text-orange-700')
                               }
                             >
                               {getInitial(share.username)}
                             </div>
-                            <span className="text-sm text-gray-700 truncate max-w-[120px] sm:max-w-none">{share.username}</span>
+                            <span className="text-sm text-text-strong truncate max-w-[120px] sm:max-w-none">{share.username}</span>
                           </div>
                           <div className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-sm font-medium text-gray-800">
+                            <span className="text-sm font-medium text-text-strong">
                               {share.amount} AED
                             </span>
                             {share.is_paid ? (
-                              <span className="text-xs bg-green-100 text-green-700 px-3 py-1.5 min-h-[36px] flex items-center rounded font-medium">
+                              <span className="text-xs bg-accent-soft text-emerald px-3 py-1.5 min-h-[36px] flex items-center rounded font-medium">
                                 Paid
                               </span>
                             ) : (
@@ -390,10 +391,10 @@ export default function SplitExpensesPage() {
 
                     {/* Delete button for creator */}
                     {split.created_by_username === currentUsername && (
-                      <div className="border-t border-gray-100 pt-3 mt-3 flex justify-end">
+                      <div className="border-t border-border-soft pt-3 mt-3 flex justify-end">
                         <button
                           onClick={() => handleDeleteSplit(split.id)}
-                          className="text-xs text-red-500 hover:text-red-700 transition"
+                          className="text-xs text-clay hover:text-clay transition"
                         >
                           Delete Split
                         </button>
@@ -411,20 +412,20 @@ export default function SplitExpensesPage() {
           <Modal title="Create Split" onClose={() => setShowCreateModal(false)}>
             <div className="space-y-4">
               {createError && (
-                <div className="bg-red-50 border border-red-200 rounded p-2 text-red-700 text-sm">
+                <div className="bg-[rgba(196,122,90,0.12)] border border-red-200 rounded p-2 text-clay text-sm">
                   {createError}
                 </div>
               )}
 
               {/* Expense selector */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-strong mb-1">
                   Select Expense
                 </label>
                 <select
                   value={selectedExpense}
                   onChange={(e) => handleExpenseChange(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                  className="w-full border border-border-soft rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald"
                 >
                   <option value="">-- Choose an expense --</option>
                   {expenses.map((exp) => (
@@ -437,11 +438,11 @@ export default function SplitExpensesPage() {
 
               {/* Split type */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-strong mb-1">
                   Split Type
                 </label>
                 <div className="flex gap-4">
-                  <label className="flex items-center gap-2 text-sm cursor-pointer px-3 py-2 min-h-[44px] rounded border border-gray-200 hover:bg-gray-50">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer px-3 py-2 min-h-[44px] rounded border border-border-soft hover:bg-surface-2">
                     <input
                       type="radio"
                       name="splitType"
@@ -452,7 +453,7 @@ export default function SplitExpensesPage() {
                     />
                     Equal
                   </label>
-                  <label className="flex items-center gap-2 text-sm cursor-pointer px-3 py-2 min-h-[44px] rounded border border-gray-200 hover:bg-gray-50">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer px-3 py-2 min-h-[44px] rounded border border-border-soft hover:bg-surface-2">
                     <input
                       type="radio"
                       name="splitType"
@@ -469,7 +470,7 @@ export default function SplitExpensesPage() {
               {/* Share assignments */}
               {selectedExpense && customShares.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-text-strong mb-2">
                     Share Amounts
                   </label>
                   <div className="space-y-2">
@@ -478,7 +479,7 @@ export default function SplitExpensesPage() {
                         <div className="w-8 h-8 rounded-full bg-brand-warm flex items-center justify-center text-brand-forest font-bold text-xs flex-shrink-0">
                           {getInitial(share.username)}
                         </div>
-                        <span className="text-sm text-gray-700 w-20 sm:w-24 truncate">
+                        <span className="text-sm text-text-strong w-20 sm:w-24 truncate">
                           {share.username}
                         </span>
                         <input
@@ -489,17 +490,17 @@ export default function SplitExpensesPage() {
                           onChange={(e) => handleShareAmountChange(idx, e.target.value)}
                           disabled={splitType === 'equal'}
                           className={
-                            'flex-1 min-w-[80px] border border-gray-300 rounded px-3 py-2 min-h-[40px] text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald' +
-                            (splitType === 'equal' ? ' bg-gray-50' : '')
+                            'flex-1 min-w-[80px] border border-border-soft rounded px-3 py-2 min-h-[40px] text-sm focus:outline-none focus:ring-2 focus:ring-brand-emerald' +
+                            (splitType === 'equal' ? ' bg-bg' : '')
                           }
                           placeholder="0.00"
                         />
-                        <span className="text-sm text-gray-500">AED</span>
+                        <span className="text-sm text-text-muted">AED</span>
                       </div>
                     ))}
                   </div>
                   {splitType === 'custom' && selectedExpense && (
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-text-muted mt-2">
                       Total:{' '}
                       {customShares
                         .reduce((sum, s) => sum + (parseFloat(s.amount) || 0), 0)
@@ -514,7 +515,7 @@ export default function SplitExpensesPage() {
               <div className="flex flex-col sm:flex-row justify-end gap-2 pt-2">
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 min-h-[44px] text-sm border border-gray-300 rounded hover:bg-gray-50 transition w-full sm:w-auto"
+                  className="px-4 py-2 min-h-[44px] text-sm border border-border-soft rounded hover:bg-surface-2 transition w-full sm:w-auto"
                 >
                   Cancel
                 </button>

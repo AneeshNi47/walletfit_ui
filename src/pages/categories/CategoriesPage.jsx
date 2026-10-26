@@ -130,7 +130,7 @@ export default function CategoriesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
+      <div className="min-h-screen flex flex-col justify-center items-center text-clay text-xl">
         <p>Error: {error}</p>
         <button onClick={fetchCategories} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
@@ -143,17 +143,17 @@ export default function CategoriesPage() {
     <>
       <main className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold text-gray-800">Your Categories</h1>
+          <h1 className="text-3xl font-bold text-text-strong">Your Categories</h1>
           <button
             onClick={() => { setNewCategoryName(''); setAddError(''); setShowAddModal(true); }}
-            className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-300 w-full sm:w-auto"
+            className="px-6 py-3 bg-emerald text-white rounded-lg shadow-md hover:bg-forest transition duration-300 w-full sm:w-auto"
           >
             + Add Category
           </button>
         </div>
 
         {categories.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
+          <div className="text-center py-10 text-text-muted">
             <p className="text-lg">No categories found.</p>
             <p className="text-sm mt-2">Click "Add Category" to create your first one!</p>
           </div>
@@ -162,11 +162,11 @@ export default function CategoriesPage() {
             {categories.map((category) => (
               <div
                 key={category.id}
-                className="bg-white rounded-lg shadow-md p-5 flex justify-between items-center border border-gray-200 hover:shadow-lg transition duration-200"
+                className="bg-surface rounded-lg shadow-md p-5 flex justify-between items-center border border-border-soft hover:shadow-lg transition duration-200"
               >
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">{category.name}</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-lg font-semibold text-text-strong">{category.name}</p>
+                  <p className="text-xs text-text-dim mt-1">
                     Created: {new Date(category.created_at).toLocaleDateString()}
                   </p>
                 </div>
@@ -179,7 +179,7 @@ export default function CategoriesPage() {
                   </button>
                   <button
                     onClick={() => openDelete(category)}
-                    className="px-3 py-1 min-h-[40px] text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+                    className="px-3 py-1 min-h-[40px] text-sm bg-[rgba(196,122,90,0.12)] text-clay rounded hover:opacity-90 transition"
                   >
                     Delete
                   </button>
@@ -195,10 +195,10 @@ export default function CategoriesPage() {
         <Modal title="Add New Category" onClose={() => setShowAddModal(false)}>
           <form onSubmit={handleAdd} className="space-y-4">
             {addError && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded">{addError}</p>
+              <p className="text-sm text-clay bg-[rgba(196,122,90,0.12)] p-2 rounded">{addError}</p>
             )}
             <div>
-              <label htmlFor="new-category-name" className="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+              <label htmlFor="new-category-name" className="block text-sm font-medium text-text-strong mb-1">Category Name</label>
               <input
                 id="new-category-name"
                 type="text"
@@ -206,14 +206,14 @@ export default function CategoriesPage() {
                 onChange={(e) => setNewCategoryName(e.target.value)}
                 required
                 placeholder="e.g. Groceries"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
+                className="w-full px-4 py-2 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-end">
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2 min-h-[40px] text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm border border-border-soft rounded-lg text-text-main hover:bg-surface-2 transition w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -234,10 +234,10 @@ export default function CategoriesPage() {
         <Modal title="Edit Category" onClose={() => setShowEditModal(false)}>
           <form onSubmit={handleEdit} className="space-y-4">
             {editError && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded">{editError}</p>
+              <p className="text-sm text-clay bg-[rgba(196,122,90,0.12)] p-2 rounded">{editError}</p>
             )}
             <div>
-              <label htmlFor="edit-category-name" className="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+              <label htmlFor="edit-category-name" className="block text-sm font-medium text-text-strong mb-1">Category Name</label>
               <input
                 id="edit-category-name"
                 type="text"
@@ -245,14 +245,14 @@ export default function CategoriesPage() {
                 onChange={(e) => setEditName(e.target.value)}
                 required
                 placeholder="Category name"
-                className="w-full px-4 py-2 min-h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
+                className="w-full px-4 py-2 min-h-[40px] border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent"
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-end">
               <button
                 type="button"
                 onClick={() => setShowEditModal(false)}
-                className="px-4 py-2 min-h-[40px] text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm border border-border-soft rounded-lg text-text-main hover:bg-surface-2 transition w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -273,16 +273,16 @@ export default function CategoriesPage() {
         <Modal title="Delete Category" onClose={() => setShowDeleteModal(false)}>
           <div className="space-y-4">
             {deleteError && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded">{deleteError}</p>
+              <p className="text-sm text-clay bg-[rgba(196,122,90,0.12)] p-2 rounded">{deleteError}</p>
             )}
-            <p className="text-gray-700">
+            <p className="text-text-strong">
               Are you sure you want to delete <span className="font-semibold">"{deleteCategory.name}"</span>? This action cannot be undone.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-end">
               <button
                 type="button"
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 min-h-[40px] text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm border border-border-soft rounded-lg text-text-main hover:bg-surface-2 transition w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -290,7 +290,7 @@ export default function CategoriesPage() {
                 type="button"
                 onClick={handleDelete}
                 disabled={deleteLoading}
-                className="px-4 py-2 min-h-[40px] text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="px-4 py-2 min-h-[40px] text-sm bg-clay text-white rounded-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {deleteLoading ? 'Deleting...' : 'Delete'}
               </button>

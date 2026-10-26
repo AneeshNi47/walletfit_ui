@@ -27,45 +27,45 @@ export default function Filters({ filters = {}, onFilterChange }) {
   };
 
   return (
-    <div className="bg-white p-4 rounded shadow space-y-3">
+    <div className="bg-surface p-4 rounded shadow space-y-3">
       <h3 className="font-semibold text-brand-forest">Filters</h3>
       <div className="grid md:grid-cols-4 gap-4">
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Start Date</label>
+          <label className="block text-xs text-text-muted mb-1">Start Date</label>
           <input
             type="date"
             value={localFilters.date_from}
             onChange={(e) => handleChange('date_from', e.target.value)}
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+            className="w-full p-2 border border-border-soft rounded focus:outline-none focus:ring-2 focus:ring-brand-emerald"
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">End Date</label>
+          <label className="block text-xs text-text-muted mb-1">End Date</label>
           <input
             type="date"
             value={localFilters.date_to}
             onChange={(e) => handleChange('date_to', e.target.value)}
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+            className="w-full p-2 border border-border-soft rounded focus:outline-none focus:ring-2 focus:ring-brand-emerald"
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Min Amount</label>
+          <label className="block text-xs text-text-muted mb-1">Min Amount</label>
           <input
             type="number"
             value={localFilters.amount_min}
             onChange={(e) => handleChange('amount_min', e.target.value)}
             placeholder="0"
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+            className="w-full p-2 border border-border-soft rounded focus:outline-none focus:ring-2 focus:ring-brand-emerald"
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Max Amount</label>
+          <label className="block text-xs text-text-muted mb-1">Max Amount</label>
           <input
             type="number"
             value={localFilters.amount_max}
             onChange={(e) => handleChange('amount_max', e.target.value)}
             placeholder="99999"
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+            className="w-full p-2 border border-border-soft rounded focus:outline-none focus:ring-2 focus:ring-brand-emerald"
           />
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function Filters({ filters = {}, onFilterChange }) {
         </button>
         <button
           onClick={handleReset}
-          className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-50 transition"
+          className="px-4 py-2 border border-border-soft text-text-strong text-sm rounded hover:bg-surface-2 transition"
         >
           Reset
         </button>

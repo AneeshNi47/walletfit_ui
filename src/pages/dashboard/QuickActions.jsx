@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, ArrowUpRight, ArrowDownLeft, ArrowLeftRight, FileText } from 'lucide-react';
 import { Card, CardEyebrow, CardHeader } from '../../components/ui/Card';
 
-export default function QuickActions({ onAddAccount, onAddExpense, onTopUp, onTransfer }) {
+export default function QuickActions({ onAddAccount, onAddExpense, onLogIncome, onTopUp, onTransfer }) {
   const navigate = useNavigate();
 
   const actions = [
@@ -15,7 +15,7 @@ export default function QuickActions({ onAddAccount, onAddExpense, onTopUp, onTr
     },
     {
       label: 'Log income',
-      onClick: onTopUp,
+      onClick: onLogIncome,
       icon: ArrowDownLeft,
       tile: 'bg-[rgba(30,107,74,0.14)] text-emerald',
       shortcut: 'I',

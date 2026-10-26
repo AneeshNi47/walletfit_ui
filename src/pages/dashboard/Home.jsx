@@ -15,6 +15,7 @@ import AddAccountForm from '../accounts/AddAccountForm';
 import AddTransactionForm from '../expenses/AddTransactionForm';
 import TopUpForm from '../expenses/TopUpForm';
 import TransferForm from '../accounts/TransferForm';
+import AddIncomeForm from '../income/AddIncomeForm';
 
 export default function Dashboard() {
   const { auth, logout } = useAuth();
@@ -24,6 +25,7 @@ export default function Dashboard() {
   const [showTransactionForm, setShowTransactionForm] = useState(false);
   const [showTopUpForm, setShowTopUpForm] = useState(false);
   const [showTransferForm, setShowTransferForm] = useState(false);
+  const [showIncomeForm, setShowIncomeForm] = useState(false);
 
   const refetchDashboard = useCallback(async () => {
     setLoading(true);
@@ -49,6 +51,7 @@ export default function Dashboard() {
     setShowTransactionForm(false);
     setShowTopUpForm(false);
     setShowTransferForm(false);
+    setShowIncomeForm(false);
     refetchDashboard();
   };
 
@@ -78,7 +81,7 @@ export default function Dashboard() {
         <UserGreeting user={user} />
         <div className="flex gap-2 shrink-0">
           <Button onClick={() => setShowTransactionForm(true)}>Add expense</Button>
-          <Button variant="ghost" onClick={() => setShowTopUpForm(true)}>
+          <Button variant="ghost" onClick={() => setShowIncomeForm(true)}>
             Log income
           </Button>
         </div>
@@ -103,6 +106,7 @@ export default function Dashboard() {
         <QuickActions
           onAddAccount={() => setShowAccountForm(true)}
           onAddExpense={() => setShowTransactionForm(true)}
+          onLogIncome={() => setShowIncomeForm(true)}
           onTopUp={() => setShowTopUpForm(true)}
           onTransfer={() => setShowTransferForm(true)}
         />
@@ -132,6 +136,11 @@ export default function Dashboard() {
       {showTransferForm && (
         <Modal title="Transfer funds" onClose={() => setShowTransferForm(false)}>
           <TransferForm onSuccess={handleActionSuccess} onCancel={() => setShowTransferForm(false)} />
+        </Modal>
+      )}
+      {showIncomeForm && (
+        <Modal title="Log income" onClose={() => setShowIncomeForm(false)}>
+          <AddIncomeForm onSuccess={handleActionSuccess} onCancel={() => setShowIncomeForm(false)} />
         </Modal>
       )}
     </div>

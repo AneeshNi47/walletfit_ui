@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import CreatableSelect from 'react-select/creatable';
-import IncomeCharts from './IncomeCharts';
+import FilterCharts, { FilterChips, monthRange } from '../../components/charts/FilterCharts';
 
 export default function IncomePage() {
   const { auth } = useAuth();
@@ -25,6 +25,14 @@ export default function IncomePage() {
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
+
+  // Click-to-filter from the charts
+  const [monthFilter, setMonthFilter] = useState(null);   // 'YYYY-MM'
+  const [sourceFilter, setSourceFilter] = useState(null); // source id
+  const filterParams = useMemo(() => ({
+    ...(monthFilter ? monthRange(monthFilter) : {}),
+    ...(sourceFilter ? { source: sourceFilter } : {}),
+  }), [monthFilter, sourceFilter]);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -59,7 +67,7 @@ export default function IncomePage() {
     try {
       const res = await axios.get('/income/', {
         headers,
-        params: { page: p },
+        params: { page: p, ...filterParams },
       });
       setIncomes(res.data.results);
       setHasNext(!!res.data.next);
@@ -94,11 +102,12 @@ export default function IncomePage() {
   };
 
   useEffect(() => {
-    if (auth?.access) {
-      fetchSummary();
-      fetchIncomes(1);
-    }
+    if (auth?.access) fetchSummary();
   }, [auth]);
+
+  useEffect(() => {
+    if (auth?.access) fetchIncomes(1);
+  }, [auth, filterParams]);
 
   // Open modal and load form data
   const openModal = () => {
@@ -210,30 +219,30 @@ export default function IncomePage() {
   const selectStyles = {
     control: (provided) => ({
       ...provided,
-      borderColor: '#d1d5db',
+      borderColor: 'var(--border-mid)',
       borderRadius: '0.25rem',
       padding: '0.25rem',
       minHeight: '38px',
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: '#1f2937',
+      color: 'var(--text-strong)',
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#e5e7eb' : 'white',
-      color: '#1f2937',
+      backgroundColor: state.isFocused ? 'var(--surface-2)' : 'var(--surface)',
+      color: 'var(--text-strong)',
     }),
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg">
       <div className="max-w-5xl mx-auto px-4 py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Income</h1>
+          <h1 className="text-2xl font-bold text-text-strong">Income</h1>
           <button
             onClick={openModal}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition w-full sm:w-auto"
+            className="px-4 py-2 bg-emerald text-white rounded hover:bg-forest transition w-full sm:w-auto"
           >
             + Add Income
           </button>
@@ -241,31 +250,31 @@ export default function IncomePage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded shadow p-4">
-            <p className="text-sm text-gray-500">Total Income (All Time)</p>
-            <p className="text-xl font-bold text-green-600">
+          <div className="bg-surface rounded shadow p-4">
+            <p className="text-sm text-text-muted">Total Income (All Time)</p>
+            <p className="text-xl font-bold text-emerald">
               {Number(summary.total_income).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
             </p>
           </div>
-          <div className="bg-white rounded shadow p-4">
-            <p className="text-sm text-gray-500">This Month</p>
-            <p className="text-xl font-bold text-green-600">
+          <div className="bg-surface rounded shadow p-4">
+            <p className="text-sm text-text-muted">This Month</p>
+            <p className="text-xl font-bold text-emerald">
               {Number(summary.monthly_income).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
             </p>
           </div>
-          <div className="bg-white rounded shadow p-4">
-            <p className="text-sm text-gray-500">Top Source</p>
-            <p className="text-xl font-bold text-green-600">
+          <div className="bg-surface rounded shadow p-4">
+            <p className="text-sm text-text-muted">Top Source</p>
+            <p className="text-xl font-bold text-emerald">
               {topSource ? topSource.source__name : 'N/A'}
             </p>
             {topSource && (
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-text-dim">
                 {Number(topSource.total).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
@@ -276,43 +285,70 @@ export default function IncomePage() {
         </div>
 
         {/* Charts */}
-        <IncomeCharts
-          monthlyTrend={summary.monthly_trend}
-          incomeBySource={summary.income_by_source}
+        <FilterCharts
+          monthly={summary.monthly_trend || []}
+          slices={(summary.income_by_source || []).map((x) => ({
+            id: x.source__id, label: x.source__name ?? 'Unknown', total: x.total,
+          }))}
+          barColor="#10b981"
+          barTitle="Monthly Income"
+          sliceTitle="By Source"
+          selectedMonth={monthFilter}
+          selectedSlice={sourceFilter}
+          onSelectMonth={setMonthFilter}
+          onSelectSlice={setSourceFilter}
         />
+
+        <div className="mt-4 mb-4">
+          <FilterChips
+            chips={[
+              {
+                label: monthFilter && ((summary.monthly_trend || []).find((m) => m.key === monthFilter)?.month || monthFilter),
+                onClear: () => setMonthFilter(null),
+              },
+              {
+                label: sourceFilter && (summary.income_by_source || []).find((x) => x.source__id === sourceFilter)?.source__name,
+                onClear: () => setSourceFilter(null),
+              },
+            ]}
+            onClearAll={() => { setMonthFilter(null); setSourceFilter(null); }}
+          />
+        </div>
 
         {/* Income List */}
         {loading ? (
-          <p className="text-center text-gray-500 py-8">Loading...</p>
+          <p className="text-center text-text-muted py-8">Loading...</p>
         ) : incomes.length === 0 ? (
-          <p className="text-center text-gray-500 py-8">
-            No income entries yet. Click &quot;+ Add Income&quot; to get started.
+          <p className="text-center text-text-muted py-8">
+            {monthFilter || sourceFilter
+              ? 'No income matches this filter.'
+              : <>No income entries yet. Click &quot;+ Add Income&quot; to get started.</>}
           </p>
         ) : (
           <div className="space-y-3">
             {incomes.map((income) => (
               <div
                 key={income.id}
-                className="bg-white rounded shadow p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                className="bg-surface rounded shadow p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
               >
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1">
-                    <span className="text-xs sm:text-sm text-gray-500">{income.date}</span>
-                    <span className="font-semibold text-gray-700 text-sm sm:text-base truncate">
+                    <span className="text-xs sm:text-sm text-text-muted">{income.date}</span>
+                    <span className="font-semibold text-text-strong text-sm sm:text-base truncate">
                       {income.source_name || 'Unknown Source'}
                     </span>
                   </div>
                   {income.description && (
-                    <p className="text-sm text-gray-500">{income.description}</p>
+                    <p className="text-sm text-text-muted">{income.description}</p>
                   )}
                   {income.account_name && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-text-dim mt-1">
                       Account: {income.account_name}
                     </p>
                   )}
                 </div>
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <span className="text-base sm:text-lg font-bold text-green-600">
+                  <span className="text-base sm:text-lg font-bold text-emerald">
                     +{Number(income.amount).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -320,7 +356,7 @@ export default function IncomePage() {
                   </span>
                   <button
                     onClick={() => handleDelete(income.id)}
-                    className="text-red-500 hover:text-red-700 text-sm"
+                    className="text-clay hover:text-clay text-sm"
                     title="Delete"
                   >
                     Delete
@@ -340,21 +376,21 @@ export default function IncomePage() {
               className={
                 'px-4 py-2 min-h-[44px] rounded ' +
                 (hasPrev
-                  ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed')
+                  ? 'bg-surface-2 hover:bg-surface-tint text-text-strong'
+                  : 'bg-surface-2 text-text-dim cursor-not-allowed')
               }
             >
               Previous
             </button>
-            <span className="px-4 py-2 min-h-[44px] flex items-center text-gray-600">Page {page}</span>
+            <span className="px-4 py-2 min-h-[44px] flex items-center text-text-main">Page {page}</span>
             <button
               onClick={() => fetchIncomes(page + 1)}
               disabled={!hasNext}
               className={
                 'px-4 py-2 min-h-[44px] rounded ' +
                 (hasNext
-                  ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed')
+                  ? 'bg-surface-2 hover:bg-surface-tint text-text-strong'
+                  : 'bg-surface-2 text-text-dim cursor-not-allowed')
               }
             >
               Next
@@ -367,10 +403,10 @@ export default function IncomePage() {
       {showModal && (
         <Modal title="Add Income" onClose={() => setShowModal(false)}>
           <form onSubmit={handleSubmit} className="space-y-3">
-            {formError && <p className="text-red-500 text-sm">{formError}</p>}
+            {formError && <p className="text-clay text-sm">{formError}</p>}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-strong mb-1">
                 Source
               </label>
               <CreatableSelect
@@ -388,14 +424,14 @@ export default function IncomePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-strong mb-1">
                 Account (optional)
               </label>
               <select
                 name="account"
                 value={formData.account}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border border-border-soft rounded"
               >
                 <option value="">No Account</option>
                 {accounts.map((acc) => (
@@ -407,7 +443,7 @@ export default function IncomePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-strong mb-1">
                 Amount
               </label>
               <input
@@ -416,7 +452,7 @@ export default function IncomePage() {
                 value={formData.amount}
                 onChange={handleChange}
                 placeholder="Amount"
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border border-border-soft rounded"
                 required
                 min="0.01"
                 step="0.01"
@@ -424,7 +460,7 @@ export default function IncomePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-strong mb-1">
                 Description (optional)
               </label>
               <input
@@ -433,12 +469,12 @@ export default function IncomePage() {
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Description"
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border border-border-soft rounded"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-strong mb-1">
                 Date
               </label>
               <input
@@ -446,7 +482,7 @@ export default function IncomePage() {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border border-border-soft rounded"
                 required
               />
             </div>
@@ -455,14 +491,14 @@ export default function IncomePage() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 w-full sm:w-auto"
+                className="px-4 py-2 bg-surface-2 text-text-strong border border-border-soft rounded hover:bg-surface-tint w-full sm:w-auto"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loadingForm || isCreatingSource}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 w-full sm:w-auto"
+                className="px-4 py-2 bg-emerald text-white rounded hover:bg-forest disabled:opacity-50 w-full sm:w-auto"
               >
                 {loadingForm ? 'Adding...' : 'Add Income'}
               </button>

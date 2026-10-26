@@ -95,18 +95,18 @@ export default function TelegramConnect() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
+      <div className="bg-surface rounded-lg shadow-md p-6">
+        <h2 className="text-lg font-semibold text-text-strong mb-4 border-b border-border-soft pb-2">
           Telegram Integration
         </h2>
-        <div className="text-gray-500 text-sm">Loading...</div>
+        <div className="text-text-muted text-sm">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
+    <div className="bg-surface rounded-lg shadow-md p-6">
+      <h2 className="text-lg font-semibold text-text-strong mb-4 border-b border-border-soft pb-2">
         Telegram Integration
       </h2>
 
@@ -114,8 +114,8 @@ export default function TelegramConnect() {
         <div
           className={`p-3 rounded text-sm mb-4 ${
             message.type === 'success'
-              ? 'bg-green-100 text-green-700 border border-green-300'
-              : 'bg-red-100 text-red-700 border border-red-300'
+              ? 'bg-accent-soft text-emerald border border-green-300'
+              : 'bg-[rgba(196,122,90,0.12)] text-clay border border-red-300'
           }`}
         >
           {message.text}
@@ -126,23 +126,23 @@ export default function TelegramConnect() {
         /* --- Connected State --- */
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
-            <span className="text-sm font-medium text-green-700">Connected</span>
+            <span className="inline-block w-3 h-3 bg-emerald rounded-full"></span>
+            <span className="text-sm font-medium text-emerald">Connected</span>
           </div>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-main">
             Your Telegram account is linked. You can log expenses and income directly from Telegram.
           </p>
 
           {/* Default Account Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
+            <label className="block text-sm font-medium text-text-main mb-1">
               Default Account for Telegram Entries
             </label>
             <select
               value={status.default_account || ''}
               onChange={(e) => setDefaultAccount(e.target.value)}
-              className="w-full sm:w-64 px-3 py-2 border rounded bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none"
+              className="w-full sm:w-64 px-3 py-2 border border-border-soft rounded bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none"
             >
               <option value="">No default (manual selection)</option>
               {accounts.map((acc) => (
@@ -151,28 +151,28 @@ export default function TelegramConnect() {
                 </option>
               ))}
             </select>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-text-dim mt-1">
               Expenses and income sent via Telegram will be added to this account.
             </p>
           </div>
 
           {/* Quick Reference */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Quick Commands</h3>
-            <div className="grid gap-1 text-xs text-gray-600">
-              <div><code className="bg-gray-200 px-1.5 py-0.5 rounded">lunch 45</code> — log an expense</div>
-              <div><code className="bg-gray-200 px-1.5 py-0.5 rounded">income salary 5000</code> — log income</div>
-              <div><code className="bg-gray-200 px-1.5 py-0.5 rounded">/balance</code> — check balances</div>
-              <div><code className="bg-gray-200 px-1.5 py-0.5 rounded">/budget</code> — budget status</div>
-              <div><code className="bg-gray-200 px-1.5 py-0.5 rounded">/spent</code> — today's spending</div>
-              <div><code className="bg-gray-200 px-1.5 py-0.5 rounded">/owe</code> — split balances</div>
+          <div className="bg-bg rounded-lg p-4">
+            <h3 className="text-sm font-medium text-text-strong mb-2">Quick Commands</h3>
+            <div className="grid gap-1 text-xs text-text-main">
+              <div><code className="bg-surface-2 px-1.5 py-0.5 rounded">lunch 45</code> — log an expense</div>
+              <div><code className="bg-surface-2 px-1.5 py-0.5 rounded">income salary 5000</code> — log income</div>
+              <div><code className="bg-surface-2 px-1.5 py-0.5 rounded">/balance</code> — check balances</div>
+              <div><code className="bg-surface-2 px-1.5 py-0.5 rounded">/budget</code> — budget status</div>
+              <div><code className="bg-surface-2 px-1.5 py-0.5 rounded">/spent</code> — today's spending</div>
+              <div><code className="bg-surface-2 px-1.5 py-0.5 rounded">/owe</code> — split balances</div>
             </div>
           </div>
 
           <button
             onClick={unlinkTelegram}
             disabled={unlinking}
-            className="px-4 py-2 min-h-[44px] text-sm border border-red-300 text-red-600 rounded hover:bg-red-50 transition disabled:opacity-50"
+            className="px-4 py-2 min-h-[44px] text-sm border border-red-300 text-clay rounded hover:bg-[rgba(196,122,90,0.12)] transition disabled:opacity-50"
           >
             {unlinking ? 'Disconnecting...' : 'Disconnect Telegram'}
           </button>
@@ -181,11 +181,11 @@ export default function TelegramConnect() {
         /* --- Not Connected State --- */
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <span className="inline-block w-3 h-3 bg-gray-400 rounded-full"></span>
-            <span className="text-sm font-medium text-gray-500">Not Connected</span>
+            <span className="inline-block w-3 h-3 bg-surface-2 rounded-full"></span>
+            <span className="text-sm font-medium text-text-muted">Not Connected</span>
           </div>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-main">
             Connect your Telegram account to log expenses, check balances, and manage your finances
             directly from Telegram — no need to open the app.
           </p>
@@ -213,29 +213,29 @@ export default function TelegramConnect() {
           </div>
 
           {linkCode ? (
-            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-              <p className="text-sm text-gray-600">Send this message to the bot:</p>
+            <div className="bg-bg rounded-lg p-4 space-y-3">
+              <p className="text-sm text-text-main">Send this message to the bot:</p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 bg-white border border-gray-300 rounded px-4 py-3 text-lg font-mono font-bold text-center text-gray-800">
+                <code className="flex-1 bg-surface border border-border-soft rounded px-4 py-3 text-lg font-mono font-bold text-center text-text-strong">
                   /start {linkCode.code}
                 </code>
                 <button
                   onClick={() => copyToClipboard(`/start ${linkCode.code}`)}
-                  className="px-3 py-3 text-sm bg-gray-200 rounded hover:bg-gray-300 transition"
+                  className="px-3 py-3 text-sm bg-surface-2 text-text-strong border border-border-soft hover:bg-surface-tint rounded transition"
                   title="Copy to clipboard"
                 >
                   {copied ? (
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-emerald" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                     </svg>
                   ) : (
-                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-text-main" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                   )}
                 </button>
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-dim">
                 Code expires at {new Date(linkCode.expires_at).toLocaleTimeString()}
               </p>
               <button

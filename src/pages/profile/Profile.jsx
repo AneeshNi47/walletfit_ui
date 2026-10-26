@@ -75,7 +75,7 @@ export default function Profile() {
     <>
       <main className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-gray-800">My Profile</h1>
+          <h1 className="text-2xl font-bold text-text-strong">My Profile</h1>
           {!editing ? (
             <button
               onClick={() => setEditing(true)}
@@ -87,14 +87,14 @@ export default function Profile() {
             <div className="flex gap-2 w-full sm:w-auto">
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 min-h-[44px] border border-gray-300 text-sm rounded text-gray-600 hover:bg-gray-50 transition flex-1 sm:flex-none"
+                className="px-4 py-2 min-h-[44px] border border-border-soft text-sm rounded text-text-main hover:bg-surface-2 transition flex-1 sm:flex-none"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-4 py-2 min-h-[44px] bg-green-600 text-white text-sm rounded hover:bg-green-700 transition disabled:opacity-50 flex-1 sm:flex-none"
+                className="px-4 py-2 min-h-[44px] bg-emerald text-white text-sm rounded hover:bg-forest transition disabled:opacity-50 flex-1 sm:flex-none"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
@@ -106,8 +106,8 @@ export default function Profile() {
           <div
             className={`p-3 rounded text-sm ${
               message.type === 'success'
-                ? 'bg-green-100 text-green-700 border border-green-300'
-                : 'bg-red-100 text-red-700 border border-red-300'
+                ? 'bg-accent-soft text-emerald border border-green-300'
+                : 'bg-[rgba(196,122,90,0.12)] text-clay border border-red-300'
             }`}
           >
             {message.text}
@@ -115,77 +115,77 @@ export default function Profile() {
         )}
 
         {/* Personal Information */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
+        <div className="bg-surface rounded-lg shadow-md p-6">
+          <h2 className="text-lg font-semibold text-text-strong mb-4 border-b border-border-soft pb-2">
             Personal Information
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Username</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Username</label>
               <input
                 type="text"
                 value={formData.username || ''}
                 disabled
-                className="w-full px-3 py-2 border rounded bg-gray-100 text-gray-500 cursor-not-allowed"
+                className="w-full px-3 py-2 border border-border-soft rounded bg-surface-2 text-text-muted cursor-not-allowed"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Email</label>
               <input
                 type="email"
                 value={formData.email || ''}
                 disabled
-                className="w-full px-3 py-2 border rounded bg-gray-100 text-gray-500 cursor-not-allowed"
+                className="w-full px-3 py-2 border border-border-soft rounded bg-surface-2 text-text-muted cursor-not-allowed"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">First Name</label>
+              <label className="block text-sm font-medium text-text-main mb-1">First Name</label>
               <input
                 type="text"
                 name="first_name"
                 value={formData.first_name || ''}
                 onChange={handleChange}
                 disabled={!editing}
-                className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
+                className={`w-full px-3 py-2 border border-border-soft rounded ${
+                  editing ? 'bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-surface-2 text-text-muted'
                 }`}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Last Name</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Last Name</label>
               <input
                 type="text"
                 name="last_name"
                 value={formData.last_name || ''}
                 onChange={handleChange}
                 disabled={!editing}
-                className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
+                className={`w-full px-3 py-2 border border-border-soft rounded ${
+                  editing ? 'bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-surface-2 text-text-muted'
                 }`}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Phone Number</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Phone Number</label>
               <input
                 type="text"
                 name="phone_number"
                 value={formData.phone_number || ''}
                 onChange={handleChange}
                 disabled={!editing}
-                className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
+                className={`w-full px-3 py-2 border border-border-soft rounded ${
+                  editing ? 'bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-surface-2 text-text-muted'
                 }`}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Gender</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Gender</label>
               <select
                 name="gender"
                 value={formData.gender || ''}
                 onChange={handleChange}
                 disabled={!editing}
-                className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
+                className={`w-full px-3 py-2 border border-border-soft rounded ${
+                  editing ? 'bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-surface-2 text-text-muted'
                 }`}
               >
                 <option value="">Select</option>
@@ -195,28 +195,28 @@ export default function Profile() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Date of Birth</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Date of Birth</label>
               <input
                 type="date"
                 name="date_of_birth"
                 value={formData.date_of_birth || ''}
                 onChange={handleChange}
                 disabled={!editing}
-                className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
+                className={`w-full px-3 py-2 border border-border-soft rounded ${
+                  editing ? 'bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-surface-2 text-text-muted'
                 }`}
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-600 mb-1">Address</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Address</label>
               <textarea
                 name="address"
                 value={formData.address || ''}
                 onChange={handleChange}
                 disabled={!editing}
                 rows={2}
-                className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
+                className={`w-full px-3 py-2 border border-border-soft rounded ${
+                  editing ? 'bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-surface-2 text-text-muted'
                 }`}
               />
             </div>
@@ -224,33 +224,33 @@ export default function Profile() {
         </div>
 
         {/* Preferences */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
+        <div className="bg-surface rounded-lg shadow-md p-6">
+          <h2 className="text-lg font-semibold text-text-strong mb-4 border-b border-border-soft pb-2">
             Preferences
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Currency</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Currency</label>
               <input
                 type="text"
                 name="currency"
                 value={formData.currency || ''}
                 onChange={handleChange}
                 disabled={!editing}
-                className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
+                className={`w-full px-3 py-2 border border-border-soft rounded ${
+                  editing ? 'bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-surface-2 text-text-muted'
                 }`}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Theme</label>
+              <label className="block text-sm font-medium text-text-main mb-1">Theme</label>
               <select
                 name="theme"
                 value={formData.theme || 'light'}
                 onChange={handleChange}
                 disabled={!editing}
-                className={`w-full px-3 py-2 border rounded ${
-                  editing ? 'bg-white focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-gray-100 text-gray-500'
+                className={`w-full px-3 py-2 border border-border-soft rounded ${
+                  editing ? 'bg-surface focus:ring-2 focus:ring-brand-emerald focus:outline-none' : 'bg-surface-2 text-text-muted'
                 }`}
               >
                 <option value="light">Light</option>

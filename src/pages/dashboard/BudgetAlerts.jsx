@@ -36,7 +36,9 @@ export default function BudgetAlerts() {
       setLoading(true);
       setError('');
       try {
-        const res = await axios.get('budgets/summary/', {
+        // Use the per-category budget list (summary/ returns only aggregate totals,
+        // so this card previously always showed "No budgets yet").
+        const res = await axios.get('budgets/', {
           headers: { Authorization: `Bearer ${auth?.access}` },
         });
         const data = Array.isArray(res.data) ? res.data : (res.data?.results || []);

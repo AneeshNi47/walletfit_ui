@@ -303,7 +303,7 @@ export default function ReportPage() {
 
   if (loadingOptions) {
     return (
-      <div className="min-h-screen flex justify-center items-center text-xl text-gray-700">
+      <div className="min-h-screen flex justify-center items-center text-xl text-text-strong">
         Loading Report Options...
       </div>
     );
@@ -311,7 +311,7 @@ export default function ReportPage() {
 
   if (optionsError) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-red-500 text-xl">
+      <div className="min-h-screen flex flex-col justify-center items-center text-clay text-xl">
         <p>Error: {optionsError}</p>
         <button onClick={fetchOptions} className="mt-4 px-4 py-2 bg-brand-emerald text-white rounded hover:bg-brand-forest">
           Retry
@@ -323,38 +323,38 @@ export default function ReportPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow p-4 sm:p-6 max-w-7xl mx-auto w-full space-y-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Financial Reports</h1>
+        <h1 className="text-3xl font-bold text-text-strong mb-6">Financial Reports</h1>
 
         {/* --- Filter Section --- */}
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md space-y-4">
-          <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">Filter Activities</h2>
+        <div className="bg-surface p-4 sm:p-6 rounded-lg shadow-md space-y-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4 text-text-strong">Filter Activities</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {/* Date Filters */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Start Date:</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">Start Date:</label>
               <DatePicker
                 selected={filters.startDate}
                 onChange={(date) => handleDateChange(date, 'startDate')}
                 dateFormat="yyyy-MM-dd"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
+                className="w-full p-2 border border-border-soft rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
                 placeholderText="Select start date"
                 isClearable
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">End Date:</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">End Date:</label>
               <DatePicker
                 selected={filters.endDate}
                 onChange={(date) => handleDateChange(date, 'endDate')}
                 dateFormat="yyyy-MM-dd"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
+                className="w-full p-2 border border-border-soft rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
                 placeholderText="Select end date"
                 isClearable
               />
             </div>
             {/* Account Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Accounts:</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">Accounts:</label>
               <Select
                 name="selectedAccounts"
                 options={accountsOptions}
@@ -367,12 +367,12 @@ export default function ReportPage() {
               />
             </div>
             <div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">Quick Date Range:</label>
+  <label className="block text-sm font-medium text-text-strong mb-1">Quick Date Range:</label>
   <select
     name="dateRange"
     value={filters.dateRange}
     onChange={handleFilterChange}
-    className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
+    className="w-full p-2 border border-border-soft rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
   >
     <option value="">Custom Range</option>
     <option value="today">Today</option>
@@ -385,7 +385,7 @@ export default function ReportPage() {
 </div>
             {/* Category Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Categories:</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">Categories:</label>
               <Select
                 name="selectedCategories"
                 options={categoriesOptions}
@@ -399,12 +399,12 @@ export default function ReportPage() {
             </div>
             {/* Type Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Activity Type:</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">Activity Type:</label>
               <select
                 name="type"
                 value={filters.type}
                 onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
+                className="w-full p-2 border border-border-soft rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
               >
                 <option value="">All Types</option>
                 <option value="expense">Expense</option>
@@ -415,25 +415,25 @@ export default function ReportPage() {
             </div>
             {/* Amount Range Filters */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Min Amount:</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">Min Amount:</label>
               <input
                 type="number"
                 name="minAmount"
                 value={filters.minAmount}
                 onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
+                className="w-full p-2 border border-border-soft rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
                 step="0.01"
                 placeholder="e.g., 10.00"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Max Amount:</label>
+              <label className="block text-sm font-medium text-text-strong mb-1">Max Amount:</label>
               <input
                 type="number"
                 name="maxAmount"
                 value={filters.maxAmount}
                 onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
+                className="w-full p-2 border border-border-soft rounded-md focus:ring-brand-emerald focus:border-brand-emerald"
                 step="0.01"
                 placeholder="e.g., 100.00"
               />
@@ -447,9 +447,9 @@ export default function ReportPage() {
                         checked={filters.isCredit}
                         onChange={handleFilterChange}
                         id="isCredit"
-                        className="h-4 w-4 text-brand-emerald border-gray-300 rounded focus:ring-brand-emerald"
+                        className="h-4 w-4 text-brand-emerald border-border-soft rounded focus:ring-brand-emerald"
                     />
-                    <label htmlFor="isCredit" className="ml-2 text-sm font-medium text-gray-700">Is Credit</label>
+                    <label htmlFor="isCredit" className="ml-2 text-sm font-medium text-text-strong">Is Credit</label>
                 </div>
                 <div className="flex items-center">
                     <input
@@ -458,9 +458,9 @@ export default function ReportPage() {
                         checked={filters.isDebit}
                         onChange={handleFilterChange}
                         id="isDebit"
-                        className="h-4 w-4 text-brand-emerald border-gray-300 rounded focus:ring-brand-emerald"
+                        className="h-4 w-4 text-brand-emerald border-border-soft rounded focus:ring-brand-emerald"
                     />
-                    <label htmlFor="isDebit" className="ml-2 text-sm font-medium text-gray-700">Is Debit</label>
+                    <label htmlFor="isDebit" className="ml-2 text-sm font-medium text-text-strong">Is Debit</label>
                 </div>
             </div>
           </div> {/* End Filter grid */}
@@ -468,7 +468,7 @@ export default function ReportPage() {
           <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 mt-6">
             <button
               onClick={clearFilters}
-              className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200"
+              className="px-6 py-2 bg-surface-2 text-text-strong border border-border-soft hover:bg-surface-tint rounded-md transition duration-200"
             >
               Clear Filters
             </button>
@@ -482,8 +482,8 @@ export default function ReportPage() {
         </div> {/* End Filter Section */}
 
         {/* --- Saved Reports & Export Section --- */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 sm:p-6 rounded-lg shadow-md space-y-4 sm:space-y-0 sm:space-x-4">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Report Actions</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-surface p-4 sm:p-6 rounded-lg shadow-md space-y-4 sm:space-y-0 sm:space-x-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-text-strong">Report Actions</h2>
             <div className="flex flex-wrap gap-2 sm:gap-3 justify-start sm:justify-end w-full sm:w-auto">
                 <button
                     onClick={() => setShowSaveReportModal(true)}
@@ -502,8 +502,8 @@ export default function ReportPage() {
                     disabled={exportLoading.excel}
                     className={`px-4 py-2 min-h-[44px] text-sm text-white rounded-md transition duration-200 ${
                       exportLoading.excel
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-green-600 hover:bg-green-700'
+                        ? 'bg-surface-2 cursor-not-allowed'
+                        : 'bg-emerald hover:bg-forest'
                     }`}
                 >
                     {exportLoading.excel ? 'Exporting...' : 'Export to Excel'}
@@ -513,8 +513,8 @@ export default function ReportPage() {
                     disabled={exportLoading.pdf}
                     className={`px-4 py-2 min-h-[44px] text-sm text-white rounded-md transition duration-200 ${
                       exportLoading.pdf
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-red-600 hover:bg-red-700'
+                        ? 'bg-surface-2 cursor-not-allowed'
+                        : 'bg-clay hover:opacity-90'
                     }`}
                 >
                     {exportLoading.pdf ? 'Exporting...' : 'Export to PDF'}
@@ -523,43 +523,43 @@ export default function ReportPage() {
         </div>
 
         {/* --- Report Results Section --- */}
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
-          <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">Report Results</h2>
+        <div className="bg-surface p-4 sm:p-6 rounded-lg shadow-md">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4 text-text-strong">Report Results</h2>
           {loadingReport ? (
-            <p className="text-center text-gray-500 py-8">Loading report data...</p>
+            <p className="text-center text-text-muted py-8">Loading report data...</p>
           ) : reportError ? (
-            <p className="text-center text-red-500 py-8">Error: {reportError}</p>
+            <p className="text-center text-clay py-8">Error: {reportError}</p>
           ) : reportData.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">No activities found matching the selected filters. Try adjusting your criteria.</p>
+            <p className="text-center text-text-muted py-8">No activities found matching the selected filters. Try adjusting your criteria.</p>
           ) : (
             <>
-              <div className="overflow-x-auto rounded-lg border border-gray-200">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
-                  <thead className="bg-gray-50">
+              <div className="overflow-x-auto rounded-lg border border-border-soft">
+                <table className="min-w-full divide-y divide-border-soft text-sm">
+                  <thead className="bg-bg">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Account</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Related Account</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Amount</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Account</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Category</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Description</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Related Account</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Created At</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-surface divide-y divide-border-soft">
                     {reportData.map((activity) => (
-                      <tr key={`${activity.type}-${activity.id}-${activity.created_at}`} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.date}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">{activity.type.replace(/_/g, ' ')}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${activity.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <tr key={`${activity.type}-${activity.id}-${activity.created_at}`} className="hover:bg-surface-2">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-strong">{activity.date}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-strong capitalize">{activity.type.replace(/_/g, ' ')}</td>
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${activity.amount > 0 ? 'text-emerald' : 'text-clay'}`}>
                           {activity.amount > 0 ? '+' : ''}{parseFloat(activity.amount).toFixed(2)} {activity.currency}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.account_name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.category_name || '-'}</td>
-                        <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{activity.description || '-'}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.related_account_name || '-'}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-strong">{activity.account_name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-strong">{activity.category_name || '-'}</td>
+                        <td className="px-6 py-4 text-sm text-text-strong max-w-xs truncate">{activity.description || '-'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-strong">{activity.related_account_name || '-'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                           {new Date(activity.created_at).toLocaleString()}
                         </td>
                       </tr>
@@ -570,7 +570,7 @@ export default function ReportPage() {
               {/* Pagination Controls */}
               <div className="mt-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
                 <div>
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm text-text-strong">
                     Page {currentPage} of {totalPages}
                   </span>
                 </div>
@@ -578,25 +578,25 @@ export default function ReportPage() {
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 transition duration-200"
+                    className="px-3 py-1 bg-surface-2 text-text-strong border border-border-soft hover:bg-surface-tint rounded-md disabled:opacity-50 transition duration-200"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 transition duration-200"
+                    className="px-3 py-1 bg-surface-2 text-text-strong border border-border-soft hover:bg-surface-tint rounded-md disabled:opacity-50 transition duration-200"
                   >
                     Next
                   </button>
                 </div>
                 <div>
-                  <label htmlFor="pageSizeSelect" className="text-sm text-gray-700 mr-2">Items per page:</label>
+                  <label htmlFor="pageSizeSelect" className="text-sm text-text-strong mr-2">Items per page:</label>
                   <select
                     id="pageSizeSelect"
                     value={pageSize}
                     onChange={handlePageSizeChange}
-                    className="p-1 border border-gray-300 rounded-md text-sm focus:ring-brand-emerald focus:border-brand-emerald"
+                    className="p-1 border border-border-soft rounded-md text-sm focus:ring-brand-emerald focus:border-brand-emerald"
                   >
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -618,7 +618,7 @@ export default function ReportPage() {
             <input
               type="text"
               placeholder="Enter a name for this report"
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+              className="w-full p-2 border border-border-soft rounded-md focus:ring-purple-500 focus:border-purple-500"
               value={saveReportName}
               onChange={(e) => setSaveReportName(e.target.value)}
               required
@@ -626,13 +626,13 @@ export default function ReportPage() {
             <input
               type="text"
               placeholder="Enter a description for this report"
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+              className="w-full p-2 border border-border-soft rounded-md focus:ring-purple-500 focus:border-purple-500"
               value={saveReportDescription}
               onChange={(e) => setSaveReportDescription(e.target.value)}
             />
-            {saveReportError && <p className="text-red-500 text-sm mt-1">{saveReportError}</p>}
+            {saveReportError && <p className="text-clay text-sm mt-1">{saveReportError}</p>}
             <div className="flex justify-end space-x-2">
-              <button onClick={() => { setShowSaveReportModal(false); setSaveReportError(''); setSaveReportName(''); setSaveReportDescription(''); }} className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition duration-200">Cancel</button>
+              <button onClick={() => { setShowSaveReportModal(false); setSaveReportError(''); setSaveReportName(''); setSaveReportDescription(''); }} className="px-4 py-2 bg-surface-2 text-text-strong border border-border-soft hover:bg-surface-tint rounded-md transition duration-200">Cancel</button>
               <button onClick={handleSaveReport} className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200">Save Report</button>
             </div>
           </div>
@@ -643,28 +643,28 @@ export default function ReportPage() {
         <Modal title="📂 Load Saved Report" onClose={() => setShowLoadReportModal(false)}>
           <div className="space-y-3">
             {savedReports.length === 0 ? (
-              <p className="text-gray-500 text-center">No saved reports found. Save one first!</p>
+              <p className="text-text-muted text-center">No saved reports found. Save one first!</p>
             ) : (
-              <ul className="divide-y divide-gray-200">
+              <ul className="divide-y divide-border-soft">
                 {savedReports.map((report) => (
                   <li key={report.id} className="py-2 flex flex-col sm:flex-row justify-between items-start sm:items-center">
                     <div>
-                      <p className="font-medium text-gray-800">{report.name}</p>
+                      <p className="font-medium text-text-strong">{report.name}</p>
                       {report.description && (
-                        <p className="text-sm text-gray-600 mt-1">{report.description}</p>
+                        <p className="text-sm text-text-main mt-1">{report.description}</p>
                       )}
-                      <p className="text-xs text-gray-500">Saved: {new Date(report.created_at).toLocaleDateString()}</p>
+                      <p className="text-xs text-text-muted">Saved: {new Date(report.created_at).toLocaleDateString()}</p>
                     </div>
                     <div className="flex space-x-2 mt-2 sm:mt-0">
                       <button onClick={() => handleLoadReport(report)} className="px-3 py-1 bg-brand-warm text-brand-forest rounded-md hover:bg-brand-warm transition duration-200">Load</button>
-                      <button onClick={() => handleDeleteSavedReport(report.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition duration-200">Delete</button>
+                      <button onClick={() => handleDeleteSavedReport(report.id)} className="px-3 py-1 bg-[rgba(196,122,90,0.12)] text-clay rounded-md hover:opacity-90 transition duration-200">Delete</button>
                     </div>
                   </li>
                 ))}
               </ul>
             )}
              <div className="flex justify-end mt-4">
-                <button onClick={() => setShowLoadReportModal(false)} className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition duration-200">Close</button>
+                <button onClick={() => setShowLoadReportModal(false)} className="px-4 py-2 bg-surface-2 text-text-strong border border-border-soft hover:bg-surface-tint rounded-md transition duration-200">Close</button>
             </div>
           </div>
         </Modal>

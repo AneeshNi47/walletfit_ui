@@ -14,6 +14,7 @@ import AppShell from './components/AppShell';
 import CategoriesPage from './pages/categories/CategoriesPage';
 import BudgetsPage from './pages/budgets/BudgetsPage';
 import IncomePage from './pages/income/IncomePage';
+import SavingsPage from './pages/savings/SavingsPage';
 import RecurringPage from './pages/recurring/RecurringPage';
 import SplitExpensesPage from './pages/splits/SplitExpensesPage';
 import ReportPage from './pages/reports/ReportPage';
@@ -54,6 +55,7 @@ function App() {
                 <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/budgets" element={<BudgetsPage />} />
                 <Route path="/income" element={<IncomePage />} />
+                <Route path="/savings" element={<SavingsPage />} />
                 <Route path="/recurring" element={<RecurringPage />} />
                 <Route path="/splits" element={<SplitExpensesPage />} />
                 <Route path="/reports" element={<ReportPage />} />
